@@ -1,4 +1,4 @@
-package com.example.flow_android;
+package com.uwflow.flow_android;
 
 import android.app.Activity;
 import android.os.Bundle;
