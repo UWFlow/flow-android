@@ -1,13 +1,12 @@
 package com.uwflow.flow_android.services;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.provider.AlarmClock;
 
 /**
  * Created by Chinmay on 2/10/14.
  */
-public class AlarmClockService extends Activity {
+public class AlarmClockService {
 
     public Intent setAlarmForTimeWithMessage(String message,int hour, int minutes, int timeBefore) {
 
