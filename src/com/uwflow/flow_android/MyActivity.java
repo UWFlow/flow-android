@@ -1,9 +1,9 @@
 package com.uwflow.flow_android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import com.uwflow.flow_android.services.AlarmClockService;
-
+import com.facebook.Session;
 
 public class MyActivity extends Activity {
     /**
@@ -14,8 +14,12 @@ public class MyActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        AlarmClockService alarmService = new AlarmClockService();
-        startActivity(alarmService.setAlarmForTimeWithMessage("test",5,55,2));
-
+        Intent myIntent = new Intent(this, LoginActivity.class);
+        this.startActivity(myIntent);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
 }

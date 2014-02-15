@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.8+'
+
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        url "http://mente.github.io/facebook-api-android-aar"
+    }
+}
+
+apply plugin: 'android'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.facebook:facebook-android-sdk:+@aar'
+}
+
+android {
+    compileSdkVersion 14
+    buildToolsVersion "19"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+
+        instrumentTest.setRoot('tests')
+
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+}
+
+task launchDefaultActivity(type:Exec){
+    commandLine './adb', 'shell', 'am', 'start', '-c', 'android.intent.category.LAUNCHER', '-n', 'com.example.AndroidGradle/.LaunchActivity'
+}
