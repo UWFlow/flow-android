@@ -22,16 +22,6 @@ public class ApiRequests {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 // Successfully got a response
                 Log.d(Constants.UW_FLOW, "Login Success");
-
-                if (headers != null) {
-                    for (Header h : headers) {
-                        if (h.getName().equalsIgnoreCase(Constants.SET_COOKIE)) {
-                            String cookie = h.getValue();
-                            FlowAsyncClient.storeCookie(context, cookie);
-                        }
-                    }
-                }
-
             }
 
             @Override

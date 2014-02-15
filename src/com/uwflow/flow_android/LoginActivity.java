@@ -16,14 +16,15 @@ public class LoginActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        init();
         setContentView(R.layout.login_layout);
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        if (FlowAsyncClient.getCookie(LoginActivity.this) == null){
+        if (FlowAsyncClient.getCookie() == null){
             loginButton.setVisibility(View.VISIBLE);
             loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
                 @Override
                 public void onUserInfoFetched(GraphUser user) {
-                    if (user != null && FlowAsyncClient.getCookie(LoginActivity.this) == null) {
+                    if (user != null && FlowAsyncClient.getCookie() == null) {
                         ApiRequests.login(user.getId(), Session.getActiveSession().getAccessToken(), LoginActivity.this);
                     }
                 }
@@ -37,5 +38,9 @@ public class LoginActivity extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+    }
+
+    public void init(){
+        FlowAsyncClient.init(this.getApplicationContext());
     }
 }
