@@ -7,7 +7,7 @@ import android.view.View;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-import com.uwflow.flow_android.network.ApiRequests;
+import com.uwflow.flow_android.network.FlowApiRequests;
 import com.uwflow.flow_android.network.FlowAsyncClient;
 
 public class LoginActivity extends Activity {
@@ -25,12 +25,13 @@ public class LoginActivity extends Activity {
                 @Override
                 public void onUserInfoFetched(GraphUser user) {
                     if (user != null && FlowAsyncClient.getCookie() == null) {
-                        ApiRequests.login(user.getId(), Session.getActiveSession().getAccessToken(), LoginActivity.this);
+                        FlowApiRequests.login(user.getId(), Session.getActiveSession().getAccessToken(), LoginActivity.this);
                     }
                 }
             });
         } else {
-            // Skip login
+            Intent myIntent = new Intent(this, HomeActivity.class);
+            this.startActivity(myIntent);
         }
     }
 
