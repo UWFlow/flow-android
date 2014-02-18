@@ -1,9 +1,12 @@
 package com.uwflow.flow_android;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
@@ -26,14 +29,28 @@ public class LoginActivity extends Activity {
                 public void onUserInfoFetched(GraphUser user) {
                     if (user != null && FlowAsyncClient.getCookie() == null) {
                         FlowApiRequests.login(user.getId(), Session.getActiveSession().getAccessToken(), LoginActivity.this);
+                        Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
+                        LoginActivity.this.startActivity(myIntent);
                     }
                 }
             });
         } else {
-            Intent myIntent = new Intent(this, HomeActivity.class);
+            Intent myIntent = new Intent(this, MainFlowActivity.class);
             this.startActivity(myIntent);
         }
     }
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    /** Swaps fragments in the main content view */
+    private void selectItem(int position) {
+
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
