@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
@@ -37,6 +38,16 @@ public class LoginActivity extends Activity {
             Intent myIntent = new Intent(this, MainFlowActivity.class);
             this.startActivity(myIntent);
         }
+
+        // TEMPORARY while the login isn't working:
+        Button skipLoginButton = (Button) findViewById(R.id.temp_skip_login);
+        skipLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
+                LoginActivity.this.startActivity(myIntent);
+            }
+        });
     }
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
