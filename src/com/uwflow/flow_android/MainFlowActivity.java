@@ -53,7 +53,7 @@ public class MainFlowActivity extends FlowActivity {
 
     @Override
     public void setTitle(CharSequence title) {
-        getSupportActionBar().setTitle(title);
+        getActionBar().setTitle(title);
     }
 
 
