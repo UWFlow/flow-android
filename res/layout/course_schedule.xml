@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+               android:id="@+id/schedule" android:layout_width="match_parent"
+              android:layout_height="match_parent" android:orientation="vertical">
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+id/tableLayout1"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent" >
+
+    <!-- 3 columns -->
+    <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView android:text="Class Info" android:textStyle="bold" android:layout_weight="1" />
+        <TextView android:text="Time and Location" android:textStyle="bold" android:layout_weight="1" />
+        <!--<TextView android:text=" " android:textStyle="bold"/>-->
+        <CheckBox android:checked="true"/>
+    </TableRow>
+
+    <!-- just draw a red line -->
+    <View android:layout_height="2dip" android:background="#ff5ba7ea" />
+
+    <!-- 3 columns -->
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:text="LEC 001\nWilliam David Bishop\nSeats: 134/150" android:layout_gravity="fill" android:layout_weight="1" />
+        <TextView android:text="10:00am - 11:20am\nMTWThFSSu\nRCH 105 - UW U" android:layout_gravity="fill" android:layout_weight="1" />
+        <CheckBox android:checked="true" android:layout_gravity="center_vertical"/>
+    </TableRow>
+    <View android:layout_height="1dp" android:background="#ff717171" />
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:text="LEC 001\nWilliam David Bishop\nSeats: 134/150" android:layout_gravity="fill" android:layout_weight="1" />
+        <TextView android:text="10:00am - 11:20am\nMTWThFSSu\nRCH 105 - UW U" android:layout_gravity="fill" android:layout_weight="1" />
+        <CheckBox android:checked="false" android:layout_gravity="center_vertical"/>
+    </TableRow>
+    <View android:layout_height="1dp" android:background="#ff717171" />
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:text="LEC 001\nWilliam David Bishop\nSeats: 134/150" android:layout_gravity="fill" android:layout_weight="1" />
+        <TextView android:text="10:00am - 11:20am\nMTWThFSSu\nRCH 105 - UW U" android:layout_gravity="fill" android:layout_weight="1" />
+        <CheckBox android:checked="true" android:layout_gravity="center_vertical"/>
+    </TableRow>
+    <View android:layout_height="1dp" android:background="#ff717171" />
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:text="LEC 001\nWilliam David Bishop\nSeats: 134/150" android:layout_gravity="fill" android:layout_weight="1" />
+        <TextView android:text="10:00am - 11:20am\nMTWThFSSu\nRCH 105 - UW U" android:layout_gravity="fill" android:layout_weight="1" />
+        <CheckBox android:checked="false" android:layout_gravity="center_vertical"/>
+    </TableRow>
+
+    <TextView android:text="Last updated on Feb 7 at 10:04pm"
+              android:textStyle="italic" android:textColor="#888888" android:gravity="center_horizontal"
+              android:padding="7dp"
+              android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <TextView android:text="Select a checkbox to receive a notification when a spot becomes available"
+              android:background="#ff5ba7ea" android:textColor="#ffffffff"
+              android:paddingTop="7dp" android:paddingBottom="7dp"
+              android:paddingLeft="20dp" android:paddingRight="20dp"
+              android:layout_marginLeft="25dp" android:layout_marginRight="25dp"
+              android:gravity="center_horizontal"
+              android:layout_width="match_parent" android:layout_height="wrap_content"/>
+</TableLayout>
+
+</LinearLayout>

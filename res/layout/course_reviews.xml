@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/about"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="80dp"
+                  android:orientation="horizontal">
+        <LinearLayout android:id="@+id/button_panel"
+                      android:layout_alignParentLeft="true"
+                      android:orientation="vertical"
+                      android:layout_width="100dp"
+                      android:layout_height="match_parent"
+                      android:layout_centerVertical="true">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:textSize="45dp" android:textStyle="bold" android:text="98%"
+                      android:gravity="center" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:textSize="15dp" android:text="43 ratings"
+                      android:gravity="center"/>
+        </LinearLayout>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:orientation="vertical"
+                      android:layout_width="wrap_content"
+                      android:layout_height="match_parent" >
+            <TextView android:layout_width="wrap_content" android:layout_height="fill_parent"
+                      android:text="Useful" android:textSize="18dp"
+                      android:padding="5dp" android:layout_weight="1" />
+            <TextView android:layout_width="wrap_content" android:layout_height="fill_parent"
+                      android:text="Easy" android:textSize="18dp"
+                      android:padding="5dp" android:layout_weight="1" />
+        </LinearLayout>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:orientation="vertical"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent"
+                      android:layout_centerVertical="true">
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:tools="http://schemas.android.com/tools"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5dp" >
+                <ProgressBar
+                        android:id="@+id/useful_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@android:style/Widget.ProgressBar.Horizontal" android:progress="60"/>
+                <TextView android:layout_width="fill_parent" android:layout_height="wrap_content"
+                          android:text="26 ratings" android:gravity="center" android:textColor="#ff000000" />
+            </RelativeLayout>
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:tools="http://schemas.android.com/tools"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5dp" >
+                <ProgressBar
+                        android:id="@+id/useful_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@android:style/Widget.ProgressBar.Horizontal" android:progress="60"/>
+                <TextView android:layout_width="fill_parent" android:layout_height="wrap_content"
+                          android:text="26 ratings" android:gravity="center" android:textColor="#ff000000" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ListView android:id="@+id/review_list"
+              android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+</LinearLayout>
+
+
