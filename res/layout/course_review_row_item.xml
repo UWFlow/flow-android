@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="6dp">
+    <ImageView
+            android:id="@+id/image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/photo_profile_empty"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="8.0dip" />
+    <RelativeLayout android:paddingRight="8.0dip"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7.0dip"
+                    android:layout_toRightOf="@id/image"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true">
+        <TextView
+                android:id="@+id/first"
+                android:text="Buff Badger"
+                android:textSize="17dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"/>
+        <TextView
+                android:id="@+id/second"
+                android:text="Sept 2013"
+                android:textSize="17dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4.0dip"
+                android:layout_alignBaseline="@id/first"
+                android:layout_alignParentRight="true" />
+        <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/first"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="3dp">
+            <CheckBox android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical|left"
+                      android:layout_weight="1"
+                      android:paddingLeft="5dp"
+                      android:id="@+id/status1"
+                      android:button="@drawable/boolean_icon"
+                      android:checked="true"
+                      android:enabled="false"
+                      android:text="Useful" />
+            <CheckBox android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center"
+                      android:layout_weight="1"
+                      android:paddingLeft="5dp"
+                      android:id="@+id/status2"
+                      android:button="@drawable/boolean_icon"
+                      android:checked="false"
+                      android:enabled="false"
+                      android:text="Easy" />
+            <CheckBox android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical|right"
+                      android:layout_weight="1"
+                      android:paddingLeft="5dp"
+                      android:id="@+id/status3"
+                      android:button="@drawable/boolean_icon"
+                      android:checked="true"
+                      android:enabled="false"
+                      android:text="Like it" />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <TextView android:id="@+id/review_text"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/review_bubble_top"
+              android:text="I loved this course. You don't just learn about music, you also learn about American history, politics, psychology, etc. This isn't just a plain old music class, but a course that ties together a number of subjects into one big real picture. It's not a hard course, but it's not easy. If you attend every lecture, take good notes, and read the textbook every now and then, you'll do fine."
+              android:textColor="#FFFFFF"
+              android:layout_below="@id/image"
+              android:layout_alignParentLeft="true"
+            android:layout_marginTop="4dp"/>
+    <View
+            android:id="@+id/thread_divider"
+            android:background="#ffffffff"
+            android:layout_width="0.0dp"
+            android:layout_height="0.5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true" />
+
+
+
+
+</RelativeLayout>
+

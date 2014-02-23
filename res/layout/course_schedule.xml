@@ -16,7 +16,7 @@
         <TextView android:text="Class Info" android:textStyle="bold" android:layout_weight="1" />
         <TextView android:text="Time and Location" android:textStyle="bold" android:layout_weight="1" />
         <!--<TextView android:text=" " android:textStyle="bold"/>-->
-        <CheckBox android:checked="true"/>
+        <CheckBox android:checked="true" />
     </TableRow>
 
     <!-- just draw a red line -->
