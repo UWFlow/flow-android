@@ -46,6 +46,7 @@ public class CourseAboutFragment extends Fragment {
             1. Adjust the listview height on every update such that it's always fully expanded
             2. Generate LinearLayouts for every list item
 
+	    http://stackoverflow.com/questions/12405575/using-a-listadapter-to-fill-a-linearlayout-inside-a-scrollview-layout
          */
 
         // Option 2
