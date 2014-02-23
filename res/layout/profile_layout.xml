@@ -2,8 +2,47 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-              android:text="PROFILE"/>
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <ImageView
+                android:id="@+id/user_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"/>
+
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginLeft="20dp"
+                      android:layout_marginTop="15dp"
+                      android:orientation="vertical">
+            <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User Name"/>
+
+            <TextView
+                    android:id="@+id/user_program"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Computer Science"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.astuetz.viewpager.extensions.PagerSlidingTabStrip
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="48dp" />
+
+    <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pager"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+            </android.support.v4.view.ViewPager>
 </LinearLayout>

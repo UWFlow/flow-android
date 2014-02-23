@@ -34,24 +34,35 @@ public class FlowApiRequests {
         });
     }
 
+    public static void searchUser(final FlowApiRequestCallback callback) {
+        final String uri = Constants.API_USER;
+        searchDetails(uri, callback);
+    }
+
+
+    public static void searchUsers(String userId, final FlowApiRequestCallback callback) {
+        final String uri = String.format(Constants.API_USERS_SEACH, userId);
+        searchDetails(uri, callback);
+    }
+
     public static void searchCourse(String courseId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_COURSE_SEARCH, courseId);
-        searchCourseDetails(uri, callback);
+        searchDetails(uri, callback);
     }
 
     public static void searchCourseProfessors(String courseId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_COURSE_SEARCH_PROFESSORS, courseId);
-        searchCourseDetails(uri, callback);
+        searchDetails(uri, callback);
     }
 
     public static void searchCourseExams(String courseId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_COURSE_SEARCH_EXAMS, courseId);
-        searchCourseDetails(uri, callback);
+        searchDetails(uri, callback);
     }
 
     public static void searchCourseSections(String courseId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_COURSE_SEARCH_SECTIONS, courseId);
-        searchCourseDetails(uri, callback);
+        searchDetails(uri, callback);
     }
 
     public static void searchCourseUsers(String courseId, final FlowApiRequestCallback callback) {
@@ -72,7 +83,7 @@ public class FlowApiRequests {
         });
     }
 
-    private static void searchCourseDetails(String uri, final FlowApiRequestCallback callback) {
+    private static void searchDetails(String uri, final FlowApiRequestCallback callback) {
         FlowAsyncClient.get(uri, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

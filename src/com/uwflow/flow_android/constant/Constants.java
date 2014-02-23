@@ -14,5 +14,8 @@ public class Constants {
     public static final String API_COURSE_SEARCH_EXAMS = "api/v1/courses/%s/exams";
     public static final String API_COURSE_SEARCH_SECTIONS = "api/v1/courses/%s/sections";
     public static final String API_COURSE_SEARCH_USERS = "api/v1/courses/%s/users";
+    public static final String API_USER = "api/v1/user";
+    public static final String API_USERS_SEACH = "api/v1/users/%s";
+
     public static final String UW_FLOW = "uwflow";
 }
