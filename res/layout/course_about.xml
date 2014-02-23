@@ -1,130 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/about"
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/about"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:paddingTop="10dp">
+        <TextView android:id="@+id/course_desc" android:text="An examination of the styles, forms and development of 20th-century popular music. The social, commercial and technological aspects of popular music are considered."
+                  android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <View android:layout_height="0.5dp"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:paddingTop="10dp">
-    <TextView android:id="@+id/course_desc" android:text="An examination of the styles, forms and development of 20th-century popular music. The social, commercial and technological aspects of popular music are considered."
-              android:layout_width="match_parent" android:layout_height="wrap_content"/>
+              android:layout_margin="15dp"
+              android:background="#ff717171" />
 
-    <View android:layout_height="0.5dp"
-          android:layout_width="match_parent"
-          android:layout_margin="15dp"
-          android:background="#ff717171" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="80dp"
+                      android:layout_marginTop="10dp"
+                      android:orientation="horizontal"
+                      android:gravity="center">
+            <!-- TODO: FIX THE ALIGNMENT OF THE RATING AND PROGRESSBARS-->
+            <RelativeLayout android:id="@+id/button_panel"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                    >
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_alignParentTop="true"
+                          android:id="@+id/overall_score"
+                          android:gravity="center"
+                          android:textSize="40dp"
+                          android:textStyle="bold"
+                          android:text="98%" />
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_below="@id/overall_score"
+                          android:gravity="center"
+                          android:textSize="15dp"
+                          android:text="43 ratings" />
+            </RelativeLayout>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:orientation="vertical"
+                          android:layout_width="wrap_content"
+                          android:layout_height="fill_parent" >
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="fill_parent"
+                          android:layout_weight="1"
+                          android:gravity="center"
+                          android:text="Useful"
+                          android:textSize="18dp"
+                          android:padding="5dp" />
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="fill_parent"
+                          android:layout_weight="1"
+                          android:gravity="center"
+                          android:text="Easy"
+                          android:textSize="18dp"
+                          android:padding="5dp" />
+            </LinearLayout>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:orientation="vertical"
+                          android:layout_width="fill_parent"
+                          android:layout_height="fill_parent">
+                <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                             xmlns:tools="http://schemas.android.com/tools"
+                             android:layout_width="fill_parent"
+                             android:layout_height="fill_parent"
+                             android:layout_weight="1">
+                    <ProgressBar
+                            android:id="@+id/useful_bar"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            style="@android:style/Widget.ProgressBar.Horizontal"
+                            android:progress="80"/>
+                    <TextView android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="26 ratings"
+                              android:layout_gravity="center"
+                              android:textColor="#ff000000" />
+                </FrameLayout>
+                <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                             xmlns:tools="http://schemas.android.com/tools"
+                             android:layout_width="fill_parent"
+                             android:layout_height="fill_parent"
+                             android:layout_weight="1"
+                             android:gravity="center">
+                    <ProgressBar
+                            android:id="@+id/useful_bar"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            style="@android:style/Widget.ProgressBar.Horizontal"
+                            android:progress="45"/>
+                    <TextView android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="26 ratings"
+                              android:layout_gravity="center"
+                              android:textColor="#ff000000" />
+                </FrameLayout>
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="80dp"
-                  android:layout_marginTop="10dp"
-                  android:orientation="horizontal"
-                  android:gravity="center">
-        <!-- TODO: FIX THE ALIGNMENT OF THE RATING AND PROGRESSBARS-->
-        <RelativeLayout android:id="@+id/button_panel"
-                        android:layout_width="100dp"
-                        android:layout_height="match_parent"
-                >
-            <TextView android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_alignParentTop="true"
-                      android:id="@+id/overall_score"
-                      android:gravity="center"
-                      android:textSize="40dp"
-                      android:textStyle="bold"
-                      android:text="98%" />
-            <TextView android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_below="@id/overall_score"
-                      android:gravity="center"
-                      android:textSize="15dp"
-                      android:text="43 ratings" />
-        </RelativeLayout>
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:orientation="vertical"
-                      android:layout_width="wrap_content"
-                      android:layout_height="fill_parent" >
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="fill_parent"
-                      android:layout_weight="1"
-                      android:gravity="center"
-                      android:text="Useful"
-                      android:textSize="18dp"
-                      android:padding="5dp" />
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="fill_parent"
-                      android:layout_weight="1"
-                      android:gravity="center"
-                      android:text="Easy"
-                      android:textSize="18dp"
-                      android:padding="5dp" />
-        </LinearLayout>
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:orientation="vertical"
-                      android:layout_width="fill_parent"
-                      android:layout_height="fill_parent">
-            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                         xmlns:tools="http://schemas.android.com/tools"
-                         android:layout_width="fill_parent"
-                         android:layout_height="fill_parent"
-                         android:layout_weight="1">
-                <ProgressBar
-                        android:id="@+id/useful_bar"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        style="@android:style/Widget.ProgressBar.Horizontal"
-                        android:progress="80"/>
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="26 ratings"
-                          android:layout_gravity="center"
-                          android:textColor="#ff000000" />
-            </FrameLayout>
-            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                         xmlns:tools="http://schemas.android.com/tools"
-                         android:layout_width="fill_parent"
-                         android:layout_height="fill_parent"
-                         android:layout_weight="1"
-                         android:gravity="center">
-                <ProgressBar
-                        android:id="@+id/useful_bar"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        style="@android:style/Widget.ProgressBar.Horizontal"
-                        android:progress="45"/>
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="26 ratings"
-                          android:layout_gravity="center"
-                          android:textColor="#ff000000" />
-            </FrameLayout>
+            </LinearLayout>
 
         </LinearLayout>
+        <Button android:id="@+id/see_reviews_btn"
+                android:text="See individual reviews"
+                android:paddingTop="7dp" android:paddingBottom="7dp"
+                android:paddingLeft="20dp" android:paddingRight="20dp"
+                android:layout_marginLeft="25dp" android:layout_marginRight="25dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:background="#33b4e5"
+                android:layout_width="match_parent" android:layout_height="wrap_content"/>
 
+        <View android:layout_height="0.5dp"
+              android:layout_width="match_parent"
+              android:layout_margin="15dp"
+              android:background="#ff717171" />
+
+        <TextView android:text="16 friends took this"
+                  android:textSize="20dp"
+                  android:gravity="center_horizontal"
+                  android:padding="7dp"
+                  android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <!--<ListView android:id="@+id/friend_list"-->
+                  <!--android:layout_width="match_parent"-->
+                  <!--android:layout_height="wrap_content"/>-->
+        <LinearLayout android:id="@+id/friend_list"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"/>
     </LinearLayout>
-    <Button android:id="@+id/see_reviews_btn"
-            android:text="See individual reviews"
-            android:paddingTop="7dp" android:paddingBottom="7dp"
-            android:paddingLeft="20dp" android:paddingRight="20dp"
-            android:layout_marginLeft="25dp" android:layout_marginRight="25dp"
-            android:gravity="center"
-            android:textColor="#FFFFFF"
-            android:background="#33b4e5"
-            android:layout_width="match_parent" android:layout_height="wrap_content"/>
-
-    <View android:layout_height="0.5dp"
-          android:layout_width="match_parent"
-          android:layout_margin="15dp"
-          android:background="#ff717171" />
-
-    <TextView android:text="16 friends took this"
-              android:textSize="20dp"
-              android:gravity="center_horizontal"
-              android:padding="7dp"
-              android:layout_width="match_parent" android:layout_height="wrap_content"/>
-    <ListView android:id="@+id/friend_list"
-              android:layout_width="match_parent" android:layout_height="wrap_content"/>
-
-</LinearLayout>
 
 
+</ScrollView>
