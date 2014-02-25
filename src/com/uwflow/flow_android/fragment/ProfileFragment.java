@@ -1,5 +1,6 @@
 package com.uwflow.flow_android.fragment;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,8 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.astuetz.PagerSlidingTabStrip;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.network.FlowApiRequestCallback;
 import com.uwflow.flow_android.network.FlowApiRequests;
@@ -25,8 +27,7 @@ public class ProfileFragment extends Fragment {
     protected TextView userName;
     protected TextView userProgram;
     protected ViewPager viewPager;
-    private static final int NUM_PAGES = 4;
-
+    protected PagerSlidingTabStrip tabs;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -37,7 +38,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.profile_layout, container, false);
+        View rootView =  inflater.inflate(R.layout.profile_layout, container, false);
+        return rootView;
     }
 
     @Override
@@ -47,12 +49,10 @@ public class ProfileFragment extends Fragment {
         userName = (TextView) getActivity().findViewById(R.id.user_name);
         userProgram = (TextView) getActivity().findViewById(R.id.user_program);
         viewPager = (ViewPager) getActivity().findViewById(R.id.pager);
-        viewPager.setAdapter(new ProfileTitlePagerAdapter(getActivity().getSupportFragmentManager()));
-
-        // Bind the tabs to the ViewPager
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) getActivity().findViewById(R.id.tabs);
+        viewPager.setAdapter(new ProfilePagerAdapter(getActivity().getSupportFragmentManager()));
+        tabs = (PagerSlidingTabStrip) getActivity().findViewById(R.id.pager_tabs);
         tabs.setViewPager(viewPager);
-        getActivity().getSupportFragmentManager();
+
         FlowApiRequests.searchUser(new FlowApiRequestCallback() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -60,13 +60,23 @@ public class ProfileFragment extends Fragment {
 
                 try {
                     userName.setText(response.getString("name"));
-                    userProgram.setText(response.getString("program_name"));
+                    //userProgram.setText(response.getString("program_name"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 try {
                     String url = response.getJSONObject("profile_pic_urls").getString("square");
-                    Picasso.with(ProfileFragment.this.getActivity().getApplicationContext()).load(url).into(userImage);
+                    Picasso.with(ProfileFragment.this.getActivity().getApplicationContext()).load(url).into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                            userImage.setImageBitmap(bitmap);
+                        }
+
+                        @Override
+                        public void onBitmapFailed() {
+
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -81,24 +91,37 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    private class ProfileTitlePagerAdapter extends FragmentStatePagerAdapter {
-        public ProfileTitlePagerAdapter(FragmentManager fm) {
+    private static class ProfilePagerAdapter extends FragmentStatePagerAdapter {
+        private static final String[] TITLES = new String[] {
+                "Friends",
+                "Schedule",
+                "Exams",
+                "Courses"
+        };
+
+        public ProfilePagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            return new AboutFragment();
+            switch (position){
+                case 0 : return new ProfileFriendFragment();
+                case 1 : return new ProfileScheduleFragment();
+                case 2 : return new ProfileExamFragment();
+                case 3 : return new ProfileCourseFragment();
+                default: return new AboutFragment();
+            }
         }
 
         @Override
         public int getCount() {
-            return NUM_PAGES;
+            return 4;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Title: " + position;
+            return TITLES[position];
         }
     }
 }
