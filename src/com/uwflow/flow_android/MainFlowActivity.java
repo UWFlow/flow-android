@@ -1,10 +1,12 @@
 package com.uwflow.flow_android;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,10 +46,11 @@ public class MainFlowActivity extends FlowActivity {
                 R.string.drawer_close
         ) {
             public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
 
             }
             public void onDrawerOpened(View view) {
-
+                super.onDrawerOpened(view);
             }
         };
 
@@ -65,6 +68,25 @@ public class MainFlowActivity extends FlowActivity {
         mDrawerList.setItemChecked(0, true);
     }
 
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -77,6 +99,19 @@ public class MainFlowActivity extends FlowActivity {
         getActionBar().setTitle(title);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // The action bar home/up action should open or close the drawer.
+        // ActionBarDrawerToggle will take care of this.
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle action buttons
+        switch(item.getItemId()) {
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
@@ -94,14 +129,8 @@ public class MainFlowActivity extends FlowActivity {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment)
                     .commit();
+            mDrawerList.setItemChecked(position, true);
+            mDrawerLayout.closeDrawer(mDrawerList);
         }
-
-        // Insert the fragment by replacing any existing fragment
-
-
-        // Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
-        //setTitle(mPlanetTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
     }
 }
