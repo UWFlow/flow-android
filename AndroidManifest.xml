@@ -28,4 +28,6 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
     </application>
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
 </manifest>
