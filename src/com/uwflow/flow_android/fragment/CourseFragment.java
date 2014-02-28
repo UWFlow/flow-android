@@ -19,6 +19,10 @@ public class CourseFragment extends Fragment {
     protected ViewPager mViewPager;
     protected PagerSlidingTabStrip mTabs;
 
+    final private static int SCHEDULE_PAGE = 0;
+    final private static int ABOUT_PAGE = 1;
+    final private static int REVIEWS_PAGE = 2;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -33,6 +37,9 @@ public class CourseFragment extends Fragment {
         mViewPager.setAdapter(new CoursePagerAdapter(getActivity().getSupportFragmentManager()));
         mTabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
         mTabs.setViewPager(mViewPager);
+
+        // Set default tab to About
+        mViewPager.setCurrentItem(ABOUT_PAGE);
     }
 
     @Override
@@ -54,9 +61,9 @@ public class CourseFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             switch (position){
-                case 0 : return new CourseScheduleFragment();
-                case 1 : return new CourseAboutFragment();
-                case 2 : return new CourseReviewsFragment();
+                case SCHEDULE_PAGE : return new CourseScheduleFragment();
+                case ABOUT_PAGE : return new CourseAboutFragment();
+                case REVIEWS_PAGE : return new CourseReviewsFragment();
                 default: return new AboutFragment();
             }
         }
