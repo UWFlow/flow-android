@@ -1,13 +1,13 @@
 package com.uwflow.flow_android.fragment;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.CourseReviewAdapter;
 import com.uwflow.flow_android.entities.CourseReview;
@@ -18,14 +18,15 @@ import java.util.ArrayList;
  * Created by jasperfung on 2/22/14.
  */
 public class CourseReviewsFragment extends Fragment{
-    private ListView mCourseReviewList;
+    private LinearLayout mCourseReviewListContainer;
+    private BaseAdapter mCourseReviewListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.course_reviews, container, false);
-        mCourseReviewList = (ListView)rootView.findViewById(R.id.review_list);
+        mCourseReviewListContainer = (LinearLayout)rootView.findViewById(R.id.review_list);
 
         // TODO: replace this arraylist with whatever real data source
         ArrayList<CourseReview> courseReviewList = new ArrayList<CourseReview>();
@@ -41,7 +42,14 @@ public class CourseReviewsFragment extends Fragment{
             courseReviewList.add(new CourseReview(name, date, review, null, useful, easy, likedIt));
         }
 
-        mCourseReviewList.setAdapter(new CourseReviewAdapter(courseReviewList, getActivity()));
+        mCourseReviewListAdapter = new CourseReviewAdapter(courseReviewList, getActivity());
+
+        // Generate LinearLayouts for every list item
+        for (int i = 0; i < mCourseReviewListAdapter.getCount(); i++) {
+            View item = mCourseReviewListAdapter.getView(i, null, null);
+            mCourseReviewListContainer.addView(item);
+        }
+
         return rootView;
     }
 

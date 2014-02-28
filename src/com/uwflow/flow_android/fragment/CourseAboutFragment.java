@@ -6,8 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.FriendListAdapter;
 import com.uwflow.flow_android.entities.Friend;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
  * Created by jasperfung on 2/21/14.
  */
 public class CourseAboutFragment extends Fragment {
-    private ListView mFriendListView;
-    private LinearLayout mFriendLinearLayout;
+    private LinearLayout mFriendListContainer;
+    private BaseAdapter mFriendListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,8 +27,7 @@ public class CourseAboutFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.course_about, container, false);
 
-//        mFriendListView = (ListView)rootView.findViewById(R.id.friend_list);
-        mFriendLinearLayout = (LinearLayout)rootView.findViewById(R.id.friend_list);
+        mFriendListContainer = (LinearLayout)rootView.findViewById(R.id.friend_list);
 
         // TODO: replace this arraylist with whatever real data source
         ArrayList<Friend> friendList = new ArrayList<Friend>();
@@ -38,25 +37,13 @@ public class CourseAboutFragment extends Fragment {
             friendList.add(new Friend(first, second, null));
         }
 
-        FriendListAdapter friendListAdapter = new FriendListAdapter(friendList, getActivity());
-//        mFriendListView.setAdapter(friendListAdapter);
+        mFriendListAdapter = new FriendListAdapter(friendList, getActivity());
 
-        /*
-            PROBLEM: listview cannot be placed inside scrollview, since it becomes unscrollable. Two solutions:
-            1. Adjust the listview height on every update such that it's always fully expanded
-            2. Generate LinearLayouts for every list item
-
-	    http://stackoverflow.com/questions/12405575/using-a-listadapter-to-fill-a-linearlayout-inside-a-scrollview-layout
-         */
-
-        // Option 2
-        int friendCount = friendListAdapter.getCount();
-        for (int i = 0; i < friendCount; i++) {
-            View item = friendListAdapter.getView(i, null, null);
-            mFriendLinearLayout.addView(item);
+        // Generate LinearLayouts for every list item
+        for (int i = 0; i < mFriendListAdapter.getCount(); i++) {
+            View item = mFriendListAdapter.getView(i, null, null);
+            mFriendListContainer.addView(item);
         }
-
-
 
         return rootView;
     }
