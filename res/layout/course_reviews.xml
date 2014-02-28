@@ -3,7 +3,6 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:id="@+id/about"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:orientation="vertical">
@@ -101,6 +100,16 @@
               android:layout_width="match_parent"
               android:layout_margin="15dp"
               android:background="#ff717171" />
+
+        <TextView android:id="@+id/empty_review_list"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="center"
+                  android:paddingTop="20dp"
+                  android:textColor="#999999"
+                  android:text="No reviews available"
+                  android:textSize="18dp"
+                  android:visibility="gone"/>
 
         <LinearLayout android:id="@+id/review_list"
                       android:layout_width="match_parent"

@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TextView;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.CourseReviewAdapter;
 import com.uwflow.flow_android.entities.CourseReview;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
  */
 public class CourseReviewsFragment extends Fragment{
     private LinearLayout mCourseReviewListContainer;
+    private TextView mEmptyReviewListContainerView;
+
     private BaseAdapter mCourseReviewListAdapter;
 
     @Override
@@ -27,6 +31,8 @@ public class CourseReviewsFragment extends Fragment{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.course_reviews, container, false);
         mCourseReviewListContainer = (LinearLayout)rootView.findViewById(R.id.review_list);
+        mEmptyReviewListContainerView = (TextView)rootView.findViewById(R.id.empty_review_list);
+
 
         // TODO: replace this arraylist with whatever real data source
         ArrayList<CourseReview> courseReviewList = new ArrayList<CourseReview>();
@@ -44,10 +50,19 @@ public class CourseReviewsFragment extends Fragment{
 
         mCourseReviewListAdapter = new CourseReviewAdapter(courseReviewList, getActivity());
 
-        // Generate LinearLayouts for every list item
-        for (int i = 0; i < mCourseReviewListAdapter.getCount(); i++) {
-            View item = mCourseReviewListAdapter.getView(i, null, null);
-            mCourseReviewListContainer.addView(item);
+        if (mCourseReviewListAdapter.getCount() > 0) {
+            mEmptyReviewListContainerView.setVisibility(View.GONE);
+            mCourseReviewListContainer.setVisibility(View.VISIBLE);
+
+            // Generate LinearLayouts for every list item
+            for (int i = 0; i < mCourseReviewListAdapter.getCount(); i++) {
+                View item = mCourseReviewListAdapter.getView(i, null, null);
+                mCourseReviewListContainer.addView(item);
+            }
+
+        } else {
+            mEmptyReviewListContainerView.setVisibility(View.VISIBLE);
+            mCourseReviewListContainer.setVisibility(View.GONE);
         }
 
         return rootView;
