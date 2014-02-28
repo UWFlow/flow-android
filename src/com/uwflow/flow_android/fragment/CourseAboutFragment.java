@@ -32,9 +32,9 @@ public class CourseAboutFragment extends Fragment {
         // TODO: replace this arraylist with whatever real data source
         ArrayList<Friend> friendList = new ArrayList<Friend>();
         for (int i = 0; i < 5; i++) {
-            String first = "Username" + i;
+            String first = "Username " + i;
             String second = "Sept " + (2014 + i);
-            friendList.add(new Friend(first, second, null));
+            friendList.add(new Friend(first, second, null, i + 100));
         }
 
         mFriendListAdapter = new FriendListAdapter(friendList, getActivity());

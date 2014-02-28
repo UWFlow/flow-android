@@ -8,11 +8,13 @@ import android.graphics.Bitmap;
 public class Friend {
     private String first, second;
     private Bitmap image;
+    private int fbid;
 
-    public Friend(String first, String second, Bitmap image) {
+    public Friend(String first, String second, Bitmap image, int fbid) {
         this.first = first;
         this.second = second;
         this.image = image;
+        this.fbid = fbid;
     }
 
     public String getFirst() {
@@ -37,5 +39,13 @@ public class Friend {
 
     public void setImage(Bitmap image) {
         this.image = image;
+    }
+
+    public int getFbid() {
+        return fbid;
+    }
+
+    public void setFbid(int fbid) {
+        this.fbid = fbid;
     }
 }
