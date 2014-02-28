@@ -14,7 +14,8 @@
             android:layout_gravity="center_vertical|center_horizontal"
             android:visibility="gone"
             facebook:fetch_user_info="true"/>
-    <Button
+    <Button style="@style/Flow.StyledButton"
+            android:layout_margin="20dp"
             android:id="@+id/temp_skip_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -4,11 +4,10 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="EXPLORE"/>
-    <Button
+    <Button style="@style/Flow.StyledButton"
             android:id="@+id/btn_open_course"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="20dp"
             android:text="Open Course" />
 </LinearLayout>
