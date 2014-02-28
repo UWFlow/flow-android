@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.uwflow.flow_android.adapters.NavDrawerAdapter;
+import com.uwflow.flow_android.entities.NavDrawerItem;
 import com.uwflow.flow_android.fragment.AboutFragment;
 import com.uwflow.flow_android.fragment.ExploreFragment;
 import com.uwflow.flow_android.fragment.ProfileFragment;
@@ -22,21 +24,24 @@ public class MainFlowActivity extends FlowActivity {
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-
-    private String [] LIST_VALUE = {"Profile", "Explore", "Shortlist", "About"};
+    private NavDrawerAdapter mNavDrawerAdapter;
+    private ArrayList<NavDrawerItem> mDrawerItems;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.flow_main);
+
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ArrayList<String> listValue = new ArrayList<String>();
-        for (String s : LIST_VALUE){
-            listValue.add(s);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, listValue);
-        mDrawerList.setAdapter(adapter);
+
+        mDrawerItems = new ArrayList<NavDrawerItem>();
+        mDrawerItems.add(new NavDrawerItem("Profile", R.drawable.drawer_profile_icon));
+        mDrawerItems.add(new NavDrawerItem("Explore", R.drawable.drawer_explore_icon));
+        mDrawerItems.add(new NavDrawerItem("Shortlist", R.drawable.drawer_shortlist_icon));
+        mDrawerItems.add(new NavDrawerItem("About", R.drawable.drawer_about_icon));
+
+        mNavDrawerAdapter = new NavDrawerAdapter(mDrawerItems, this);
+        mDrawerList.setAdapter(mNavDrawerAdapter);
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
