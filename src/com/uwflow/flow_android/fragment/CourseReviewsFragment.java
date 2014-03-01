@@ -43,7 +43,6 @@ public class CourseReviewsFragment extends Fragment{
             boolean useful = (i % 2 == 0) ? true : false;
             boolean easy = !useful;
             boolean likedIt = useful;
-            Log.e("BUGGER", "printout #" + i);
 
             courseReviewList.add(new CourseReview(name, date, review, null, useful, easy, likedIt));
         }
