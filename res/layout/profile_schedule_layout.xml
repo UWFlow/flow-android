@@ -3,8 +3,100 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <TextView android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:text="schedule"/>
+              android:layout_height="match_parent" android:weightSum="1">
+
+    <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/radio_group_view">
+
+            <ImageView
+                    android:id="@+id/dummy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_centerHorizontal="true" />
+
+            <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="List View"
+                    android:layout_toLeftOf="@id/dummy"
+                    android:id="@+id/radio_list_view" android:checked="true"/>
+            <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Week View"
+                    android:layout_toRightOf="@id/dummy"
+                    android:id="@+id/radio_week_view" android:checked="false" />
+
+    </RadioGroup>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_weight="1.10">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="February 10-14 2014"
+                android:id="@+id/text_view_date" android:layout_weight="0.00"
+                android:textStyle="bold" android:textIsSelectable="false"
+                android:paddingLeft="15dp" android:singleLine="false" android:textSize="17dp" android:gravity="top"
+                android:paddingTop="10dp"/>
+
+        <ImageView
+                android:id="@+id/image_schedule"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true" />
+    </LinearLayout>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_alignParentBottom="true"
+            >
+
+        <ImageView
+                android:id="@+id/dummy2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="bottom"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Export Calendar"
+                android:layout_toLeftOf="@id/dummy2"
+                android:id="@+id/btn_export_calendar"
+                android:layout_alignParentLeft="true" />
+
+        <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Share"
+                android:layout_toRightOf="@id/dummy2"
+                android:id="@+id/btn_share"
+                android:layout_alignParentRight="true"/>
+
+        <Button android:id="@+id/btn_schedule_profile"
+                android:text="Click on a schedule entry to add an alarm"
+                android:paddingTop="7dp" android:paddingBottom="7dp"
+                android:paddingLeft="20dp" android:paddingRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:background="#33b4e5"
+                android:layout_below="@id/btn_export_calendar"
+                android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+
 </LinearLayout>

@@ -8,33 +8,27 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.uwflow.flow_android.R;
+import com.uwflow.flow_android.entities.Exam;
 import com.uwflow.flow_android.entities.Friend;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 /**
- * Created by jasperfung on 2/23/14.
+ * Created by Chinmay on 3/1/14.
  */
-public class FriendListAdapter extends BaseAdapter {
-    private ArrayList<Friend> mList;
+public class ProfileExamAdapter extends BaseAdapter {
+
+    private ArrayList<Exam> mExamList;
     private Context mContext;
 
-    public FriendListAdapter(ArrayList<Friend> list, Context context) {
-        mList = list;
+    public ProfileExamAdapter(ArrayList<Exam> exams, Context context) {
+        mExamList = exams;
         mContext = context;
     }
 
     public int getCount() {
-        return mList.size();
-    }
-
-    public Object getItem(int position) {
-        return mList.get(position);
-    }
-
-    public long getItemId(int position) {
-        // TODO Auto-generated method stub
-        return position;
+        return mExamList.size();
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -42,27 +36,31 @@ public class FriendListAdapter extends BaseAdapter {
         if (convertView == null) {
             // inflate a new view
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.profile_friends_row_item, parent, false);
+            convertView = inflater.inflate(R.layout.profile_exams_row_item, parent, false);
         }
 
         // Fill view with appropriate data
-        TextView first, second;
-        ImageView image;
+        TextView first, second, third;
 
         first = (TextView) convertView.findViewById(R.id.first);
         second = (TextView) convertView.findViewById(R.id.second);
-        image = (ImageView) convertView.findViewById(R.id.image);
+        third = (TextView) convertView.findViewById(R.id.third);
 
-        first.setText(mList.get(position).getFirst());
-        second.setText(mList.get(position).getSecond());
+        first.setText(mExamList.get(position).getFirst());
+        second.setText(mExamList.get(position).getSecond());
+        third.setText(mExamList.get(position).getThird());
 
-        if (mList.get(position).getImage() == null) {
-            image.setImageResource(R.drawable.photo_profile_empty);
-        } else {
-            image.setImageBitmap(mList.get(position).getImage());
-        }
 
         return convertView;
     }
-}
 
+    public Object getItem(int arg0) {
+        return mExamList.get(arg0);
+    }
+
+    public long getItemId(int position) {
+        // TODO Auto-generated method stub
+        return position;
+    }
+
+}
