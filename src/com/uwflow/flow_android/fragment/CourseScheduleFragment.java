@@ -71,7 +71,7 @@ public class CourseScheduleFragment extends Fragment {
                             sectionType,
                             sectionNum,
                             professor,
-                            enrollmentTotal,
+                            (i % 3 == 0)? enrollmentCapacity : enrollmentTotal,
                             enrollmentCapacity,
                             startTimeSeconds,
                             endTimeSeconds,
