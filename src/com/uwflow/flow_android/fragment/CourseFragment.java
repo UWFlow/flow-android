@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 import com.uwflow.flow_android.R;
+import com.uwflow.flow_android.constant.Constants;
 
 /**
  * Created by jasperfung on 2/21/14.
@@ -18,10 +19,6 @@ public class CourseFragment extends Fragment {
     private View rootView;
     protected ViewPager mViewPager;
     protected PagerSlidingTabStrip mTabs;
-
-    final private static int SCHEDULE_PAGE = 0;
-    final private static int ABOUT_PAGE = 1;
-    final private static int REVIEWS_PAGE = 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,7 +36,7 @@ public class CourseFragment extends Fragment {
         mTabs.setViewPager(mViewPager);
 
         // Set default tab to About
-        mViewPager.setCurrentItem(ABOUT_PAGE);
+        mViewPager.setCurrentItem(Constants.COURSE_ABOUT_PAGE_INDEX);
     }
 
     @Override
@@ -61,9 +58,9 @@ public class CourseFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             switch (position){
-                case SCHEDULE_PAGE : return new CourseScheduleFragment();
-                case ABOUT_PAGE : return new CourseAboutFragment();
-                case REVIEWS_PAGE : return new CourseReviewsFragment();
+                case Constants.COURSE_SCHEDULE_PAGE_INDEX : return new CourseScheduleFragment();
+                case Constants.COURSE_ABOUT_PAGE_INDEX: return new CourseAboutFragment();
+                case Constants.COURSE_REVIEWS_PAGE_INDEX: return new CourseReviewsFragment();
                 default: return new AboutFragment();
             }
         }
