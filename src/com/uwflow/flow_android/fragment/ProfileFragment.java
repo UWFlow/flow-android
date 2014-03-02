@@ -3,8 +3,6 @@ package com.uwflow.flow_android.fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +14,12 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.uwflow.flow_android.R;
+import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
 import com.uwflow.flow_android.network.FlowApiRequestCallback;
 import com.uwflow.flow_android.network.FlowApiRequests;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
 
 public class ProfileFragment extends Fragment {
 
@@ -91,37 +91,4 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    private static class ProfilePagerAdapter extends FragmentStatePagerAdapter {
-        private static final String[] TITLES = new String[] {
-                "Friends",
-                "Schedule",
-                "Exams",
-                "Courses"
-        };
-
-        public ProfilePagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position){
-                case 0 : return new ProfileFriendFragment();
-                case 1 : return new ProfileScheduleFragment();
-                case 2 : return new ProfileExamFragment();
-                case 3 : return new ProfileCourseFragment();
-                default: return new AboutFragment();
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 4;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return TITLES[position];
-        }
-    }
 }

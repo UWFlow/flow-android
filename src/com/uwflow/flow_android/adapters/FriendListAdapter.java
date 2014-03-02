@@ -46,7 +46,7 @@ public class FriendListAdapter extends BaseAdapter {
         if (convertView == null) {
             // inflate a new view
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.friend_list_row_item, parent, false);
+            convertView = inflater.inflate(R.layout.profile_friends_row_item, parent, false);
         }
 
         // Fill view with appropriate data

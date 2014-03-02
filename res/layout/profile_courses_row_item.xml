@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:padding="5dp"
+              android:gravity="center_vertical"
+              android:orientation="horizontal">
+
+
+        <TextView
+                android:id="@+id/first"
+                android:layout_width="141dp"
+                android:layout_height="wrap_content"
+                android:text="PHIL 110A"
+                android:padding="3dp"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:gravity="center"/>
+
+        <TextView
+                android:id="@+id/second"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Introduction to Philosophy: Knowledge and Reality"
+                android:padding="3dp"
+                android:textSize="15sp" />
+
+
+</LinearLayout>

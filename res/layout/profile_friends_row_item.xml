@@ -23,13 +23,13 @@
                 android:id="@+id/first"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Name of subject"
+                android:text="Friend Name"
                 android:textSize="16sp" />
         <TextView
                 android:id="@+id/second"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Description of subject"
+                android:text="Mutual Classes"
                 android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>
