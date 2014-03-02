@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
  */
 public class Friend {
     private String first, second;
+    private String bitmapUrl;
     private Bitmap image;
     private int fbid;
 

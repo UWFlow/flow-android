@@ -15,7 +15,21 @@ public class Constants {
     public static final String API_COURSE_SEARCH_SECTIONS = "api/v1/courses/%s/sections";
     public static final String API_COURSE_SEARCH_USERS = "api/v1/courses/%s/users";
     public static final String API_USER = "api/v1/user";
-    public static final String API_USERS_SEACH = "api/v1/users/%s";
+    public static final String API_USERS_SEARCH = "api/v1/users/%s";
+    public static final String API_USER_SCHEDULE = "api/v1/user/schedule";
+    public static final String API_USERS_SCHEDULE = "api/v1/users/%s/schedule";
+    public static final String API_USER_EXAMS = "api/v1/user/exams";
+    public static final String API_USERS_EXAMS = "api/v1/users/%s/exams";
+    public static final String API_USER_COURSES = "api/v1/user/courses";
+    public static final String API_USERS_COURSES = "api/v1/users/%s/courses";
+    public static final String API_USER_FRIENDS = "api/v1/user/friends";
+    public static final String API_USERS_FRIENDS = "api/v1/users/%s/friends";
+
+
+    public static class DatabaseColumnName{
+        public static final String USER_ID = "user_id";
+
+    }
 
     public static final String UW_FLOW = "uwflow";
 

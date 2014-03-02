@@ -4,10 +4,17 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+<<<<<<< HEAD
 
     <ListView android:id="@+id/friend_list"
               android:layout_width="match_parent" android:layout_height="fill_parent"/>
 
 
 
+=======
+    <ListView
+            android:id="@+id/profile_friend"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"></ListView>
+>>>>>>> database work
 </LinearLayout>

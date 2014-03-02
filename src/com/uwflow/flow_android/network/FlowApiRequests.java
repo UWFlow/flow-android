@@ -1,6 +1,5 @@
 package com.uwflow.flow_android.network;
 
-import android.content.Context;
 import android.util.Log;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -15,7 +14,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 public class FlowApiRequests {
-    public static void login(String facebookId, String facebookAccessToken, final Context context) {
+    public static void login(String facebookId, String facebookAccessToken,
+                             final FlowApiRequestCallback callback) {
         RequestParams params = new RequestParams();
         params.put(Constants.FBID, facebookId);
         params.put(Constants.FACEBOOK_ACCESS_TOKEN, facebookAccessToken);
@@ -25,25 +25,67 @@ public class FlowApiRequests {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 // Successfully got a response
                 Log.d(Constants.UW_FLOW, "Login Success");
+                callback.onSuccess(null);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Log.d(Constants.UW_FLOW, "Failed");
+                callback.onFailure(null);
             }
         });
     }
 
     public static void searchUser(final FlowApiRequestCallback callback) {
         final String uri = Constants.API_USER;
-        searchDetails(uri, callback);
+        searchAuthenticatedDetails(uri, callback);
     }
 
+    public static void searchUserSchedule(final FlowApiRequestCallback callback) {
+        final String uri = Constants.API_USER_SCHEDULE;
+        searchAuthenticatedDetails(uri, callback);
+    }
+
+    public static void searchUserExams(final FlowApiRequestCallback callback) {
+        final String uri = Constants.API_USER_EXAMS;
+        searchAuthenticatedDetails(uri, callback);
+    }
+
+    public static void searchUserCourses(final FlowApiRequestCallback callback) {
+        final String uri = Constants.API_USER_COURSES;
+        searchAuthenticatedDetails(uri, callback);
+    }
+
+    public static void searchUserFriends(final FlowApiRequestCallback callback) {
+        final String uri = Constants.API_USER_FRIENDS;
+        searchAuthenticatedDetails(uri, callback);
+    }
 
     public static void searchUsers(String userId, final FlowApiRequestCallback callback) {
-        final String uri = String.format(Constants.API_USERS_SEACH, userId);
-        searchDetails(uri, callback);
+        final String uri = String.format(Constants.API_USERS_SEARCH, userId);
+        searchAuthenticatedDetails(uri, callback);
     }
+
+    public static void searchUsersSchedule(String userId, final FlowApiRequestCallback callback) {
+        final String uri = String.format(Constants.API_USERS_SCHEDULE, userId);
+        searchAuthenticatedDetails(uri, callback);
+    }
+
+    public static void searchUsersExams(String userId, final FlowApiRequestCallback callback) {
+        final String uri = String.format(Constants.API_USERS_EXAMS, userId);
+        searchAuthenticatedDetails(uri, callback);
+    }
+
+    public static void searchUsersCourses(String userId, final FlowApiRequestCallback callback) {
+        final String uri = String.format(Constants.API_USERS_COURSES, userId);
+        searchAuthenticatedDetails(uri, callback);
+    }
+
+    public static void searchUsersFriends(String userId, final FlowApiRequestCallback callback) {
+        final String uri = String.format(Constants.API_USERS_FRIENDS, userId);
+        searchAuthenticatedDetails(uri, callback);
+    }
+
 
     public static void searchCourse(String courseId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_COURSE_SEARCH, courseId);
@@ -67,18 +109,26 @@ public class FlowApiRequests {
 
     public static void searchCourseUsers(String courseId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_COURSE_SEARCH_USERS, courseId);
+        searchAuthenticatedDetails(uri, callback);
+    }
+
+    private static void searchAuthenticatedDetails(String uri, final FlowApiRequestCallback callback) {
         HashMap<String, String> headers = new HashMap<String, String>();
         Cookie cookie = FlowAsyncClient.getCookie();
-        headers.put(Constants.HEADER_COOKIE, cookie.getName() + "=" +cookie.getValue() + ";");
+        if (cookie == null) {
+            headers.put(Constants.HEADER_COOKIE, "session=\"BswubxSTbrmP+52mREbNSbAZ0Zk=?_csrf_token=UydENVVURDk1MU8zRktFNEcnCnAxCi4=&user_id=Y2NvcHlfcmVnCl9yZWNvbnN0cnVjdG9yCnAxCihjYnNvbi5vYmplY3RpZApPYmplY3RJZApwMgpjX19idWlsdGluX18Kb2JqZWN0CnAzCk50UnA0ClMnUVJROFx4ZDhceDlkYlx4MGVceGU2XHhjNG5ceDg0JwpwNQpiLg==\";");
+        } else {
+            headers.put(Constants.HEADER_COOKIE, cookie.getName() + "=" + cookie.getValue() + ";");
+        }
         FlowAsyncClient.get(headers, uri, null, new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(org.json.JSONObject response) {
                 // Successfully got a response
-                callback.onSuccess(parseData(responseBody));
+                callback.onSuccess(response);
             }
 
-            public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.String responseBody, java.lang.Throwable e) {
-                Log.d(Constants.UW_FLOW, responseBody);
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                callback.onFailure(null);
             }
         });
     }
@@ -86,40 +136,15 @@ public class FlowApiRequests {
     private static void searchDetails(String uri, final FlowApiRequestCallback callback) {
         FlowAsyncClient.get(uri, null, new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(org.json.JSONObject response) {
                 // Successfully got a response
-                callback.onSuccess(parseData(responseBody));
+                callback.onSuccess(response);
             }
 
             @Override
-            public void onSuccess(org.json.JSONObject response) {
-                // Successfully got a response
-                Log.d(Constants.UW_FLOW, response.toString());
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                callback.onFailure(null);
             }
         });
-    }
-
-    private static JSONObject parseData(byte[] data) {
-        try {
-            String str = new String(data, "UTF-8");
-            JSONArray ary = new JSONArray(str);
-            JSONObject obj = new JSONObject();
-            obj.put("course", ary);
-            return obj;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            String str = new String(data, "UTF-8");
-            JSONObject obj = new JSONObject(str);
-            return obj;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return new JSONObject();
     }
 }

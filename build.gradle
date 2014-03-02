@@ -31,6 +31,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.1.0'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.android.support:support-v4:18.0.+'
+    compile 'com.google.code.gson:gson:2.1'
 }
 
 android {

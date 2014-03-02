@@ -81,6 +81,11 @@ public class ProfileFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
         });
 
     }
