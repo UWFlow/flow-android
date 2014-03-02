@@ -10,17 +10,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
+import com.uwflow.flow_android.entities.CourseInfo;
+import com.uwflow.flow_android.network.CourseInfoLoader;
+
+import java.util.List;
 
 /**
  * Created by jasperfung on 2/21/14.
  */
-public class CourseFragment extends Fragment {
+public class CourseFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<CourseInfo> {
     private View rootView;
     protected ViewPager mViewPager;
     protected PagerSlidingTabStrip mTabs;
+    private TextView mCourseCodeTextView;
+    private TextView mCourseNameTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +43,8 @@ public class CourseFragment extends Fragment {
         mViewPager.setAdapter(new CoursePagerAdapter(getActivity().getSupportFragmentManager()));
         mTabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
         mTabs.setViewPager(mViewPager);
+        mCourseCodeTextView = (TextView) rootView.findViewById(R.id.course_code);
+        mCourseNameTextView = (TextView) rootView.findViewById(R.id.course_name);
 
         // Set default tab to About
         mViewPager.setCurrentItem(Constants.COURSE_ABOUT_PAGE_INDEX);
@@ -66,7 +75,28 @@ public class CourseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+
+        // Prepare the loader.  Either re-connect with an existing one, or start a new one
+        getLoaderManager().initLoader(0, null, this); // TODO: .forceLoad(); ???
     }
+
+    @Override
+    public android.support.v4.content.Loader<CourseInfo> onCreateLoader(int i, Bundle bundle) {
+        return new CourseInfoLoader(getActivity());
+    }
+
+    @Override
+    public void onLoadFinished(android.support.v4.content.Loader<CourseInfo> courseInfoLoader, CourseInfo courseInfo) {
+        mCourseCodeTextView.setText(courseInfo.getCode());
+        mCourseNameTextView.setText(courseInfo.getName());
+    }
+
+    @Override
+    public void onLoaderReset(android.support.v4.content.Loader<CourseInfo> courseInfoLoader) {
+        // TODO Auto-generated method stub
+
+    }
+
 
     private static class CoursePagerAdapter extends FragmentStatePagerAdapter {
         private static final String[] TITLES = new String[] {
@@ -99,4 +129,6 @@ public class CourseFragment extends Fragment {
             return TITLES[position];
         }
     }
+
+
 }
