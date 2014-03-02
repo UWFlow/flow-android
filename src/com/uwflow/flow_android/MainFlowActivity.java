@@ -6,7 +6,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,10 +17,8 @@ import com.uwflow.flow_android.fragment.AboutFragment;
 import com.uwflow.flow_android.fragment.ExploreFragment;
 import com.uwflow.flow_android.fragment.ProfileFragment;
 import com.uwflow.flow_android.fragment.ShortlistFragment;
-import com.uwflow.flow_android.network.FlowDatabaseLoader;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainFlowActivity extends FlowActivity {
     private ListView mDrawerList;
@@ -29,8 +26,6 @@ public class MainFlowActivity extends FlowActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private NavDrawerAdapter mNavDrawerAdapter;
     private ArrayList<NavDrawerItem> mDrawerItems;
-    private String [] LIST_VALUE = {"Profile", "Explore", "Shortlist", "About"};
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,14 +42,6 @@ public class MainFlowActivity extends FlowActivity {
 
         mNavDrawerAdapter = new NavDrawerAdapter(mDrawerItems, this);
         mDrawerList.setAdapter(mNavDrawerAdapter);
-
-        ArrayList<String> listValue = new ArrayList<String>();
-        for (String s : LIST_VALUE){
-            listValue.add(s);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, listValue);
-        mDrawerList.setAdapter(adapter);
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
