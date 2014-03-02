@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.User;
+import utility.FacebookUtilities;
 
 import java.util.List;
 
@@ -46,7 +47,18 @@ public class ProfileFriendAdapter extends BaseAdapter {
         first.setText(mFriends.get(position).getName());
         second.setText(mFriends.get(position).getProgramName());
 
-        Picasso.with(mContext).load(mFriends.get(position).getProfilePicUrls().getSquare()).placeholder(R.drawable.photo_profile_empty).into(image);
+	Picasso.with(mContext).load(mFriends.get(position).getProfilePicUrls().getSquare()).placeholder(R.drawable.kitty).into(image);
+
+	final User user = mFriends.get(position);
+
+	// Make this View clickable to open a dialog for Facebook/Flow profile links
+	View.OnClickListener onClickListener = new View.OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
+		FacebookUtilities.createUserDialog(mContext, user).show();
+	    }
+	};
+	convertView.setOnClickListener(onClickListener);
 
         return convertView;
     }
@@ -56,8 +68,7 @@ public class ProfileFriendAdapter extends BaseAdapter {
     }
 
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
-        return position;
+	return mFriends.get(position).getFbid();
     }
 }
 

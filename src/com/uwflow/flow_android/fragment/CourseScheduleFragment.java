@@ -1,6 +1,7 @@
 package com.uwflow.flow_android.fragment;
 
 //import android.app.Fragment;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,9 +11,7 @@ import android.widget.*;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.CourseClassListAdapter;
 import com.uwflow.flow_android.entities.CourseClass;
-import com.uwflow.flow_android.entities.CourseReview;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**

@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class CourseUserDetail {
+    @SerializedName("users")
     protected ArrayList<User> users;
 
     @SerializedName("term_users")

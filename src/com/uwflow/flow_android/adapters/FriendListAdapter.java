@@ -4,14 +4,17 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.R;
-import com.uwflow.flow_android.entities.Friend;
+import com.uwflow.flow_android.db_object.User;
+import com.uwflow.flow_android.entities.CourseFriend;
 import utility.FacebookUtilities;
 
 import java.util.ArrayList;
@@ -20,10 +23,10 @@ import java.util.ArrayList;
  * Created by jasperfung on 2/23/14.
  */
 public class FriendListAdapter extends BaseAdapter {
-    private ArrayList<Friend> mList;
+    private ArrayList<CourseFriend> mList;
     private Context mContext;
 
-    public FriendListAdapter(ArrayList<Friend> list, Context context) {
+    public FriendListAdapter(ArrayList<CourseFriend> list, Context context) {
         mList = list;
         mContext = context;
     }
@@ -37,8 +40,7 @@ public class FriendListAdapter extends BaseAdapter {
     }
 
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
-        return position;
+	return mList.get(position).getUser().getFbid();
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -57,25 +59,19 @@ public class FriendListAdapter extends BaseAdapter {
         second = (TextView) convertView.findViewById(R.id.second);
         image = (ImageView) convertView.findViewById(R.id.image);
 
-        // Set text fields
-        first.setText(mList.get(position).getFirst());
-        second.setText(mList.get(position).getSecond());
+	final User user = mList.get(position).getUser();
 
-        // Set photo resource
-        if (mList.get(position).getImage() == null) {
-            image.setImageResource(R.drawable.photo_profile_empty);
-        } else {
-            image.setImageBitmap(mList.get(position).getImage());
-        }
+	// Set text fields
+	first.setText(user.getName());
+	second.setText(mList.get(position).getTermName());
 
-
-        final Friend f = mList.get(position);
+	Picasso.with(mContext).load(user.getProfilePicUrls().getLarge()).placeholder(R.drawable.kitty).into(image);
 
         // Make this View clickable to open a dialog for Facebook/Flow profile links
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createUserDialog(mContext, f).show();
+		FacebookUtilities.createUserDialog(mContext, user).show();
             }
         };
         convertView.setOnClickListener(onClickListener);
@@ -83,44 +79,7 @@ public class FriendListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private String getFirstName(String fullname) {
-        if (fullname.contains(" ")) {
-            return fullname.substring(0, fullname.indexOf(" "));
-        }
-        return fullname;
-    }
 
-    private AlertDialog createUserDialog(Context context, final Friend friend) {
-        String firstname = getFirstName(friend.getFirst());
-
-        final String[] dialogOptions = {
-                String.format("View %s on Flow", firstname),
-                String.format("View %s on Facebook", firstname)};
-
-        AlertDialog dialog = new AlertDialog.Builder(mContext)
-                .setTitle("View Profile")
-                .setItems(dialogOptions, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 1:
-                                // View friend on Facebook
-                                Intent profileIntent =
-                                        FacebookUtilities.getOpenFBProfileIntent(mContext, friend.getFbid());
-                                mContext.startActivity(profileIntent);
-                                break;
-                            case 0:
-                            default:
-                                // View friend on Flow
-                                // TODO: route to a user's profile on flow
-                                break;
-                        }
-                        dialog.dismiss();
-                    }
-                }).create();
-
-        return dialog;
-    }
 
 }
 

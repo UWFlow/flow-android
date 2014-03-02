@@ -1,23 +1,32 @@
 package com.uwflow.flow_android.adapters;
 
-import java.util.ArrayList;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.R;
-import com.uwflow.flow_android.entities.CourseReview;
+import com.uwflow.flow_android.db_object.Rating;
+import com.uwflow.flow_android.db_object.Review;
+import com.uwflow.flow_android.db_object.User;
+import utility.DateHelper;
+import utility.FacebookUtilities;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jasperfung on 2/22/14.
  */
 public class CourseReviewAdapter extends BaseAdapter {
-    private ArrayList<CourseReview> mReviews;
+    private List<Review> mReviews;
     private Context mContext;
 
-    public CourseReviewAdapter(ArrayList<CourseReview> reviews, Context context) {
+    public CourseReviewAdapter(List<Review> reviews, Context context) {
         mReviews = reviews;
         mContext = context;
     }
@@ -58,19 +67,73 @@ public class CourseReviewAdapter extends BaseAdapter {
         status2 = (CheckBox) convertView.findViewById(R.id.status2);
         status3 = (CheckBox) convertView.findViewById(R.id.status3);
 
-        first.setText(mReviews.get(position).getName());
-        second.setText(mReviews.get(position).getDate());
-        reviewText.setText(mReviews.get(position).getReview());
+	final Review review = mReviews.get(position);
 
-        status1.setChecked(mReviews.get(position).isUseful());
-        status2.setChecked(mReviews.get(position).isEasy());
-        status3.setChecked(mReviews.get(position).isLikedIt());
+	String programName = review.getAuthor().getProgramName();
+	if (programName != null) {
+	    // Set reviewer name
+	    first.setText(String.format("A %s student", programName));
 
+	    // Use placeholder image
+	    image.setImageResource(R.drawable.kitty);
 
-        if (mReviews.get(position).getImage() == null) {
-            image.setImageResource(R.drawable.photo_profile_empty);
+	    // Remove any OnClickListeners that may be attached to this review
+	    image.setOnClickListener(null);
+	    first.setOnClickListener(null);
+	} else {
+	    // Set reviewer name
+	    first.setText(review.getAuthor().getName());
+
+	    // Fetch facebook image
+	    Picasso.with(mContext).load(review.getAuthor().getProfilePicUrl()).placeholder(R.drawable.kitty).into(image);
+
+	    // Make this View clickable to open a dialog for Facebook/Flow profile links
+	    View.OnClickListener onClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+		    User user = new User();
+
+		    // The API currently doesn't provide the users fbid, so we must parse it out ourselves
+		    String[] tokens = review.getAuthor().getProfilePicUrl().split("/");
+
+		    // We expect the fbid value at index 3
+		    user.setFbid(Long.valueOf(tokens[3]).longValue());
+
+		    user.setId(review.getAuthor().getId());
+		    user.setFirstName(FacebookUtilities.getFirstWord(review.getAuthor().getName()));
+		    FacebookUtilities.createUserDialog(mContext, user).show();
+		}
+	    };
+	    image.setOnClickListener(onClickListener);
+	    first.setOnClickListener(onClickListener);
+	}
+
+	// Set date field
+	second.setText(DateHelper.getShortString(new Date(review.getCommentDate())));
+	reviewText.setText(review.getComment());
+
+	// Set state of ratings
+	String usefulRating = review.getRatings().get(Rating.USEFULNESS).getRating();
+	String easyRating = review.getRatings().get(Rating.EASINESS).getRating();
+	String likedItRating = review.getRatings().get(Rating.INTEREST).getRating();
+
+	if (usefulRating == null) {
+	    status1.setEnabled(true);
+	} else {
+	    status1.setEnabled(false);
+	    status1.setChecked(Double.valueOf(usefulRating) == 1);
+	}
+	if (easyRating== null) {
+	    status2.setEnabled(true);
+	} else {
+	    status2.setEnabled(false);
+	    status2.setChecked(Double.valueOf(easyRating) == 1);
+	}
+	if (likedItRating == null) {
+	    status3.setEnabled(true);
         } else {
-            image.setImageBitmap(mReviews.get(position).getImage());
+	    status3.setEnabled(false);
+	    status3.setChecked(Double.valueOf(likedItRating) == 1);
         }
 
         return convertView;

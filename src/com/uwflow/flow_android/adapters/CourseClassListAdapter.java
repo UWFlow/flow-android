@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.entities.CourseClass;
-import com.uwflow.flow_android.entities.CourseReview;
 
 /**
  * Created by jasperfung on 2/22/14.

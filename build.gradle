@@ -32,6 +32,7 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.android.support:support-v4:18.0.+'
     compile 'com.google.code.gson:gson:2.1'
+    compile 'com.makeramen:roundedimageview:1.2.4'
 }
 
 android {
