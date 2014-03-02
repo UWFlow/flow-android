@@ -1,5 +1,5 @@
 #
-# generated on 2014/03/01 01:19:59
+# generated on 2014/03/02 01:34:10
 #
 # --table-start--
 dataClass=com.uwflow.flow_android.db_object.Course
@@ -46,8 +46,8 @@ dataClass=com.uwflow.flow_android.db_object.Exam
 tableName=exam
 # --table-fields-start--
 # --field-start--
-fieldName=id
-generatedId=true
+fieldName=courseId
+id=true
 # --field-end--
 # --field-start--
 fieldName=url
@@ -57,9 +57,6 @@ fieldName=infoKnown
 # --field-end--
 # --field-start--
 fieldName=location
-# --field-end--
-# --field-start--
-fieldName=courseId
 # --field-end--
 # --field-start--
 fieldName=locationKnown

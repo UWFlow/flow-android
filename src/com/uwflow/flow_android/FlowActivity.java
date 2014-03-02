@@ -38,7 +38,7 @@ public class FlowActivity extends FragmentActivity {
         }
     }
 
-    protected FlowDatabaseHelper getHelper() {
+    public FlowDatabaseHelper getHelper() {
         if (flowDatabaseHelper == null) {
             flowDatabaseHelper =
                     OpenHelperManager.getHelper(this, FlowDatabaseHelper.class);

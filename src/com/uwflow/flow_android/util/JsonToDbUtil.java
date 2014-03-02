@@ -12,17 +12,16 @@ public class JsonToDbUtil {
     public static User getUser(JSONObject jsonObject){
         try {
             User user = new User();
-            JSONObject nameValuePair = jsonObject.getJSONObject("nameValuePairs");
-            user.setId(nameValuePair.getString("id"));
-            user.setFirstName(nameValuePair.getString("first_name"));
-            user.setPoint(nameValuePair.getInt("num_points"));
-            user.setProgramName(nameValuePair.getString("program_name"));
-            user.setName(nameValuePair.getString("name"));
-            user.setLastName(nameValuePair.getString("last_name"));
-            user.setNumInvites(nameValuePair.getInt("num_invites"));
-            user.setFbid(nameValuePair.getLong("fbid"));
+            user.setId(jsonObject.getString("id"));
+            user.setFirstName(jsonObject.getString("first_name"));
+            user.setPoint(jsonObject.getInt("num_points"));
+            user.setProgramName(jsonObject.getString("program_name"));
+            user.setName(jsonObject.getString("name"));
+            user.setLastName(jsonObject.getString("last_name"));
+            user.setNumInvites(jsonObject.getInt("num_invites"));
+            user.setFbid(jsonObject.getLong("fbid"));
             user.setMe(true);
-            JSONObject imageUrls = nameValuePair.getJSONObject("profile_pic_urls");
+            JSONObject imageUrls = jsonObject.getJSONObject("profile_pic_urls");
             String [] imageUrl = {imageUrls.getString("large"), imageUrls.getString("square"), imageUrls.getString("default")};
             user.setImages(imageUrl);
             return user;
@@ -37,9 +36,7 @@ public class JsonToDbUtil {
         try {
             JSONArray friends = jsonObject.getJSONArray("friends");
             for (int i = 0; i < friends.length(); i++){
-                JSONObject object = new JSONObject();
-                object.put("nameValuePairs", friends.get(i));
-                User user = getUser(object);
+                User user = getUser(friends.getJSONObject(i));
                 user.setMe(false);
                 userFriends.add(user);
             }

@@ -31,6 +31,14 @@ public class Constants {
 
     }
 
+    public static class LoaderManagerId {
+        public static final int PROFILE_FRIENDS_LOADER_ID = 1;
+        public static final int PROFILE_SCHEDULE_LOADER_ID = 2;
+        public static final int PROFILE_EXAMS_LOADER_ID = 3;
+        public static final int PROFILE_COURSES_LOADER_ID = 4;
+        public static final int PROFILE_LOADER_ID = 5;
+    }
+
     public static final String UW_FLOW = "uwflow";
 
     public static final int COURSE_SCHEDULE_PAGE_INDEX = 0;

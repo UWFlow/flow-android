@@ -12,8 +12,8 @@ import java.util.Date;
 public class Exam implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @DatabaseField(generatedId = true)
-    private Integer id;
+    @DatabaseField (id = true)
+    private String courseId;
 
     @DatabaseField
     private String url;
@@ -23,9 +23,6 @@ public class Exam implements Serializable {
 
     @DatabaseField
     private String location;
-
-    @DatabaseField
-    private String courseId;
 
     @DatabaseField
     private boolean locationKnown;
@@ -38,14 +35,6 @@ public class Exam implements Serializable {
 
     @DatabaseField(dataType = DataType.DATE)
     private Date endDate;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public Date getEndDate() {
         return endDate;
