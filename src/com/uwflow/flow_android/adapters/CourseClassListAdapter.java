@@ -52,26 +52,31 @@ public class CourseClassListAdapter extends BaseAdapter {
         column2 = (TextView) convertView.findViewById(R.id.col2);
         checkbox = (CheckBox) convertView.findViewById(R.id.checkbox);
 
+        CourseClass currClass = mClasses.get(position);
 
         String string1 = String.format("%s %03d\n%s\nSeats: %d/%d",
-                mClasses.get(position).getSectionType(),
-                mClasses.get(position).getSectionNum(),
-                mClasses.get(position).getProfessor(),
-                mClasses.get(position).getEnrollmentTotal(),
-                mClasses.get(position).getEnrollmentCapacity());
+                currClass.getSectionType(),
+                currClass.getSectionNum(),
+                currClass.getProfessor(),
+                currClass.getEnrollmentTotal(),
+                currClass.getEnrollmentCapacity());
         column1.setText(string1);
 
         String string2 = String.format("%s - %s<br>%s<br>%s %s - %s",
-                getTimeFromSeconds(mClasses.get(position).getStartTimeSeconds()),
-                getTimeFromSeconds(mClasses.get(position).getEndTimeSeconds()),
-                getFormattedDays(mClasses.get(position).getDays()),
-                mClasses.get(position).getBuilding(),
-                mClasses.get(position).getRoom(),
-                mClasses.get(position).getCampus());
+                getTimeFromSeconds(currClass.getStartTimeSeconds()),
+                getTimeFromSeconds(currClass.getEndTimeSeconds()),
+                getFormattedDays(currClass.getDays()),
+                currClass.getBuilding(),
+                currClass.getRoom(),
+                currClass.getCampus());
         column2.setText(Html.fromHtml(string2));
 
-        // TODO: we need some way of checking the reminder state of this class
-        checkbox.setChecked(mClasses.get(position).getSubscribed());
+        if (currClass.getEnrollmentTotal() >= currClass.getEnrollmentCapacity()) {
+            // TODO: we need some way of checking the reminder state of this class
+            checkbox.setChecked(currClass.getSubscribed());
+        } else {
+            checkbox.setVisibility(View.INVISIBLE);
+        }
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -18,4 +18,9 @@ public class Constants {
     public static final String API_USERS_SEACH = "api/v1/users/%s";
 
     public static final String UW_FLOW = "uwflow";
+
+    public static final int COURSE_SCHEDULE_PAGE_INDEX = 0;
+    public static final int COURSE_ABOUT_PAGE_INDEX = 1;
+    public static final int COURSE_REVIEWS_PAGE_INDEX = 2;
+
 }
