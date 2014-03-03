@@ -18,6 +18,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import utility.DateHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,7 +26,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -146,7 +149,8 @@ public class CourseInfoLoader extends AsyncTaskLoader<CourseInfo> {
                     // TODO: we need to include the fbid into each CourseReview object to provide a link to the users' profiles
                     picURL = author.getString("profile_pic_url");
                 }
-                String date = row.getString("comment_date");
+
+                String date = DateHelper.getShortString(DateHelper.getDateFromMilliseconds(row.getString("comment_date")));;
                 String comment = row.getString("comment");
                 Bitmap image = getFacebookProfilePicture(picURL);
 
