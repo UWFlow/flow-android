@@ -40,6 +40,9 @@ public class CourseFragment extends Fragment implements android.support.v4.app.L
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.course_layout, container, false);
+        mCourseCodeTextView = (TextView) rootView.findViewById(R.id.course_code);
+        mCourseNameTextView = (TextView) rootView.findViewById(R.id.course_name);
+        mTabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
 
         mCourseScheduleFragment = new CourseScheduleFragment();
         mCourseAboutFragment = new CourseAboutFragment();
@@ -52,13 +55,11 @@ public class CourseFragment extends Fragment implements android.support.v4.app.L
         super.onViewCreated(view, savedInstanceState);
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
         mViewPager.setAdapter(new CoursePagerAdapter(getActivity().getSupportFragmentManager(), mCourseScheduleFragment, mCourseAboutFragment, mCourseReviewsFragment));
-        mTabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
         mTabs.setViewPager(mViewPager);
-        mCourseCodeTextView = (TextView) rootView.findViewById(R.id.course_code);
-        mCourseNameTextView = (TextView) rootView.findViewById(R.id.course_name);
 
         // Set default tab to About
         mViewPager.setCurrentItem(Constants.COURSE_ABOUT_PAGE_INDEX);
+//        mViewPager.setOffscreenPageLimit(2); // TODO: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
 
         Button shortlistButton = (Button)rootView.findViewById(R.id.shortlist_btn);
         shortlistButton.setOnClickListener(new View.OnClickListener() {
@@ -98,15 +99,18 @@ public class CourseFragment extends Fragment implements android.support.v4.app.L
 
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<CourseInfo> courseInfoLoader, CourseInfo courseInfo) {
+        if (courseInfo == null) return;
+
+        mCourseInfo = courseInfo;
+
         mCourseCodeTextView.setText(courseInfo.getCode());
         mCourseCodeTextView.setGravity(Gravity.LEFT);
 
         mCourseNameTextView.setText(courseInfo.getName());
         mCourseNameTextView.setGravity(Gravity.LEFT);
 
-        mCourseInfo = courseInfo;
-
         mCourseAboutFragment.loadCourseInfo(mCourseInfo);
+        mCourseReviewsFragment.loadCourseInfo(mCourseInfo);
     }
 
     @Override

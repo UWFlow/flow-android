@@ -8,16 +8,17 @@ import android.graphics.Bitmap;
 public class CourseReview {
     private String name;
     private String date;
-    private String review;
+    private String comment;
     private Bitmap image;
-    private boolean useful;
-    private boolean easy;
-    private boolean likedIt;
+    private Boolean useful;
+    private Boolean easy;
+    private Boolean likedIt;
 
-    public CourseReview(String name, String date, String review, Bitmap image, boolean useful, boolean easy, boolean likedIt) {
+    // booleans are nullable
+    public CourseReview(String name, String date, String comment, Bitmap image, Boolean useful, Boolean easy, Boolean likedIt) {
         this.name = name;
         this.date = date;
-        this.review = review;
+        this.comment = comment;
         this.image = image;
         this.useful = useful;
         this.easy = easy;
@@ -40,12 +41,12 @@ public class CourseReview {
         this.date = date;
     }
 
-    public String getReview() {
-        return review;
+    public String getComment() {
+        return comment;
     }
 
-    public void setReview(String review) {
-        this.review = review;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public Bitmap getImage() {
@@ -56,27 +57,21 @@ public class CourseReview {
         this.image = image;
     }
 
-    public boolean isUseful() {
-        return useful;
-    }
+    public Boolean isUseful() { return useful; }
 
-    public void setUseful(boolean useful) {
+    public void setUseful(Boolean useful) {
         this.useful = useful;
     }
 
-    public boolean isEasy() {
-        return easy;
-    }
+    public Boolean isEasy() { return easy; }
 
-    public void setEasy(boolean easy) {
+    public void setEasy(Boolean easy) {
         this.easy = easy;
     }
 
-    public boolean isLikedIt() {
-        return likedIt;
-    }
+    public Boolean isLikedIt() { return likedIt; }
 
-    public void setLikedIt(boolean likedIt) {
+    public void setLikedIt(Boolean likedIt) {
         this.likedIt = likedIt;
     }
 }

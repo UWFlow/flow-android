@@ -2,7 +2,6 @@ package com.uwflow.flow_android.adapters;
 
 import java.util.ArrayList;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,11 +59,30 @@ public class CourseReviewAdapter extends BaseAdapter {
 
         first.setText(mReviews.get(position).getName());
         second.setText(mReviews.get(position).getDate());
-        reviewText.setText(mReviews.get(position).getReview());
+        reviewText.setText(mReviews.get(position).getComment());
 
-        status1.setChecked(mReviews.get(position).isUseful());
-        status2.setChecked(mReviews.get(position).isEasy());
-        status3.setChecked(mReviews.get(position).isLikedIt());
+        Boolean useful = mReviews.get(position).isUseful();
+        Boolean easy = mReviews.get(position).isEasy();
+        Boolean likedIt = mReviews.get(position).isLikedIt();
+
+        if (useful == null) {
+            status1.setEnabled(true);
+        } else {
+            status1.setEnabled(false);
+            status1.setChecked(useful);
+        }
+        if (easy== null) {
+            status2.setEnabled(true);
+        } else {
+            status2.setEnabled(false);
+            status2.setChecked(easy);
+        }
+        if (likedIt == null) {
+            status3.setEnabled(true);
+        } else {
+            status3.setEnabled(false);
+            status3.setChecked(likedIt);
+        }
 
 
         if (mReviews.get(position).getImage() == null) {

@@ -1,8 +1,11 @@
 package com.uwflow.flow_android.network;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
+import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.entities.CourseInfo;
 import com.uwflow.flow_android.entities.CourseOverallRating;
 import com.uwflow.flow_android.entities.CourseReview;
@@ -20,6 +23,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,9 +129,34 @@ public class CourseInfoLoader extends AsyncTaskLoader<CourseInfo> {
             double easyRating = easyObject.getDouble("rating");
 
             // get course reviews
-            JSONArray reviewsArray = json.getJSONArray("reviews");
-            // TODO: get reviews
             ArrayList<CourseReview> reviewsArrayList = new ArrayList<CourseReview>();
+            JSONArray reviewsArray = json.getJSONArray("reviews");
+            for (int i = 0; i < reviewsArray.length(); i++) {
+                JSONObject row = reviewsArray.getJSONObject(i);
+
+                JSONObject author = row.getJSONObject("author");
+                String name = null;
+                String fbid = null;
+                String picURL = null;
+                if (author.has("program_name")) {
+                    name = String.format("A %s student", author.getString("program_name"));
+                } else {
+                    name = author.getString("name");
+                    fbid = author.getString("id");
+                    // TODO: we need to include the fbid into each CourseReview object to provide a link to the users' profiles
+                    picURL = author.getString("profile_pic_url");
+                }
+                String date = row.getString("comment_date");
+                String comment = row.getString("comment");
+                Bitmap image = getFacebookProfilePicture(picURL);
+
+                JSONArray ratings = row.getJSONArray("ratings");
+                Boolean useful = ((JSONObject)ratings.get(0)).isNull("rating") ? null : ((JSONObject)ratings.get(0)).getDouble("rating") == 1;
+                Boolean easy = ((JSONObject)ratings.get(1)).isNull("rating") ? null : ((JSONObject)ratings.get(1)).getDouble("rating") == 1;
+                Boolean likedIt = ((JSONObject)ratings.get(2)).isNull("rating") ? null : ((JSONObject)ratings.get(2)).getDouble("rating") == 1;
+
+                reviewsArrayList.add(new CourseReview(name, date, comment, image, useful, easy, likedIt));
+            }
 
             courseOverallRating = new CourseOverallRating(overallCount,
                     overallRating,
@@ -250,5 +280,22 @@ public class CourseInfoLoader extends AsyncTaskLoader<CourseInfo> {
     protected void onReleaseResources(CourseInfo apps) {
         // For a simple List<> there is nothing to do.  For something
         // like a Cursor, we would close it here.
+    }
+
+    public static Bitmap getFacebookProfilePicture(String url){
+        if (url != null) {
+            try {
+    //            URL imageURL = new URL("http://graph.facebook.com/" + userID + "/picture?type=large");
+    //            Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+                URL imageURL = new URL(url);
+                Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+                return bitmap;
+            } catch (MalformedURLException e) {
+                Log.e(Constants.UW_FLOW, "Error creating image URL: " + e);
+            } catch (IOException e) {
+                Log.e(Constants.UW_FLOW, "Error opening connection during image fetch: " + e);
+            }
+        }
+        return null;
     }
 }
