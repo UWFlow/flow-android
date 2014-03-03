@@ -5,10 +5,7 @@ import android.os.AsyncTask;
 import com.j256.ormlite.dao.Dao;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
-import com.uwflow.flow_android.db_object.Course;
-import com.uwflow.flow_android.db_object.Exam;
-import com.uwflow.flow_android.db_object.ScheduleCourse;
-import com.uwflow.flow_android.db_object.User;
+import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.util.JsonToDbUtil;
 import org.json.JSONObject;
 
@@ -76,10 +73,10 @@ public class FlowDatabaseLoader {
                 new AsyncTask<JSONObject, Void, Object>(){
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
-                        ArrayList<User> userFriends = JsonToDbUtil.getUserFriends(jsonObjects[0]);
+                        UserFriends userFriends = JsonToDbUtil.getUserFriends(jsonObjects[0]);
                         try {
                             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
-                            for (User u : userFriends) {
+                            for (User u : userFriends.getFriends()) {
                                 userDao.createOrUpdate(u);
                             }
                         } catch (SQLException e) {
@@ -109,10 +106,10 @@ public class FlowDatabaseLoader {
                 new AsyncTask<JSONObject, Void, Object>(){
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
-                        ArrayList<ScheduleCourse> scheduleCourses = JsonToDbUtil.getUserSchedule(jsonObjects[0]);
+                        ScheduleCourses scheduleCourses = JsonToDbUtil.getUserSchedule(jsonObjects[0]);
                         try {
                             Dao<ScheduleCourse, String> userCourseSchedule = flowDatabaseHelper.getUserScheduleCourseDao();
-                            for (ScheduleCourse sc : scheduleCourses) {
+                            for (ScheduleCourse sc : scheduleCourses.getScheduleCourses()) {
                                 userCourseSchedule.createOrUpdate(sc);
                             }
                         } catch (SQLException e) {
@@ -143,10 +140,10 @@ public class FlowDatabaseLoader {
                 new AsyncTask<JSONObject, Void, Object>(){
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
-                        ArrayList<Exam> userExams = JsonToDbUtil.getUserExam(jsonObjects[0]);
+                        Exams userExams = JsonToDbUtil.getUserExams(jsonObjects[0]);
                         try {
                             Dao<Exam, Integer> userExamDao = flowDatabaseHelper.getUserExamDao();
-                            for (Exam exam : userExams) {
+                            for (Exam exam : userExams.getExams()) {
                                 userExamDao.createOrUpdate(exam);
                             }
                         } catch (SQLException e) {
@@ -176,11 +173,16 @@ public class FlowDatabaseLoader {
                 new AsyncTask<JSONObject, Void, Object>(){
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
-                        ArrayList<Course> userCourses = JsonToDbUtil.getUserCourses(jsonObjects[0]);
+                        UserCourseDetail userCourses = JsonToDbUtil.getUserCourseDetail(jsonObjects[0]);
                         try {
                             Dao<Course, String> courseDao = flowDatabaseHelper.getUserCourseDao();
-                            for (Course c : userCourses) {
+                            for (Course c : userCourses.getCourses()) {
                                 courseDao.createOrUpdate(c);
+
+                            }
+                            Dao<UserCourse, String> userCourseExtraDao = flowDatabaseHelper.getUserCourseExtraDao();
+                            for (UserCourse c : userCourses.getUserCourses()) {
+                                userCourseExtraDao.createOrUpdate(c);
 
                             }
                         } catch (SQLException e) {

@@ -4,7 +4,6 @@ import com.uwflow.flow_android.db_object.*;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class FlowApiRequestCallback {
     abstract public void onSuccess(JSONObject response);
@@ -13,34 +12,30 @@ public abstract class FlowApiRequestCallback {
     public void getUserCallback(User user) {
     }
 
-    public void getUserScheduleCallback(List<ScheduleCourse> schedule) {
+    public void getUserScheduleCallback(ScheduleCourses scheduleCourses) {
     }
 
-    public void getUserExamsCallback(List<Exam> exams) {
+    public void getUserExamsCallback(Exams exams) {
     }
 
-    public void getUserCoursesCallback(List<Course> courses) {
+    public void getUserCoursesCallback(UserCourseDetail userCourseDetail) {
     }
 
-    public void getUserFriendsCallback(List<User> userFriends) {
+    public void getUserFriendsCallback(UserFriends userFriends) {
     }
 
-    public void getCourseCallback(CourseDetailedWrapper courseDetailedWrapper) {
+    public void getCourseCallback(CourseDetail courseDetail) {
     }
 
-    public void getCourseSectionCallback(ArrayList<Section> sections) {
-
+    public void getCourseSectionCallback(Sections sections) {
     }
 
-    public void getCourseUsersCallback(CourseUserDetails courseUserDetails) {
-
+    public void getCourseUsersCallback(CourseUserDetail courseUserDetail) {
     }
 
-    public void getCourseExamsCallback(ArrayList<Exam> exams) {
-
+    public void getCourseExamsCallback(Exams exams) {
     }
 
-    public void getCourseProfessorCallback(ArrayList<Professor> professors) {
-
+    public void getCourseProfessorCallback(Professors professors) {
     }
 }

@@ -44,47 +44,47 @@ public class FlowApiRequests {
 
     public static void searchUserSchedule(final FlowApiRequestCallback callback) {
         final String uri = Constants.API_USER_SCHEDULE;
-        searchAuthenticatedDetails(uri, callback);
+        searchDetails(uri, callback);
     }
 
     public static void searchUserExams(final FlowApiRequestCallback callback) {
         final String uri = Constants.API_USER_EXAMS;
-        searchAuthenticatedDetails(uri, callback);
+        searchDetails(uri, callback);
     }
 
     public static void searchUserCourses(final FlowApiRequestCallback callback) {
         final String uri = Constants.API_USER_COURSES;
-        searchAuthenticatedDetails(uri, callback);
+        searchDetails(uri, callback);
     }
 
     public static void searchUserFriends(final FlowApiRequestCallback callback) {
         final String uri = Constants.API_USER_FRIENDS;
-        searchAuthenticatedDetails(uri, callback);
+        searchDetails(uri, callback);
     }
 
-    public static void searchUsers(String userId, final FlowApiRequestCallback callback) {
+    public static void searchUser(String userId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_USERS_SEARCH, userId);
-        searchAuthenticatedDetails(uri, callback);
+        searchDetails(Constants.API_REQUEST_CALL_ID.API_USER_SEARCH, uri, callback);
     }
 
-    public static void searchUsersSchedule(String userId, final FlowApiRequestCallback callback) {
+    public static void searchUserSchedule(String userId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_USERS_SCHEDULE, userId);
-        searchAuthenticatedDetails(uri, callback);
+        searchDetails(Constants.API_REQUEST_CALL_ID.API_USER_SCHEDULE_SEARCH, uri, callback);
     }
 
-    public static void searchUsersExams(String userId, final FlowApiRequestCallback callback) {
+    public static void searchUserExams(String userId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_USERS_EXAMS, userId);
-        searchAuthenticatedDetails(uri, callback);
+        searchDetails(Constants.API_REQUEST_CALL_ID.API_USER_EXAMS_SEARCH, uri, callback);
     }
 
-    public static void searchUsersCourses(String userId, final FlowApiRequestCallback callback) {
+    public static void searchUserCourses(String userId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_USERS_COURSES, userId);
-        searchAuthenticatedDetails(uri, callback);
+        searchDetails(Constants.API_REQUEST_CALL_ID.API_USER_COURSE_SEARCH, uri, callback);
     }
 
-    public static void searchUsersFriends(String userId, final FlowApiRequestCallback callback) {
+    public static void searchUserFriends(String userId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_USERS_FRIENDS, userId);
-        searchAuthenticatedDetails(uri, callback);
+        searchDetails(Constants.API_REQUEST_CALL_ID.API_USER_FRIENDS_SEARCH, uri, callback);
     }
 
 
@@ -209,10 +209,25 @@ public class FlowApiRequests {
                     return JsonToDbUtil.getCourseProfessors(jsonObject);
 
                 case Constants.API_REQUEST_CALL_ID.API_COURSE_USERS_SEARCH:
-                    return JsonToDbUtil.getCourseUsers(jsonObject);
+                    return JsonToDbUtil.getCourseUserDetail(jsonObject);
 
                 case Constants.API_REQUEST_CALL_ID.API_COURSE_SECTIONS_SEARCH:
                     return JsonToDbUtil.getCourseSections(jsonObject);
+
+                case Constants.API_REQUEST_CALL_ID.API_USER_SEARCH:
+                    return JsonToDbUtil.getUser(jsonObject);
+
+                case Constants.API_REQUEST_CALL_ID.API_USER_COURSE_SEARCH:
+                    return JsonToDbUtil.getUserCourseDetail(jsonObject);
+
+                case Constants.API_REQUEST_CALL_ID.API_USER_EXAMS_SEARCH:
+                    return JsonToDbUtil.getUserExams(jsonObject);
+
+                case Constants.API_REQUEST_CALL_ID.API_USER_FRIENDS_SEARCH:
+                    return JsonToDbUtil.getUserFriends(jsonObject);
+
+                case Constants.API_REQUEST_CALL_ID.API_USER_SCHEDULE_SEARCH:
+                    return JsonToDbUtil.getUserSchedule(jsonObject);
             }
             return jsonObject;
         }
@@ -222,24 +237,35 @@ public class FlowApiRequests {
             try {
                 switch (callId) {
                     case Constants.API_REQUEST_CALL_ID.API_COURSE_SEARCH:
-                        callback.getCourseCallback((CourseDetailedWrapper) result);
+                        callback.getCourseCallback((CourseDetail) result);
                         break;
-
                     case Constants.API_REQUEST_CALL_ID.API_COURSE_EXAMS_SEARCH:
-                        callback.getCourseExamsCallback((ArrayList<Exam>) result);
+                        callback.getCourseExamsCallback((Exams) result);
                         break;
-
                     case Constants.API_REQUEST_CALL_ID.API_COURSE_PROFESSORS_SEARCH:
-                        callback.getCourseProfessorCallback((ArrayList<Professor>) result);
+                        callback.getCourseProfessorCallback((Professors) result);
                         break;
                     case Constants.API_REQUEST_CALL_ID.API_COURSE_USERS_SEARCH:
-                        callback.getCourseUsersCallback((CourseUserDetails) result);
+                        callback.getCourseUsersCallback((CourseUserDetail) result);
                         break;
-
                     case Constants.API_REQUEST_CALL_ID.API_COURSE_SECTIONS_SEARCH:
-                        callback.getCourseSectionCallback((ArrayList<Section>) result);
+                        callback.getCourseSectionCallback((Sections) result);
                         break;
-
+                    case Constants.API_REQUEST_CALL_ID.API_USER_SEARCH:
+                        callback.getUserCallback((User) result);
+                        break;
+                    case Constants.API_REQUEST_CALL_ID.API_USER_FRIENDS_SEARCH:
+                        callback.getUserFriendsCallback((UserFriends) result);
+                        break;
+                    case Constants.API_REQUEST_CALL_ID.API_USER_SCHEDULE_SEARCH:
+                        callback.getUserScheduleCallback((ScheduleCourses) result);
+                        break;
+                    case Constants.API_REQUEST_CALL_ID.API_USER_EXAMS_SEARCH:
+                        callback.getUserExamsCallback((Exams) result);
+                        break;
+                    case Constants.API_REQUEST_CALL_ID.API_USER_COURSE_SEARCH:
+                        callback.getUserCoursesCallback((UserCourseDetail) result);
+                        break;
                     default:
                         callback.onSuccess((JSONObject) result);
                 }

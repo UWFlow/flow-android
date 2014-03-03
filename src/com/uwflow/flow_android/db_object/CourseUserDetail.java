@@ -1,9 +1,13 @@
 package com.uwflow.flow_android.db_object;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
-public class CourseUserDetails {
+public class CourseUserDetail {
     protected ArrayList<User> users;
+
+    @SerializedName("term_users")
     protected ArrayList<TermUser> termUsers;
 
     public ArrayList<User> getUsers() {

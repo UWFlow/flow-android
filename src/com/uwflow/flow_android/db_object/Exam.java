@@ -1,5 +1,6 @@
 package com.uwflow.flow_android.db_object;
 
+import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -12,37 +13,34 @@ import java.util.Date;
 public class Exam implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @SerializedName("course_id")
     @DatabaseField (id = true)
     private String courseId;
 
     @DatabaseField
     private String url;
 
+    @SerializedName("info_known")
     @DatabaseField
     private boolean infoKnown;
 
     @DatabaseField
     private String location;
 
+    @SerializedName("location_known")
     @DatabaseField
     private boolean locationKnown;
 
     @DatabaseField
     private String sections;
 
-    @DatabaseField(dataType = DataType.DATE)
-    private Date startDate;
+    @SerializedName("start_date")
+    @DatabaseField
+    private long startDate;
 
-    @DatabaseField(dataType = DataType.DATE)
-    private Date endDate;
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
+    @SerializedName("end_date")
+    @DatabaseField
+    private long endDate;
 
     public String getUrl() {
         return url;
@@ -92,11 +90,19 @@ public class Exam implements Serializable {
         this.sections = sections;
     }
 
-    public Date getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
+    }
+
+    public long getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(long endDate) {
+        this.endDate = endDate;
     }
 }

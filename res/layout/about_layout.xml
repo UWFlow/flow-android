@@ -5,9 +5,9 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <Button android:id="@+id/fetch_prof" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="GETProf"/>
+            android:text="GetCourseData"/>
     <Button android:id="@+id/fetch_user" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="GETUser"/>
+            android:text="GetUserData"/>
     <Button android:id="@+id/fetch_me" android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="GETMe"/>
     <ScrollView android:layout_width="wrap_content" android:layout_height="wrap_content">

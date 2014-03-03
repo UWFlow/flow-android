@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
     protected TextView userProgram;
     protected ViewPager viewPager;
     protected PagerSlidingTabStrip tabs;
+    protected Bitmap imageBitmap;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -55,12 +58,12 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         viewPager.setAdapter(new ProfilePagerAdapter(getActivity().getSupportFragmentManager()));
         tabs = (PagerSlidingTabStrip) getActivity().findViewById(R.id.pager_tabs);
         tabs.setViewPager(viewPager);
+        if (imageBitmap != null) userImage.setImageBitmap(imageBitmap);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
     }
 
     @Override
@@ -77,7 +80,10 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
             Picasso.with(getActivity()).load(me.getProfilePicUrls().getSquare()).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                    userImage.setImageBitmap(bitmap);
+                    if (userImage != null)
+                        userImage.setImageBitmap(bitmap);
+                    else
+                        imageBitmap = bitmap;
                 }
 
                 @Override

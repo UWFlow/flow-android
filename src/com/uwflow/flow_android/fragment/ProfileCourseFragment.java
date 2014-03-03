@@ -13,11 +13,12 @@ import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfileCoursesAdapter;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.Course;
+import com.uwflow.flow_android.db_object.UserCourseDetail;
 import com.uwflow.flow_android.loaders.UserCoursesLoader;
 
 import java.util.List;
 
-public class ProfileCourseFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Course>>{
+public class ProfileCourseFragment extends Fragment implements LoaderManager.LoaderCallbacks<UserCourseDetail>{
 
     protected ListView mCoursesListView;
     protected View rootView;
@@ -40,18 +41,18 @@ public class ProfileCourseFragment extends Fragment implements LoaderManager.Loa
     }
 
     @Override
-    public Loader<List<Course>> onCreateLoader(int i, Bundle bundle) {
+    public Loader<UserCourseDetail> onCreateLoader(int i, Bundle bundle) {
         return new UserCoursesLoader(getActivity(), ((MainFlowActivity)getActivity()).getHelper());
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Course>> listLoader, List<Course> courses) {
-        profileListAdapter = new ProfileCoursesAdapter(courses, getActivity());
+    public void onLoadFinished(Loader<UserCourseDetail> listLoader, UserCourseDetail userCourseDetail) {
+        profileListAdapter = new ProfileCoursesAdapter(userCourseDetail.getCourses(), getActivity());
         mCoursesListView.setAdapter(profileListAdapter);
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Course>> listLoader) {
+    public void onLoaderReset(Loader<UserCourseDetail> listLoader) {
         mCoursesListView.setAdapter(null);
     }
 }
