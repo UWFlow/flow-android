@@ -18,7 +18,8 @@
               android:layout_marginBottom="7dp"
               android:background="@color/divider" />
 
-        <include layout="@layout/course_review_overview"/>
+        <include layout="@layout/course_review_overview"
+                android:id="@+id/rating_overview"/>
 
         <Button android:id="@+id/see_reviews_btn"
                 style="@style/Flow.StyledButton"
