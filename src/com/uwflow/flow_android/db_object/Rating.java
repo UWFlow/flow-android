@@ -6,7 +6,7 @@ public class Rating implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int count;
-    private double rating;
+    private String rating;
     private String name;
 
     public int getCount() {
@@ -17,11 +17,11 @@ public class Rating implements Serializable {
         this.count = count;
     }
 
-    public double getRating() {
+    public String getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(String rating) {
         this.rating = rating;
     }
 

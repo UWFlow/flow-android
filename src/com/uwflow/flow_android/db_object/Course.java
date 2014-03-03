@@ -1,5 +1,6 @@
 package com.uwflow.flow_android.db_object;
 
+import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 public class Course implements Serializable {
     private static final long serialVersionUID = 1L;
 
+
+    @SerializedName("user_course_id")
     @DatabaseField (id = true)
     private String userCourseId;
 
@@ -43,7 +46,6 @@ public class Course implements Serializable {
 
 
     public Course(){
-
     }
 
     public Course(String description, String id, ArrayList<Rating> ratings, String userCourseId, String code, String name, ArrayList<String> professorIds, String prereqs, int overallCount, double overallRating) {

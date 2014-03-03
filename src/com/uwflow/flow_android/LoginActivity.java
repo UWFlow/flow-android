@@ -38,7 +38,7 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
                 public void onUserInfoFetched(GraphUser user) {
                     if (user != null && FlowAsyncClient.getCookie() == null) {
                         FlowApiRequests.login(user.getId(), Session.getActiveSession().getAccessToken(),
-                                new FlowApiRequestCallback() {
+                                new FlowApiRequestCallbackAdapter() {
                                     @Override
                                     public void onSuccess(JSONObject response) {
                                         loadDataAndLogin();

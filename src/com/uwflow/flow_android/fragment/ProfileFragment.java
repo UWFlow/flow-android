@@ -74,7 +74,7 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
             User me = users.get(0);
             userName.setText(me.getName());
             userProgram.setText(me.getProgramName());
-            Picasso.with(getActivity()).load(me.getImages()[1]).into(new Target() {
+            Picasso.with(getActivity()).load(me.getProfilePicUrls().getSquare()).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
                     userImage.setImageBitmap(bitmap);

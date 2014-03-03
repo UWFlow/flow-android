@@ -1,5 +1,6 @@
 package com.uwflow.flow_android.db_object;
 
+import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -21,7 +22,7 @@ public class User implements Serializable {
     private int point;
 
     @DatabaseField(dataType = DataType.SERIALIZABLE)
-    private String[] images = new String[3];
+    private ProfilePicUrls profilePicUrls;
 
     @DatabaseField(canBeNull = false)
     private String programName;
@@ -42,19 +43,6 @@ public class User implements Serializable {
     private boolean isMe;
 
     public User() {
-    }
-
-    public User(String id, String firstName, int point, String[] images, String programName, String name, String lastName, int numInvites, long fbid, boolean isMe) {
-        this.id = id;
-        this.firstName = firstName;
-        this.point = point;
-        this.images = images;
-        this.programName = programName;
-        this.name = name;
-        this.lastName = lastName;
-        this.numInvites = numInvites;
-        this.fbid = fbid;
-        this.isMe = isMe;
     }
 
     public String getId() {
@@ -81,12 +69,12 @@ public class User implements Serializable {
         this.point = point;
     }
 
-    public String[] getImages() {
-        return images;
+    public ProfilePicUrls getProfilePicUrls() {
+        return profilePicUrls;
     }
 
-    public void setImages(String[] images) {
-        this.images = images;
+    public void setProfilePicUrls(ProfilePicUrls profilePicUrls) {
+        this.profilePicUrls = profilePicUrls;
     }
 
     public String getProgramName() {
@@ -135,5 +123,37 @@ public class User implements Serializable {
 
     public void setMe(boolean isMe) {
         this.isMe = isMe;
+    }
+
+    public static class ProfilePicUrls implements Serializable{
+        protected String defaultPic;
+        protected String large;
+        protected String square;
+
+        public ProfilePicUrls(){}
+
+        public String getDefaultPic() {
+            return defaultPic;
+        }
+
+        public void setDefaultPic(String defaultPic) {
+            this.defaultPic = defaultPic;
+        }
+
+        public String getLarge() {
+            return large;
+        }
+
+        public void setLarge(String large) {
+            this.large = large;
+        }
+
+        public String getSquare() {
+            return square;
+        }
+
+        public void setSquare(String square) {
+            this.square = square;
+        }
     }
 }

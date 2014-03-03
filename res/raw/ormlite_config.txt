@@ -1,5 +1,5 @@
 #
-# generated on 2014/03/02 01:34:10
+# generated on 2014/03/02 09:10:29
 #
 # --table-start--
 dataClass=com.uwflow.flow_android.db_object.Course
@@ -135,7 +135,7 @@ fieldName=point
 canBeNull=false
 # --field-end--
 # --field-start--
-fieldName=images
+fieldName=profilePicUrls
 dataPersister=SERIALIZABLE
 # --field-end--
 # --field-start--

@@ -1,0 +1,155 @@
+package com.uwflow.flow_android.db_object;
+
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+
+public class Section {
+    protected String note;
+    protected Double units;
+    @SerializedName("last_updated")
+    protected long lastUpdated;
+    @SerializedName("class_num")
+    protected String classNum;
+    @SerializedName("term_id")
+    protected String termId;
+
+    protected ArrayList<Meeting> meetings;
+
+    @SerializedName("section_type")
+    protected String sectionType;
+    protected String campus;
+    @SerializedName("waiting_total")
+    protected int waitingTotal;
+    @SerializedName("enrollment_capacity")
+    protected int enrollmentCapacity;
+    @SerializedName("section_num")
+    protected String sectionNum;
+    @SerializedName("enrollment_total")
+    protected String enrollmentTotal;
+    @SerializedName("course_id")
+    protected String courseId;
+    @SerializedName("waiting_capacity")
+    protected int waitingCapacity;
+    protected String id;
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Double getUnits() {
+        return units;
+    }
+
+    public void setUnits(Double units) {
+        this.units = units;
+    }
+
+    public long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(long lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public String getClassNum() {
+        return classNum;
+    }
+
+    public void setClassNum(String classNum) {
+        this.classNum = classNum;
+    }
+
+    public String getTermId() {
+        return termId;
+    }
+
+    public void setTermId(String termId) {
+        this.termId = termId;
+    }
+
+    public ArrayList<Meeting> getMeetings() {
+        return meetings;
+    }
+
+    public void setMeetings(ArrayList<Meeting> meetings) {
+        this.meetings = meetings;
+    }
+
+    public String getSectionType() {
+        return sectionType;
+    }
+
+    public void setSectionType(String sectionType) {
+        this.sectionType = sectionType;
+    }
+
+    public String getCampus() {
+        return campus;
+    }
+
+    public void setCampus(String campus) {
+        this.campus = campus;
+    }
+
+    public int getWaitingTotal() {
+        return waitingTotal;
+    }
+
+    public void setWaitingTotal(int waitingTotal) {
+        this.waitingTotal = waitingTotal;
+    }
+
+    public int getEnrollmentCapacity() {
+        return enrollmentCapacity;
+    }
+
+    public void setEnrollmentCapacity(int enrollmentCapacity) {
+        this.enrollmentCapacity = enrollmentCapacity;
+    }
+
+    public String getSectionNum() {
+        return sectionNum;
+    }
+
+    public void setSectionNum(String sectionNum) {
+        this.sectionNum = sectionNum;
+    }
+
+    public String getEnrollmentTotal() {
+        return enrollmentTotal;
+    }
+
+    public void setEnrollmentTotal(String enrollmentTotal) {
+        this.enrollmentTotal = enrollmentTotal;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
+    }
+
+    public int getWaitingCapacity() {
+        return waitingCapacity;
+    }
+
+    public void setWaitingCapacity(int waitingCapacity) {
+        this.waitingCapacity = waitingCapacity;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+}

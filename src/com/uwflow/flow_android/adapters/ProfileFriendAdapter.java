@@ -46,7 +46,7 @@ public class ProfileFriendAdapter extends BaseAdapter {
         first.setText(mFriends.get(position).getName());
         second.setText(mFriends.get(position).getProgramName());
 
-        Picasso.with(mContext).load(mFriends.get(position).getImages()[1]).placeholder(R.drawable.photo_profile_empty).into(image);
+        Picasso.with(mContext).load(mFriends.get(position).getProfilePicUrls().getSquare()).placeholder(R.drawable.photo_profile_empty).into(image);
 
         return convertView;
     }

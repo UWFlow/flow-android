@@ -37,7 +37,7 @@ public class FlowDatabaseLoader {
     }
 
     public void reloadUserMe(final int index, final FlowResultCollector flowResultCollector){
-        FlowApiRequests.searchUser(new FlowApiRequestCallback() {
+        FlowApiRequests.searchUser(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
                 new AsyncTask<JSONObject, Void, Object>(){
@@ -46,7 +46,9 @@ public class FlowDatabaseLoader {
                     protected Void doInBackground(JSONObject... jsonObjects) {
                         try {
                             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
-                            userDao.createOrUpdate(JsonToDbUtil.getUser(jsonObjects[0]));
+                            User user = JsonToDbUtil.getUserMe(jsonObjects[0]);
+                            if (user != null)
+                                userDao.createOrUpdate(user);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -68,7 +70,7 @@ public class FlowDatabaseLoader {
     }
 
     public void reloadProfileFriends(final int index, final FlowResultCollector flowResultCollector){
-        FlowApiRequests.searchUserFriends(new FlowApiRequestCallback() {
+        FlowApiRequests.searchUserFriends(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
                 new AsyncTask<JSONObject, Void, Object>(){
@@ -101,7 +103,7 @@ public class FlowDatabaseLoader {
     }
 
     public void reloadProfileSchedule(final int index, final FlowResultCollector flowResultCollector){
-        FlowApiRequests.searchUserSchedule(new FlowApiRequestCallback() {
+        FlowApiRequests.searchUserSchedule(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
                 new AsyncTask<JSONObject, Void, Object>(){
@@ -134,7 +136,7 @@ public class FlowDatabaseLoader {
     }
 
     public void reloadProfileExams(final int index, final FlowResultCollector flowResultCollector){
-        FlowApiRequests.searchUserExams(new FlowApiRequestCallback() {
+        FlowApiRequests.searchUserExams(new FlowApiRequestCallbackAdapter() {
 
             @Override
             public void onSuccess(JSONObject response) {
@@ -168,7 +170,7 @@ public class FlowDatabaseLoader {
     }
 
     public void reloadProfileCourses(final int index, final FlowResultCollector flowResultCollector){
-        FlowApiRequests.searchUserCourses(new FlowApiRequestCallback() {
+        FlowApiRequests.searchUserCourses(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
                 new AsyncTask<JSONObject, Void, Object>(){
