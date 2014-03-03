@@ -7,19 +7,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.uwflow.flow_android.R;
-import com.uwflow.flow_android.entities.Course;
+import com.uwflow.flow_android.db_object.Course;
 
-import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by Chinmay on 3/1/14.
- */
 public class ProfileCoursesAdapter extends BaseAdapter {
 
-    private ArrayList<Course> mCourseList;
+    private List<Course> mCourseList;
     private Context mContext;
 
-    public ProfileCoursesAdapter(ArrayList<Course> courses, Context context) {
+    public ProfileCoursesAdapter(List<Course> courses, Context context) {
         mCourseList = courses;
         mContext = context;
     }
@@ -42,8 +39,8 @@ public class ProfileCoursesAdapter extends BaseAdapter {
         first = (TextView) convertView.findViewById(R.id.first);
         second = (TextView) convertView.findViewById(R.id.second);
 
-        first.setText(mCourseList.get(position).getFirst());
-        second.setText(mCourseList.get(position).getSecond());
+        first.setText(mCourseList.get(position).getId());
+        second.setText(mCourseList.get(position).getName());
 
         return convertView;
     }

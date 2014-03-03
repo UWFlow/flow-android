@@ -1,0 +1,168 @@
+#
+# generated on 2014/03/02 09:10:29
+#
+# --table-start--
+dataClass=com.uwflow.flow_android.db_object.Course
+tableName=course
+# --table-fields-start--
+# --field-start--
+fieldName=userCourseId
+id=true
+# --field-end--
+# --field-start--
+fieldName=id
+# --field-end--
+# --field-start--
+fieldName=ratings
+dataPersister=SERIALIZABLE
+# --field-end--
+# --field-start--
+fieldName=code
+# --field-end--
+# --field-start--
+fieldName=name
+# --field-end--
+# --field-start--
+fieldName=professorIds
+dataPersister=SERIALIZABLE
+# --field-end--
+# --field-start--
+fieldName=prereqs
+# --field-end--
+# --field-start--
+fieldName=overallCount
+# --field-end--
+# --field-start--
+fieldName=overallRating
+# --field-end--
+# --field-start--
+fieldName=description
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.uwflow.flow_android.db_object.Exam
+tableName=exam
+# --table-fields-start--
+# --field-start--
+fieldName=courseId
+id=true
+# --field-end--
+# --field-start--
+fieldName=url
+# --field-end--
+# --field-start--
+fieldName=infoKnown
+# --field-end--
+# --field-start--
+fieldName=location
+# --field-end--
+# --field-start--
+fieldName=locationKnown
+# --field-end--
+# --field-start--
+fieldName=sections
+# --field-end--
+# --field-start--
+fieldName=startDate
+dataPersister=DATE
+# --field-end--
+# --field-start--
+fieldName=endDate
+dataPersister=DATE
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.uwflow.flow_android.db_object.ScheduleCourse
+tableName=schedule_course
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=profId
+# --field-end--
+# --field-start--
+fieldName=courseId
+# --field-end--
+# --field-start--
+fieldName=startDate
+dataPersister=DATE
+# --field-end--
+# --field-start--
+fieldName=endDate
+dataPersister=DATE
+# --field-end--
+# --field-start--
+fieldName=building
+# --field-end--
+# --field-start--
+fieldName=room
+# --field-end--
+# --field-start--
+fieldName=termId
+# --field-end--
+# --field-start--
+fieldName=sectionType
+# --field-end--
+# --field-start--
+fieldName=sectionNum
+# --field-end--
+# --field-start--
+fieldName=classNum
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.uwflow.flow_android.db_object.User
+tableName=user
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=firstName
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=point
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=profilePicUrls
+dataPersister=SERIALIZABLE
+# --field-end--
+# --field-start--
+fieldName=programName
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=name
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=lastName
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=numInvites
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=fbid
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=isMe
+columnName=is_me
+canBeNull=false
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

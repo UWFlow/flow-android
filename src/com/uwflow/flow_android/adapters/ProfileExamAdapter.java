@@ -8,21 +8,22 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.uwflow.flow_android.R;
-import com.uwflow.flow_android.entities.Exam;
+import com.uwflow.flow_android.db_object.Exam;
 import com.uwflow.flow_android.entities.Friend;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Chinmay on 3/1/14.
  */
 public class ProfileExamAdapter extends BaseAdapter {
 
-    private ArrayList<Exam> mExamList;
+    private List<Exam> mExamList;
     private Context mContext;
 
-    public ProfileExamAdapter(ArrayList<Exam> exams, Context context) {
+    public ProfileExamAdapter(List<Exam> exams, Context context) {
         mExamList = exams;
         mContext = context;
     }
@@ -46,9 +47,9 @@ public class ProfileExamAdapter extends BaseAdapter {
         second = (TextView) convertView.findViewById(R.id.second);
         third = (TextView) convertView.findViewById(R.id.third);
 
-        first.setText(mExamList.get(position).getFirst());
-        second.setText(mExamList.get(position).getSecond());
-        third.setText(mExamList.get(position).getThird());
+        first.setText(mExamList.get(position).getCourseId());
+        second.setText(mExamList.get(position).getLocation());
+        third.setText(mExamList.get(position).getSections());
 
 
         return convertView;

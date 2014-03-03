@@ -5,20 +5,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.R;
-import com.uwflow.flow_android.entities.CourseReview;
-import com.uwflow.flow_android.entities.Friend;
+import com.uwflow.flow_android.db_object.User;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileFriendAdapter extends BaseAdapter {
-    private ArrayList<Friend> mFriends;
+    private List<User> mFriends;
     private Context mContext;
 
-    public ProfileFriendAdapter(ArrayList<Friend> friends, Context context) {
+    public ProfileFriendAdapter(List<User> friends, Context context) {
         mFriends = friends;
         mContext = context;
     }
@@ -44,14 +43,10 @@ public class ProfileFriendAdapter extends BaseAdapter {
 
         image = (ImageView) convertView.findViewById(R.id.image);
 
-        first.setText(mFriends.get(position).getFirst());
-        second.setText(mFriends.get(position).getSecond());
+        first.setText(mFriends.get(position).getName());
+        second.setText(mFriends.get(position).getProgramName());
 
-        if (mFriends.get(position).getImage() == null) {
-            image.setImageResource(R.drawable.photo_profile_empty);
-        } else {
-            image.setImageBitmap(mFriends.get(position).getImage());
-        }
+        Picasso.with(mContext).load(mFriends.get(position).getProfilePicUrls().getSquare()).placeholder(R.drawable.photo_profile_empty).into(image);
 
         return convertView;
     }

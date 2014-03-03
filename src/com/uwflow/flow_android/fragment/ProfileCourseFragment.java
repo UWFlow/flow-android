@@ -2,22 +2,26 @@ package com.uwflow.flow_android.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfileCoursesAdapter;
-import com.uwflow.flow_android.adapters.ProfileFriendAdapter;
-import com.uwflow.flow_android.entities.Course;
-import com.uwflow.flow_android.entities.Friend;
+import com.uwflow.flow_android.constant.Constants;
+import com.uwflow.flow_android.db_object.Course;
+import com.uwflow.flow_android.loaders.UserCoursesLoader;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class ProfileCourseFragment extends Fragment{
+public class ProfileCourseFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Course>>{
 
     protected ListView mCoursesListView;
     protected View rootView;
+    protected ProfileCoursesAdapter profileListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,21 +30,28 @@ public class ProfileCourseFragment extends Fragment{
         rootView = inflater.inflate(R.layout.profile_course_layout, container, false);
         mCoursesListView = (ListView)rootView.findViewById(R.id.course_list);
 
-        // TODO: replace this arraylist with whatever real data source
-        ArrayList<Course> coursesList = new ArrayList<Course>();
-        for (int i = 0; i < 12; i++) {
-            String name = "Phil 11" + i;
-            String description = "Introduction to Philosophy: Knowledge and Reality";
-            coursesList.add(new Course(name, description));
-        }
-
-        mCoursesListView.setAdapter(new ProfileCoursesAdapter(coursesList, getActivity()));
+        getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_COURSES_LOADER_ID, null, this);
         return rootView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+    }
 
+    @Override
+    public Loader<List<Course>> onCreateLoader(int i, Bundle bundle) {
+        return new UserCoursesLoader(getActivity(), ((MainFlowActivity)getActivity()).getHelper());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Course>> listLoader, List<Course> courses) {
+        profileListAdapter = new ProfileCoursesAdapter(courses, getActivity());
+        mCoursesListView.setAdapter(profileListAdapter);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Course>> listLoader) {
+        mCoursesListView.setAdapter(null);
     }
 }

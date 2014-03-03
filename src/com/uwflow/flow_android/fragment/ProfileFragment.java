@@ -3,8 +3,9 @@ package com.uwflow.flow_android.fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +14,16 @@ import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
-import com.uwflow.flow_android.network.FlowApiRequestCallback;
-import com.uwflow.flow_android.network.FlowApiRequests;
-import org.json.JSONException;
-import org.json.JSONObject;
-import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
+import com.uwflow.flow_android.constant.Constants;
+import com.uwflow.flow_android.db_object.User;
+import com.uwflow.flow_android.loaders.UserMeLoader;
 
-public class ProfileFragment extends Fragment {
+import java.util.List;
+
+public class ProfileFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<User>> {
 
     protected ImageView userImage;
     protected TextView userName;
@@ -39,50 +41,20 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.profile_layout, container, false);
+        userImage = (ImageView) rootView.findViewById(R.id.user_image);
+        userName = (TextView) rootView.findViewById(R.id.user_name);
+        userProgram = (TextView) rootView.findViewById(R.id.user_program);
+        viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_LOADER_ID, null, this);
         return rootView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        userImage = (ImageView) getActivity().findViewById(R.id.user_image);
-        userName = (TextView) getActivity().findViewById(R.id.user_name);
-        userProgram = (TextView) getActivity().findViewById(R.id.user_program);
-        viewPager = (ViewPager) getActivity().findViewById(R.id.pager);
         viewPager.setAdapter(new ProfilePagerAdapter(getActivity().getSupportFragmentManager()));
         tabs = (PagerSlidingTabStrip) getActivity().findViewById(R.id.pager_tabs);
         tabs.setViewPager(viewPager);
-
-        FlowApiRequests.searchUser(new FlowApiRequestCallback() {
-            @Override
-            public void onSuccess(JSONObject response) {
-                Log.d("WENTAO", response.toString());
-
-                try {
-                    userName.setText(response.getString("name"));
-                    //userProgram.setText(response.getString("program_name"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    String url = response.getJSONObject("profile_pic_urls").getString("square");
-                    Picasso.with(ProfileFragment.this.getActivity().getApplicationContext()).load(url).into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                            userImage.setImageBitmap(bitmap);
-                        }
-
-                        @Override
-                        public void onBitmapFailed() {
-
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
     }
 
     @Override
@@ -91,4 +63,32 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    @Override
+    public Loader<List<User>> onCreateLoader(int i, Bundle bundle) {
+        return new UserMeLoader(getActivity(), ((MainFlowActivity)getActivity()).getHelper());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<User>> listLoader, List<User> users) {
+        if (!users.isEmpty()){
+            User me = users.get(0);
+            userName.setText(me.getName());
+            userProgram.setText(me.getProgramName());
+            Picasso.with(getActivity()).load(me.getProfilePicUrls().getSquare()).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                    userImage.setImageBitmap(bitmap);
+                }
+
+                @Override
+                public void onBitmapFailed() {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<User>> listLoader) {
+    }
 }

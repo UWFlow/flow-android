@@ -2,25 +2,34 @@ package com.uwflow.flow_android.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfileExamAdapter;
-import com.uwflow.flow_android.entities.Exam;
+import com.uwflow.flow_android.constant.Constants;
+import com.uwflow.flow_android.db_object.Course;
+import com.uwflow.flow_android.db_object.Exam;
 import com.uwflow.flow_android.entities.Friend;
+import com.uwflow.flow_android.loaders.UserCoursesLoader;
+import com.uwflow.flow_android.loaders.UserExamsLoader;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ProfileExamFragment extends Fragment {
+public class ProfileExamFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Exam>> {
 
     protected ListView mExamsList;
     protected TextView mLastUpdatedText;
     protected Button mAddToCalBtn;
     protected View rootView;
+    protected ProfileExamAdapter profileExamAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,17 +40,23 @@ public class ProfileExamFragment extends Fragment {
         mLastUpdatedText = (TextView)rootView.findViewById(R.id.text_last_updated);
         mAddToCalBtn = (Button)rootView.findViewById(R.id.btn_exam_to_cal);
 
-        // TODO: replace this arraylist with whatever real data source
-        ArrayList<Exam> examList = new ArrayList<Exam>();
-        for (int i = 0; i < 7; i++) {
-            String name = "Phil 11" + i;
-            String description = "Introduction to Philosophy: Knowledge and Reality";
-            String date = "April 14(Mon) 7:30 - 10:00pm PAC 1,2,3";
-            examList.add(new Exam(name, description, date));
-        }
-
-        mExamsList.setAdapter(new ProfileExamAdapter(examList, getActivity()));
-
+        getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_EXAMS_LOADER_ID, null, this);
         return rootView;
+    }
+
+    @Override
+    public Loader<List<Exam>> onCreateLoader(int i, Bundle bundle) {
+        return new UserExamsLoader(getActivity(), ((MainFlowActivity)getActivity()).getHelper());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Exam>> listLoader, List<Exam> exams) {
+        profileExamAdapter = new ProfileExamAdapter(exams, getActivity());
+        mExamsList.setAdapter(profileExamAdapter);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Exam>> listLoader) {
+        mExamsList.setAdapter(null);
     }
 }

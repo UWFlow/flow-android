@@ -1,42 +1,59 @@
 package com.uwflow.flow_android;
 
-import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-import com.uwflow.flow_android.network.FlowApiRequests;
-import com.uwflow.flow_android.network.FlowAsyncClient;
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+import com.j256.ormlite.dao.Dao;
+import com.uwflow.flow_android.dao.FlowDatabaseHelper;
+import com.uwflow.flow_android.db_object.User;
+import com.uwflow.flow_android.network.*;
+import com.uwflow.flow_android.util.JsonToDbUtil;
+import org.json.JSONObject;
 
-public class LoginActivity extends Activity {
-    private LoginButton loginButton;
+import java.sql.SQLException;
+
+public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
+    protected LoginButton loginButton;
+    protected FlowDatabaseLoader databaseLoader;
+    protected ProgressDialog loadingDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init();
         setContentView(R.layout.login_layout);
+        init();
+
+        databaseLoader = new FlowDatabaseLoader(this.getApplicationContext(), getHelper());
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        if (FlowAsyncClient.getCookie() == null){
+        if (FlowAsyncClient.getCookie() == null) {
             loginButton.setVisibility(View.VISIBLE);
             loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
                 @Override
                 public void onUserInfoFetched(GraphUser user) {
                     if (user != null && FlowAsyncClient.getCookie() == null) {
-                        FlowApiRequests.login(user.getId(), Session.getActiveSession().getAccessToken(), LoginActivity.this);
-                        Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
-                        LoginActivity.this.startActivity(myIntent);
+                        FlowApiRequests.login(user.getId(), Session.getActiveSession().getAccessToken(),
+                                new FlowApiRequestCallbackAdapter() {
+                                    @Override
+                                    public void onSuccess(JSONObject response) {
+                                        loadDataAndLogin();
+                                    }
+
+                                    @Override
+                                    public void onFailure(String error) {
+                                        loadDataAndLogin();
+                                    }
+                                });
                     }
                 }
             });
         } else {
-            Intent myIntent = new Intent(this, MainFlowActivity.class);
-            this.startActivity(myIntent);
+            loadDataAndLogin();
         }
 
         // TEMPORARY while the login isn't working:
@@ -49,18 +66,22 @@ public class LoginActivity extends Activity {
             }
         });
     }
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
-        }
+
+    protected void loadDataAndLogin() {
+        loadingDialog = new ProgressDialog(this);
+        loadingDialog.setTitle("Logging In");
+        loadingDialog.setMessage("Loading ...");
+        loadingDialog.show();
+
+        databaseLoader.loadOrReloadProfileData(new ResultCollectorCallback() {
+            @Override
+            public void loadOrReloadCompleted() {
+                loadingDialog.dismiss();
+                Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
+                LoginActivity.this.startActivity(myIntent);
+            }
+        });
     }
-
-    /** Swaps fragments in the main content view */
-    private void selectItem(int position) {
-
-    }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -68,7 +89,7 @@ public class LoginActivity extends Activity {
         Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
 
-    public void init(){
+    public void init() {
         FlowAsyncClient.init(this.getApplicationContext());
     }
 }

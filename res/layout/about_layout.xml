@@ -4,14 +4,21 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <Button android:id="@+id/fetch_prof" android:layout_width="200dp" android:layout_height="50dp"
-            android:text="Test fetch prof"/>
-
-    <Button android:id="@+id/fetch_user" android:layout_width="200dp" android:layout_height="50dp"
-            android:text="Test fetch User"/>
-    <TextView
-            android:id="@+id/text_field"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Test"/>
+    <Button android:id="@+id/fetch_prof" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="GETProf"/>
+    <Button android:id="@+id/fetch_user" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="GETUser"/>
+    <Button android:id="@+id/fetch_me" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="GETMe"/>
+    <ScrollView android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <HorizontalScrollView android:id="@+id/HorizontalScrollView01"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content">
+            <TextView
+                    android:id="@+id/text_field"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Test"/>
+        </HorizontalScrollView>
+    </ScrollView>
 </LinearLayout>
