@@ -4,10 +4,8 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 
-import java.util.List;
-
-public abstract class FlowAbstractDataLoader<T extends List<?>> extends AsyncTaskLoader<T> {
-    protected T mLastDataList = null;
+public abstract class FlowAbstractDataLoader<T extends Object> extends AsyncTaskLoader<T> {
+    protected T mLastData = null;
 
     protected abstract T loadDelegate();
     protected FlowDatabaseHelper flowDatabaseHelper;
@@ -31,17 +29,17 @@ public abstract class FlowAbstractDataLoader<T extends List<?>> extends AsyncTas
      * whatever is using the dataList.
      */
     @Override
-    public void deliverResult(T dataList) {
+    public void deliverResult(T data) {
         if (isReset()) {
-            dataList = null;
+            data = null;
             return;
         }
-        T oldDataList = mLastDataList;
-        mLastDataList = dataList;
+        T oldDataList = mLastData;
+        mLastData = data;
         if (isStarted()) {
-            super.deliverResult(dataList);
+            super.deliverResult(data);
         }
-        if (oldDataList != null && oldDataList != dataList) {
+        if (oldDataList != null && oldDataList != data) {
             oldDataList = null;
         }
     }
@@ -56,10 +54,10 @@ public abstract class FlowAbstractDataLoader<T extends List<?>> extends AsyncTas
      */
     @Override
     protected void onStartLoading() {
-        if (mLastDataList != null) {
-            deliverResult(mLastDataList);
+        if (mLastData != null) {
+            deliverResult(mLastData);
         }
-        if (takeContentChanged() || mLastDataList == null) {
+        if (takeContentChanged() || mLastData == null) {
             forceLoad();
         }
     }
@@ -92,6 +90,6 @@ public abstract class FlowAbstractDataLoader<T extends List<?>> extends AsyncTas
         super.onReset();
         // Ensure the loader is stopped
         onStopLoading();
-        mLastDataList = null;
+        mLastData = null;
     }
 }

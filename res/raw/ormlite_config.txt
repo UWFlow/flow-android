@@ -1,5 +1,5 @@
 #
-# generated on 2014/03/02 09:10:29
+# generated on 2014/03/03 02:49:50
 #
 # --table-start--
 dataClass=com.uwflow.flow_android.db_object.Course
@@ -30,10 +30,8 @@ dataPersister=SERIALIZABLE
 fieldName=prereqs
 # --field-end--
 # --field-start--
-fieldName=overallCount
-# --field-end--
-# --field-start--
-fieldName=overallRating
+fieldName=overall
+dataPersister=SERIALIZABLE
 # --field-end--
 # --field-start--
 fieldName=description
@@ -66,11 +64,9 @@ fieldName=sections
 # --field-end--
 # --field-start--
 fieldName=startDate
-dataPersister=DATE
 # --field-end--
 # --field-start--
 fieldName=endDate
-dataPersister=DATE
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -91,11 +87,9 @@ fieldName=courseId
 # --field-end--
 # --field-start--
 fieldName=startDate
-dataPersister=DATE
 # --field-end--
 # --field-start--
 fieldName=endDate
-dataPersister=DATE
 # --field-end--
 # --field-start--
 fieldName=building
@@ -162,6 +156,46 @@ canBeNull=false
 fieldName=isMe
 columnName=is_me
 canBeNull=false
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.uwflow.flow_android.db_object.UserCourse
+tableName=user_course
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=userId
+# --field-end--
+# --field-start--
+fieldName=termName
+# --field-end--
+# --field-start--
+fieldName=termId
+# --field-end--
+# --field-start--
+fieldName=hasReviewed
+# --field-end--
+# --field-start--
+fieldName=professorId
+# --field-end--
+# --field-start--
+fieldName=courseId
+# --field-end--
+# --field-start--
+fieldName=programYearId
+# --field-end--
+# --field-start--
+fieldName=professorReview
+dataPersister=SERIALIZABLE
+# --field-end--
+# --field-start--
+fieldName=courseReview
+dataPersister=SERIALIZABLE
 # --field-end--
 # --table-fields-end--
 # --table-end--

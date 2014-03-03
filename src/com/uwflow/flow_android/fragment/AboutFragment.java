@@ -15,8 +15,6 @@ import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 
 public class AboutFragment extends Fragment {
     protected TextView tv;
@@ -38,13 +36,13 @@ public class AboutFragment extends Fragment {
         fetchProf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fetchProf();
+                fetchCourseData();
             }
         });
         fetchUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fetchUser();
+                fetchUserData();
             }
         });
         fetchMe.setOnClickListener(new View.OnClickListener() {
@@ -55,13 +53,14 @@ public class AboutFragment extends Fragment {
         });
     }
 
-    public void fetchProf() {
+    public void fetchCourseData() {
+        tv.setText("Start Fetch Courses Details!\n");
         FlowApiRequests.searchCourse(
                 "psych101",
                 new FlowApiRequestCallbackAdapter() {
                     @Override
-                    public void getCourseCallback(CourseDetailedWrapper courseDetailedWrapper) {
-                        if (courseDetailedWrapper != null)
+                    public void getCourseCallback(CourseDetail courseDetail) {
+                        if (courseDetail != null)
                             tv.setText(tv.getText() + "Course Done\n");
                     }
                 });
@@ -69,8 +68,8 @@ public class AboutFragment extends Fragment {
                 "psych101",
                 new FlowApiRequestCallbackAdapter() {
                     @Override
-                    public void getCourseUsersCallback(CourseUserDetails courseUserDetails) {
-                        if (courseUserDetails != null)
+                    public void getCourseUsersCallback(CourseUserDetail courseUserDetail) {
+                        if (courseUserDetail != null)
                             tv.setText(tv.getText() + "Course Users Done\n");
                     }
                 });
@@ -78,7 +77,7 @@ public class AboutFragment extends Fragment {
                 "psych101",
                 new FlowApiRequestCallbackAdapter() {
                     @Override
-                    public void getCourseExamsCallback(ArrayList<Exam> exams) {
+                    public void getCourseExamsCallback(Exams exams) {
                         if (exams != null)
                             tv.setText(tv.getText() + "Course Exams Done\n");
                     }
@@ -87,7 +86,7 @@ public class AboutFragment extends Fragment {
                 "psych101",
                 new FlowApiRequestCallbackAdapter() {
                     @Override
-                    public void getCourseProfessorCallback(ArrayList<Professor> professors) {
+                    public void getCourseProfessorCallback(Professors professors) {
                         if (professors != null)
                             tv.setText(tv.getText() + "Course Professor Done\n");
                     }
@@ -96,27 +95,48 @@ public class AboutFragment extends Fragment {
                 "psych101",
                 new FlowApiRequestCallbackAdapter() {
                     @Override
-                    public void getCourseSectionCallback(ArrayList<Section> sections) {
+                    public void getCourseSectionCallback(Sections sections) {
                         if (sections != null)
                             tv.setText(tv.getText() + "Course Section Done\n");
                     }
                 });
     }
 
-    public void fetchUser() {
-
-        FlowApiRequests.searchCourseUsers(
-                "cs446",
+    public void fetchUserData() {
+        tv.setText("Fetch User Data ...\n");
+        FlowApiRequests.searchUser(
+                "5061a8db44957127ebf1bc9a",
                 new FlowApiRequestCallbackAdapter() {
-                    @Override
-                    public void onSuccess(JSONObject response) {
-                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        tv.setText(gson.toJson(response));
+                    public void getUserCallback(User user) {
+                        tv.setText(tv.getText() + "Fetch User Done!\n");
                     }
-
-                    @Override
-                    public void onFailure(String error) {
-
+                });
+        FlowApiRequests.searchUserSchedule(
+                "5061a8db44957127ebf1bc9a",
+                new FlowApiRequestCallbackAdapter() {
+                    public void getUserScheduleCallback(ScheduleCourses scheduleCourses) {
+                        tv.setText(tv.getText() + "Fetch User Schedule Done!\n");
+                    }
+                });
+        FlowApiRequests.searchUserExams(
+                "5061a8db44957127ebf1bc9a",
+                new FlowApiRequestCallbackAdapter() {
+                    public void getUserExamsCallback(Exams exams) {
+                        tv.setText(tv.getText() + "Fetch User Exams Done!\n");
+                    }
+                });
+        FlowApiRequests.searchUserCourses(
+                "5061a8db44957127ebf1bc9a",
+                new FlowApiRequestCallbackAdapter() {
+                    public void getUserCoursesCallback(UserCourseDetail userCourseDetail) {
+                        tv.setText(tv.getText() + "Fetch User Courses Done!\n");
+                    }
+                });
+        FlowApiRequests.searchUserFriends(
+                "5061a8db44957127ebf1bc9a",
+                new FlowApiRequestCallbackAdapter() {
+                    public void getUserFriendsCallback(UserFriends userFriends) {
+                        tv.setText(tv.getText() + "Fetch User Friends Done!\n");
                     }
                 });
     }

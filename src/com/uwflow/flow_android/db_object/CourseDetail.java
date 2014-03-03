@@ -4,8 +4,9 @@ package com.uwflow.flow_android.db_object;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class CourseDetailedWrapper {
+public class CourseDetail {
 
     protected String code;
     protected String name;
@@ -13,15 +14,15 @@ public class CourseDetailedWrapper {
     protected String prereqs;
     protected String id;
     protected String description;
-    protected ArrayList<Review> reviews;
+    protected List<Review> reviews;
     @SerializedName("professor_ids")
     protected ArrayList<String> professorIds;
 
-    public ArrayList<Review> getReviews() {
+    public List<Review> getReviews() {
         return reviews;
     }
 
-    public void setReviews(ArrayList<Review> reviews) {
+    public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
 

@@ -1,6 +1,8 @@
 package com.uwflow.flow_android.db_object;
 
-public class Overall {
+import java.io.Serializable;
+
+public class Overall implements Serializable{
     protected int count;
     protected Double rating;
 }

@@ -40,15 +40,16 @@ public class Constants {
     }
 
     public static class API_REQUEST_CALL_ID{
-        public static final int API_USER_COURSES_SEARCH = 0;
+        public static final int API_USER_COURSE_SEARCH = 0;
         public static final int API_USER_FRIENDS_SEARCH = 1;
         public static final int API_USER_EXAMS_SEARCH = 2;
-        public static final int API_USER_SCHEDULE_COURSE_SEARCH = 3;
-        public static final int API_COURSE_SECTIONS_SEARCH = 4;
-        public static final int API_COURSE_EXAMS_SEARCH = 5;
-        public static final int API_COURSE_PROFESSORS_SEARCH = 6;
-        public static final int API_COURSE_USERS_SEARCH= 7;
-        public static final int API_COURSE_SEARCH = 8;
+        public static final int API_USER_SCHEDULE_SEARCH = 3;
+        public static final int API_USER_SEARCH= 4;
+        public static final int API_COURSE_SECTIONS_SEARCH = 5;
+        public static final int API_COURSE_EXAMS_SEARCH = 6;
+        public static final int API_COURSE_PROFESSORS_SEARCH = 7;
+        public static final int API_COURSE_USERS_SEARCH= 8;
+        public static final int API_COURSE_SEARCH = 9;
     }
 
     public static final String UW_FLOW = "uwflow";

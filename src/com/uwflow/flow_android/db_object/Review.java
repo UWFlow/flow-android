@@ -2,9 +2,10 @@ package com.uwflow.flow_android.db_object;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Review {
+public class Review implements Serializable{
     protected String comment;
     protected ArrayList<Rating> ratings;
     @SerializedName("comment_date")

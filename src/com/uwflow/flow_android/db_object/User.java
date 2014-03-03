@@ -15,24 +15,31 @@ public class User implements Serializable {
     @DatabaseField(id = true)
     private String id;
 
+    @SerializedName("first_name")
     @DatabaseField(canBeNull = false)
     private String firstName;
 
+    @SerializedName("num_points")
     @DatabaseField(canBeNull = false)
     private int point;
 
+
+    @SerializedName("profile_pic_urls")
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ProfilePicUrls profilePicUrls;
 
+    @SerializedName("program_name")
     @DatabaseField(canBeNull = false)
     private String programName;
 
     @DatabaseField(canBeNull = false)
     private String name;
 
+    @SerializedName("last_name")
     @DatabaseField(canBeNull = false)
     private String lastName;
 
+    @SerializedName("num_invites")
     @DatabaseField(canBeNull = false)
     private int numInvites;
 
@@ -126,6 +133,7 @@ public class User implements Serializable {
     }
 
     public static class ProfilePicUrls implements Serializable{
+        @SerializedName("default")
         protected String defaultPic;
         protected String large;
         protected String square;

@@ -1,11 +1,10 @@
 package com.uwflow.flow_android.db_object;
 
-import com.j256.ormlite.field.DataType;
+import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @DatabaseTable(tableName = "schedule_course")
 public class ScheduleCourse implements Serializable {
@@ -14,17 +13,22 @@ public class ScheduleCourse implements Serializable {
     @DatabaseField(id = true)
     private String id;
 
+    @SerializedName("prof_id")
     @DatabaseField
     private String profId;
 
+
+    @SerializedName("course_id")
     @DatabaseField
     private String courseId;
 
-    @DatabaseField (dataType = DataType.DATE)
-    private Date startDate;
+    @SerializedName("start_date")
+    @DatabaseField
+    private long startDate;
 
-    @DatabaseField (dataType = DataType.DATE)
-    private Date endDate;
+    @SerializedName("end_date")
+    @DatabaseField
+    private long endDate;
 
     @DatabaseField
     private String building;
@@ -32,15 +36,19 @@ public class ScheduleCourse implements Serializable {
     @DatabaseField
     private String room;
 
+    @SerializedName("term_id")
     @DatabaseField
     private String termId;
 
+    @SerializedName("section_type")
     @DatabaseField
     private String sectionType;
 
+    @SerializedName("section_num")
     @DatabaseField
     private String sectionNum;
 
+    @SerializedName("class_num")
     @DatabaseField
     private String classNum;
 
@@ -71,19 +79,19 @@ public class ScheduleCourse implements Serializable {
         this.courseId = courseId;
     }
 
-    public Date getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(long endDate) {
         this.endDate = endDate;
     }
 

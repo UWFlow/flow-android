@@ -1,10 +1,11 @@
 package com.uwflow.flow_android.db_object;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TermUser {
     protected String termId;
-    protected ArrayList<String> userIds;
+    protected List<String> userIds;
     protected String termName;
 
     public String getTermId() {
@@ -15,11 +16,11 @@ public class TermUser {
         this.termId = termId;
     }
 
-    public ArrayList<String> getUserIds() {
+    public List<String> getUserIds() {
         return userIds;
     }
 
-    public void setUserIds(ArrayList<String> userIds) {
+    public void setUserIds(List<String> userIds) {
         this.userIds = userIds;
     }
 

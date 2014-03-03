@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class Course implements Serializable {
     private static final long serialVersionUID = 1L;
 
-
     @SerializedName("user_course_id")
     @DatabaseField (id = true)
     private String userCourseId;
@@ -29,36 +28,20 @@ public class Course implements Serializable {
     @DatabaseField
     private String name;
 
+    @SerializedName("professor_ids")
     @DatabaseField (dataType = DataType.SERIALIZABLE)
     private ArrayList<String> professorIds;
 
     @DatabaseField
     private String prereqs;
 
-    @DatabaseField
-    private int overallCount;
-
-    @DatabaseField
-    private Double overallRating;
+    @DatabaseField (dataType = DataType.SERIALIZABLE)
+    private Overall overall;
 
     @DatabaseField
     private String description;
 
-
     public Course(){
-    }
-
-    public Course(String description, String id, ArrayList<Rating> ratings, String userCourseId, String code, String name, ArrayList<String> professorIds, String prereqs, int overallCount, double overallRating) {
-        this.description = description;
-        this.id = id;
-        this.ratings = ratings;
-        this.userCourseId = userCourseId;
-        this.code = code;
-        this.name = name;
-        this.professorIds = professorIds;
-        this.prereqs = prereqs;
-        this.overallCount = overallCount;
-        this.overallRating = overallRating;
     }
 
     public static long getSerialVersionUID() {
@@ -97,6 +80,18 @@ public class Course implements Serializable {
         this.code = code;
     }
 
+    public void setPrereqs(String prereqs) {
+        this.prereqs = prereqs;
+    }
+
+    public Overall getOverall() {
+        return overall;
+    }
+
+    public void setOverall(Overall overall) {
+        this.overall = overall;
+    }
+
     public String getName() {
         return name;
     }
@@ -117,26 +112,6 @@ public class Course implements Serializable {
         return prereqs;
     }
 
-    public void setPrereqs(String prereqs) {
-        this.prereqs = prereqs;
-    }
-
-    public int getOverallCount() {
-        return overallCount;
-    }
-
-    public void setOverallCount(int overallCount) {
-        this.overallCount = overallCount;
-    }
-
-    public double getOverallRating() {
-        return overallRating;
-    }
-
-    public void setOverallRating(double overallRating) {
-        this.overallRating = overallRating;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -144,4 +119,5 @@ public class Course implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }
