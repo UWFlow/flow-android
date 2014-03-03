@@ -39,7 +39,7 @@ public class FlowApiRequests {
 
     public static void searchUser(final FlowApiRequestCallback callback) {
         final String uri = Constants.API_USER;
-        searchAuthenticatedDetails(uri, callback);
+        searchDetails(uri, callback);
     }
 
     public static void searchUserSchedule(final FlowApiRequestCallback callback) {
@@ -110,7 +110,7 @@ public class FlowApiRequests {
 
     public static void searchCourseUsers(String courseId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_COURSE_SEARCH_USERS, courseId);
-        searchAuthenticatedDetails(Constants.API_REQUEST_CALL_ID.API_COURSE_USERS_SEARCH, uri, callback);
+        searchDetails(Constants.API_REQUEST_CALL_ID.API_COURSE_USERS_SEARCH, uri, callback);
     }
 
     private static void searchAuthenticatedDetails(final int id, String uri, final FlowApiRequestCallback callback) {
