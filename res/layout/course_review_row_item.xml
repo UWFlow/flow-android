@@ -20,22 +20,24 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true">
         <TextView
-                android:id="@+id/first"
-                android:text="Buff Badger"
-                android:textSize="17dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"/>
-        <TextView
                 android:id="@+id/second"
                 android:text="Sept 2013"
-                android:textSize="17dp"
+                android:textSize="14dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4.0dip"
-                android:layout_alignBaseline="@id/first"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true" />
+        <TextView
+                android:id="@+id/first"
+                android:text="Buff Badger"
+                android:textSize="14dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:singleLine="true"
+                android:layout_toLeftOf="@id/second"/>
         <FrameLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +54,8 @@
                       android:button="@drawable/boolean_icon"
                       android:checked="true"
                       android:enabled="true"
-                      android:text="Useful" />
+                      android:text="Useful"
+                      android:textSize="14dp"/>
             <CheckBox android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center"
@@ -62,7 +65,8 @@
                       android:button="@drawable/boolean_icon"
                       android:checked="false"
                       android:enabled="true"
-                      android:text="Easy" />
+                      android:text="Easy"
+                      android:textSize="14dp"/>
             <CheckBox android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical|right"
@@ -72,7 +76,8 @@
                       android:button="@drawable/boolean_icon"
                       android:checked="true"
                       android:enabled="true"
-                      android:text="Like it" />
+                      android:text="Like it"
+                      android:textSize="14dp"/>
         </FrameLayout>
     </RelativeLayout>
 
@@ -82,9 +87,10 @@
               android:background="@drawable/review_bubble_grey_top"
               android:text="I loved this course. You don't just learn about music, you also learn about American history, politics, psychology, etc. This isn't just a plain old music class, but a course that ties together a number of subjects into one big real picture. It's not a hard course, but it's not easy. If you attend every lecture, take good notes, and read the textbook every now and then, you'll do fine."
               android:textColor="@color/black"
+              android:textSize="14dp"
               android:layout_below="@id/image"
               android:layout_alignParentLeft="true"
-              android:layout_marginTop="4dp"/>
+              android:layout_marginTop="0dp"/>
     <View
             android:id="@+id/thread_divider"
             android:background="#ffffffff"
