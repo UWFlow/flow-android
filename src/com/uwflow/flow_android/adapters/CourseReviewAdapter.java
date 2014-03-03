@@ -86,7 +86,7 @@ public class CourseReviewAdapter extends BaseAdapter {
 
 
         if (mReviews.get(position).getImage() == null) {
-            image.setImageResource(R.drawable.photo_profile_empty);
+            image.setImageResource(R.drawable.kitty);
         } else {
             image.setImageBitmap(mReviews.get(position).getImage());
         }
