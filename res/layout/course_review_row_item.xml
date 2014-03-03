@@ -42,6 +42,7 @@
                 android:layout_below="@id/first"
                 android:layout_alignParentLeft="true"
                 android:layout_margin="3dp">
+            <!-- NOTE: The CheckBoxes enabled param is being used to toggle the no-data drawable -->
             <CheckBox android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical|left"
@@ -50,7 +51,7 @@
                       android:id="@+id/status1"
                       android:button="@drawable/boolean_icon"
                       android:checked="true"
-                      android:enabled="false"
+                      android:enabled="true"
                       android:text="Useful" />
             <CheckBox android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
@@ -60,7 +61,7 @@
                       android:id="@+id/status2"
                       android:button="@drawable/boolean_icon"
                       android:checked="false"
-                      android:enabled="false"
+                      android:enabled="true"
                       android:text="Easy" />
             <CheckBox android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
@@ -70,7 +71,7 @@
                       android:id="@+id/status3"
                       android:button="@drawable/boolean_icon"
                       android:checked="true"
-                      android:enabled="false"
+                      android:enabled="true"
                       android:text="Like it" />
         </FrameLayout>
     </RelativeLayout>

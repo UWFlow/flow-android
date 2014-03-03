@@ -285,8 +285,8 @@ public class CourseInfoLoader extends AsyncTaskLoader<CourseInfo> {
     public static Bitmap getFacebookProfilePicture(String url){
         if (url != null) {
             try {
-    //            URL imageURL = new URL("http://graph.facebook.com/" + userID + "/picture?type=large");
-    //            Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+                //            URL imageURL = new URL("http://graph.facebook.com/" + userID + "/picture?type=large");
+                //            Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
                 URL imageURL = new URL(url);
                 Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
                 return bitmap;
