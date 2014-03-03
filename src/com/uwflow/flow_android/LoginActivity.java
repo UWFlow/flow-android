@@ -31,28 +31,27 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
 
         databaseLoader = new FlowDatabaseLoader(this.getApplicationContext(), getHelper());
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        if (FlowAsyncClient.getCookie() == null) {
-            loginButton.setVisibility(View.VISIBLE);
-            loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
-                @Override
-                public void onUserInfoFetched(GraphUser user) {
-                    if (user != null && FlowAsyncClient.getCookie() == null) {
-                        FlowApiRequests.login(user.getId(), Session.getActiveSession().getAccessToken(),
-                                new FlowApiRequestCallbackAdapter() {
-                                    @Override
-                                    public void onSuccess(JSONObject response) {
-                                        loadDataAndLogin();
-                                    }
+        loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
+            @Override
+            public void onUserInfoFetched(GraphUser user) {
+                if (user != null && FlowAsyncClient.getCookie() == null) {
+                    FlowApiRequests.login(user.getId(), Session.getActiveSession().getAccessToken(),
+                            new FlowApiRequestCallbackAdapter() {
+                                @Override
+                                public void onSuccess(JSONObject response) {
+                                    loadDataAndLogin();
+                                }
 
-                                    @Override
-                                    public void onFailure(String error) {
-                                        loadDataAndLogin();
-                                    }
-                                });
-                    }
+                                @Override
+                                public void onFailure(String error) {
+                                    loadDataAndLogin();
+                                }
+                            });
                 }
-            });
-        } else {
+            }
+        });
+
+        if (FlowAsyncClient.getCookie() != null) {
             loadDataAndLogin();
         }
 
