@@ -12,4 +12,15 @@
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">10dp</item>
     </style>
+    <style name="Flow.TipBox" parent="@android:style/Theme.Holo.Light">
+	<item name="android:background">@color/flow_light_blue</item>
+	<item name="android:textColor">@color/black</item>
+	<item name="android:gravity">center</item>
+	<item name="android:paddingTop">7dp</item>
+	<item name="android:paddingBottom">7dp</item>
+	<item name="android:paddingLeft">20dp</item>
+	<item name="android:paddingRight">20dp</item>
+	<item name="android:layout_marginLeft">25dp</item>
+	<item name="android:layout_marginRight">25dp</item>
+    </style>
 </resources>
