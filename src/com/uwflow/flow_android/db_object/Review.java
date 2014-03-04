@@ -6,11 +6,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Review implements Serializable{
+    @SerializedName("comment")
     protected String comment;
+
+    @SerializedName("ratings")
     protected ArrayList<Rating> ratings;
+
     @SerializedName("comment_date")
     protected long commentDate;
+
+    @SerializedName("author")
     protected Author author;
+
+    @SerializedName("privacy")
     protected String privacy;
 
     public String getComment() {

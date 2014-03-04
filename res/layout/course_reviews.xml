@@ -10,7 +10,8 @@
                   android:paddingRight="6dp"
                   android:orientation="vertical">
 
-        <include layout="@layout/course_review_overview"/>
+	<include layout="@layout/course_review_overview"
+		android:id="@+id/rating_overview"/>
 
         <View android:layout_height="0.5dp"
               android:layout_width="match_parent"

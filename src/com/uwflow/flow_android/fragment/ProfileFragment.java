@@ -1,6 +1,7 @@
 package com.uwflow.flow_android.fragment;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -77,7 +78,7 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
             User me = users.get(0);
             userName.setText(me.getName());
             userProgram.setText(me.getProgramName());
-            Picasso.with(getActivity()).load(me.getProfilePicUrls().getSquare()).into(new Target() {
+	    Picasso.with(getActivity()).load(me.getProfilePicUrls().getLarge()).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
                     if (userImage != null)
@@ -87,7 +88,12 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                 }
 
                 @Override
-                public void onBitmapFailed() {
+		public void onBitmapFailed(Drawable drawable) {
+
+		}
+
+		@Override
+		public void onPrepareLoad(Drawable drawable) {
 
                 }
             });

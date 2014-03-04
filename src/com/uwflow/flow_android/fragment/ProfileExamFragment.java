@@ -14,13 +14,9 @@ import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfileExamAdapter;
 import com.uwflow.flow_android.constant.Constants;
-import com.uwflow.flow_android.db_object.Course;
 import com.uwflow.flow_android.db_object.Exam;
-import com.uwflow.flow_android.entities.Friend;
-import com.uwflow.flow_android.loaders.UserCoursesLoader;
 import com.uwflow.flow_android.loaders.UserExamsLoader;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileExamFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Exam>> {

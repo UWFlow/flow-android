@@ -5,14 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.Exam;
-import com.uwflow.flow_android.entities.Friend;
-import org.w3c.dom.Text;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

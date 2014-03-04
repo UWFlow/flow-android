@@ -7,8 +7,12 @@
     <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal">
-        <com.uwflow.flow_android.custom_view.RoundedImageView
+	<com.makeramen.RoundedImageView
+		xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/user_image"
+		android:src="@drawable/kitty"
+		android:scaleType="centerCrop"
+		app:is_oval="true"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginLeft="10dp"
