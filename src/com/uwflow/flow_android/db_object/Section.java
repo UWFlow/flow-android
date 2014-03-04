@@ -5,32 +5,49 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class Section {
+    @SerializedName("note")
     protected String note;
+
+    @SerializedName("units")
     protected Double units;
+
     @SerializedName("last_updated")
     protected long lastUpdated;
+
     @SerializedName("class_num")
     protected String classNum;
+
     @SerializedName("term_id")
     protected String termId;
 
+    @SerializedName("meetings")
     protected ArrayList<Meeting> meetings;
 
     @SerializedName("section_type")
     protected String sectionType;
+
+    @SerializedName("campus")
     protected String campus;
+
     @SerializedName("waiting_total")
     protected int waitingTotal;
+
     @SerializedName("enrollment_capacity")
     protected int enrollmentCapacity;
+
     @SerializedName("section_num")
     protected String sectionNum;
+
     @SerializedName("enrollment_total")
-    protected String enrollmentTotal;
+    protected int enrollmentTotal;
+
     @SerializedName("course_id")
     protected String courseId;
+
     @SerializedName("waiting_capacity")
     protected int waitingCapacity;
+
+    @SerializedName("id")
     protected String id;
 
     public String getNote() {
@@ -121,11 +138,11 @@ public class Section {
         this.sectionNum = sectionNum;
     }
 
-    public String getEnrollmentTotal() {
+    public int getEnrollmentTotal() {
         return enrollmentTotal;
     }
 
-    public void setEnrollmentTotal(String enrollmentTotal) {
+    public void setEnrollmentTotal(int enrollmentTotal) {
         this.enrollmentTotal = enrollmentTotal;
     }
 

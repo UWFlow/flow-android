@@ -1,10 +1,12 @@
 package com.uwflow.flow_android.db_object;
 
-import java.util.ArrayList;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Sections {
-    protected List<Section> sections = new ArrayList<Section>();
+    @SerializedName("sections")
+    protected List<Section> sections;
 
     public List<Section> getSections() {
         return sections;

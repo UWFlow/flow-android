@@ -5,19 +5,25 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class Meeting {
+    @SerializedName("building")
     protected String building;
 
     @SerializedName("is_tba")
     protected boolean isTba;
+
+    @SerializedName("room")
     protected String room;
 
     @SerializedName("end_date")
     protected long endDate;
 
+    @SerializedName("days")
     protected ArrayList<String> days;
 
     @SerializedName("start_seconds")
     protected long startSeconds;
+
+    @SerializedName("prof_id")
     protected String profId;
 
     @SerializedName("end_seconds")

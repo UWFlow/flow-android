@@ -95,7 +95,7 @@ public class AboutFragment extends Fragment {
                 "psych101",
                 new FlowApiRequestCallbackAdapter() {
                     @Override
-                    public void getCourseSectionCallback(Sections sections) {
+		    public void getCourseSectionsCallback(Sections sections) {
                         if (sections != null)
                             tv.setText(tv.getText() + "Course Section Done\n");
                     }

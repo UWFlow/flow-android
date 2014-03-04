@@ -27,7 +27,7 @@ public abstract class FlowApiRequestCallback {
     public void getCourseCallback(CourseDetail courseDetail) {
     }
 
-    public void getCourseSectionCallback(Sections sections) {
+    public void getCourseSectionsCallback(Sections sections) {
     }
 
     public void getCourseUsersCallback(CourseUserDetail courseUserDetail) {

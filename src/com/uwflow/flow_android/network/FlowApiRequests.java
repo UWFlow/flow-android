@@ -11,7 +11,6 @@ import org.apache.http.Header;
 import org.apache.http.cookie.Cookie;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FlowApiRequests {
@@ -249,7 +248,7 @@ public class FlowApiRequests {
                         callback.getCourseUsersCallback((CourseUserDetail) result);
                         break;
                     case Constants.API_REQUEST_CALL_ID.API_COURSE_SECTIONS_SEARCH:
-                        callback.getCourseSectionCallback((Sections) result);
+			callback.getCourseSectionsCallback((Sections) result);
                         break;
                     case Constants.API_REQUEST_CALL_ID.API_USER_SEARCH:
                         callback.getUserCallback((User) result);
