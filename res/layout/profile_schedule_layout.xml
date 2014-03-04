@@ -52,7 +52,6 @@
 
     <TextView android:text="Click on a schedule entry to add an alarm"
 	      style="@style/Flow.TipBox"
-	      android:textSize="14dp"
 	      android:layout_marginTop="10dp"
 	      android:layout_width="match_parent"
 	      android:layout_height="wrap_content" />

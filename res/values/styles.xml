@@ -15,6 +15,7 @@
     <style name="Flow.TipBox" parent="@android:style/Theme.Holo.Light">
 	<item name="android:background">@color/flow_light_blue</item>
 	<item name="android:textColor">@color/black</item>
+	<item name="android:textSize">14dp</item>
 	<item name="android:gravity">center</item>
 	<item name="android:paddingTop">7dp</item>
 	<item name="android:paddingBottom">7dp</item>
