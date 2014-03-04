@@ -1,4 +1,4 @@
-package utility;
+package com.uwflow.flow_android.util;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -57,24 +57,24 @@ public class FacebookUtilities {
 	AlertDialog dialog = new AlertDialog.Builder(context)
 		.setTitle("View Profile")
 		.setItems(dialogOptions, new DialogInterface.OnClickListener() {
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-			switch (which) {
-			    case 1:
-				// View friend on Facebook
-				Intent profileIntent =
-					FacebookUtilities.getOpenFBProfileIntent(context, user.getFbid());
-				context.startActivity(profileIntent);
-				break;
-			    case 0:
-			    default:
-				// View friend on Flow
-				// TODO: route to a user's profile on flow
-				break;
-			}
-			dialog.dismiss();
-		    }
-		}).create();
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 1:
+                        // View friend on Facebook
+                        Intent profileIntent =
+                                FacebookUtilities.getOpenFBProfileIntent(context, user.getFbid());
+                        context.startActivity(profileIntent);
+                        break;
+                    case 0:
+                    default:
+                        // View friend on Flow
+                        // TODO: route to a user's profile on flow
+                        break;
+                }
+                dialog.dismiss();
+            }
+        }).create();
 
 	return dialog;
     }

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.User;
-import utility.FacebookUtilities;
+import com.uwflow.flow_android.util.FacebookUtilities;
 
 import java.util.List;
 

@@ -11,15 +11,12 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.CourseClassListAdapter;
-import com.uwflow.flow_android.adapters.FriendListAdapter;
-import com.uwflow.flow_android.db_object.CourseUserDetail;
 import com.uwflow.flow_android.db_object.Section;
 import com.uwflow.flow_android.db_object.Sections;
 import com.uwflow.flow_android.entities.CourseClass;
-import com.uwflow.flow_android.entities.CourseFriend;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
-import utility.DateHelper;
+import com.uwflow.flow_android.util.DateHelper;
 
 import java.util.ArrayList;
 import java.util.List;

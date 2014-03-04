@@ -1,4 +1,4 @@
-package utility;
+package com.uwflow.flow_android.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

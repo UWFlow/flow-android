@@ -13,8 +13,8 @@ import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.Rating;
 import com.uwflow.flow_android.db_object.Review;
 import com.uwflow.flow_android.db_object.User;
-import utility.DateHelper;
-import utility.FacebookUtilities;
+import com.uwflow.flow_android.util.DateHelper;
+import com.uwflow.flow_android.util.FacebookUtilities;
 
 import java.util.Date;
 import java.util.List;

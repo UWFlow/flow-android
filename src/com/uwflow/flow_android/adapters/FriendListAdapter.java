@@ -1,10 +1,6 @@
 package com.uwflow.flow_android.adapters;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +11,7 @@ import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.entities.CourseFriend;
-import utility.FacebookUtilities;
+import com.uwflow.flow_android.util.FacebookUtilities;
 
 import java.util.ArrayList;
 

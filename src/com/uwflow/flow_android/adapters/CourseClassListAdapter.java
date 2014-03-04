@@ -12,8 +12,7 @@ import android.widget.*;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.Meeting;
 import com.uwflow.flow_android.db_object.Section;
-import com.uwflow.flow_android.entities.CourseClass;
-import utility.StringHelper;
+import com.uwflow.flow_android.util.StringHelper;
 
 /**
  * Created by jasperfung on 2/22/14.

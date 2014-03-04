@@ -1,4 +1,4 @@
-package utility;
+package com.uwflow.flow_android.util;
 
 /**
  * Created by jasperfung on 3/4/14.
