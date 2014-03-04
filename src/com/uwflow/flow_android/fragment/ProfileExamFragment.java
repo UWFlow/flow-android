@@ -23,7 +23,6 @@ public class ProfileExamFragment extends Fragment implements LoaderManager.Loade
 
     protected ListView mExamsList;
     protected TextView mLastUpdatedText;
-    protected Button mAddToCalBtn;
     protected View rootView;
     protected ProfileExamAdapter profileExamAdapter;
 
@@ -34,7 +33,6 @@ public class ProfileExamFragment extends Fragment implements LoaderManager.Loade
         rootView = inflater.inflate(R.layout.profile_exam_layout, container, false);
         mExamsList = (ListView)rootView.findViewById(R.id.exam_list);
         mLastUpdatedText = (TextView)rootView.findViewById(R.id.text_last_updated);
-        mAddToCalBtn = (Button)rootView.findViewById(R.id.btn_exam_to_cal);
 
         getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_EXAMS_LOADER_ID, null, this);
         return rootView;

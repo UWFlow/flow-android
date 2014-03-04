@@ -4,47 +4,21 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_alignParentBottom="true"
-            >
-
-        <ListView android:id="@+id/exam_list"
+    <ListView android:id="@+id/exam_list"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_above="@+id/text_last_updated" android:layout_alignParentLeft="true"
-              android:layout_alignParentStart="true"/>
-
-        <TextView android:text="Last updated on Feb 7 at 10:04pm"
-                  android:id="@+id/text_last_updated"
-                  android:textStyle="italic"
-                  android:textColor="#888888"
-                  android:gravity="center_horizontal"
-                  android:padding="7dp"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_above="@+id/btn_exam_to_cal" android:layout_alignParentLeft="true"
-                  android:layout_alignParentStart="true"/>
-
-
-        <Button android:id="@+id/btn_exam_to_cal"
-                android:text="Click an exam to add it to your Calendar app"
-                android:paddingTop="7dp" android:paddingBottom="7dp"
-                android:paddingLeft="20dp" android:paddingRight="20dp"
-                android:layout_marginBottom="5dp"
-                android:gravity="center"
-                android:textColor="#FFFFFF"
-                android:background="#33b4e5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
-
-
-    </RelativeLayout>
-
+	      android:layout_height="0dp"
+	      android:layout_weight="1" />
+    <TextView android:text="Last updated on Feb 7 at 10:04pm"
+	      android:id="@+id/text_last_updated"
+	      android:textStyle="italic"
+	      android:textColor="#888888"
+	      android:gravity="center_horizontal"
+	      android:padding="7dp"
+	      android:layout_width="match_parent"
+	      android:layout_height="wrap_content"/>
+    <TextView android:text="Click an exam to add it to your Calendar app"
+	      android:layout_marginBottom="5dp"
+	      style="@style/Flow.TipBox"
+	      android:layout_width="match_parent"
+	      android:layout_height="wrap_content"/>
 </LinearLayout>
