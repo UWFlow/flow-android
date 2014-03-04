@@ -9,8 +9,8 @@ import java.util.Date;
  */
 public class DateHelper {
     private static final String seasons[] = {
-	    "Winter", "Winter", "Spring", "Spring", "Summer", "Summer",
-	    "Summer", "Summer", "Fall", "Fall", "Winter", "Winter"
+	    "Winter", "Winter", "Winter", "Winter", "Spring", "Spring",
+	    "Spring", "Spring", "Fall", "Fall", "Fall", "Fall"
     };
     private static final String shortMonth[] = {
 	    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -32,5 +32,18 @@ public class DateHelper {
 	sb.append(" ");
 	sb.append(df.format(date));
 	return sb.toString();
+    }
+
+    public static String formatTermNicely(String termId) {
+	if (termId == null) return null;
+
+	String[] tokens = termId.split("_");
+
+	int year = Integer.valueOf(tokens[0]).intValue();
+	int month = Integer.valueOf(tokens[1]).intValue() - 1;
+
+	if (month >= 12) return null;
+
+	return String.format("%s %d", seasons[month], year);
     }
 }

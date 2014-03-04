@@ -2,7 +2,8 @@
 <ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical"
+	    android:paddingTop="10dp">
         <TextView android:id="@+id/empty_schedule"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -25,9 +26,17 @@
                 <!-- 3 columns -->
                 <TableRow
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                    <TextView android:text="Class Info" android:textStyle="bold" android:layout_weight="1" />
-                    <TextView android:text="Time and Location" android:textStyle="bold" android:layout_weight="1" />
+			android:layout_height="wrap_content"
+			android:background="@color/flow_blue">
+		    <TextView android:text="Class Info"
+			      android:textStyle="bold"
+			      android:layout_weight="1"
+			      android:textColor="@color/white"
+			      android:paddingLeft="10dp"/>
+		    <TextView android:text="Time and Location"
+			      android:textStyle="bold"
+			      android:layout_weight="1"
+			      android:textColor="@color/white"/>
                     <!--<TextView android:text=" " android:textStyle="bold"/>-->
                     <CheckBox android:checked="true" />
                 </TableRow>

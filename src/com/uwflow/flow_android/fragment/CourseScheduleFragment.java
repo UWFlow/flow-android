@@ -2,6 +2,7 @@ package com.uwflow.flow_android.fragment;
 
 //import android.app.Fragment;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.uwflow.flow_android.entities.CourseClass;
 import com.uwflow.flow_android.entities.CourseFriend;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
+import utility.DateHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,15 +122,22 @@ public class CourseScheduleFragment extends Fragment {
 			    }
 
 			    // Generate LinearLayouts for every list item
+			    String lastTerm = "";
 			    for (int i = 0; i < mCourseClassListAdapter.getCount(); i++) {
+				String currentTerm = DateHelper.formatTermNicely(((Section)mCourseClassListAdapter.getItem(i)).getTermId());
+				if (!currentTerm.equals(lastTerm)) {
+				    // Insert a header for a new term
+				    lastTerm = currentTerm;
+				    mClassListContainer.addView(createScheduleTermHeader(currentTerm));
+				    mClassListContainer.addView(createScheduleDivider(1));
+				}
+
 				View item = mCourseClassListAdapter.getView(i, null, null);
 				mClassListContainer.addView(item, new TableLayout.LayoutParams(
 					TableRow.LayoutParams.MATCH_PARENT,
 					TableRow.LayoutParams.WRAP_CONTENT));
-				View dividerView = new View(getActivity());
-				dividerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1));
-				dividerView.setBackgroundColor(0xff717171);
-				mClassListContainer.addView(dividerView);
+
+				mClassListContainer.addView(createScheduleDivider(1));
 			    }
 			} else {
 			    // No classes to show. Hide the schedule table.
@@ -139,4 +148,25 @@ public class CourseScheduleFragment extends Fragment {
 		});
     }
 
+    private View createScheduleDivider(int thickness) {
+	View dividerView = new View(getActivity());
+	dividerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, thickness));
+	dividerView.setBackgroundColor(0xff717171);
+	return dividerView;
+    }
+
+    private View createScheduleTermHeader(String heading) {
+	TextView textView = new TextView(getActivity());
+	textView.setText(heading);
+	textView.setTypeface(null, Typeface.BOLD);
+	textView.setLayoutParams(new TableLayout.LayoutParams(
+		TableLayout.LayoutParams.MATCH_PARENT,
+		TableLayout.LayoutParams.WRAP_CONTENT,
+		1f));
+	float scale = getResources().getDisplayMetrics().density; // scale for converting dp to px
+	textView.setPadding((int)(10 * scale + 0.5f), 0, 0, 0);
+	textView.setBackgroundResource(R.color.flow_light_blue);
+
+	return textView;
+    }
 }
