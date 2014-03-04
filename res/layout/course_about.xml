@@ -7,8 +7,8 @@
                   android:id="@+id/about"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  android:orientation="vertical"
-                  android:paddingTop="10dp">
+		  android:paddingTop="10dp"
+		  android:orientation="vertical">
         <TextView android:id="@+id/course_desc" android:text="An examination of the styles, forms and development of 20th-century popular music. The social, commercial and technological aspects of popular music are considered."
                   android:layout_width="match_parent" android:layout_height="wrap_content"/>
 

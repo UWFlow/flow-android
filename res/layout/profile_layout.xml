@@ -2,14 +2,14 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	      xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-	      android:layout_height="fill_parent"
-	      android:padding="10dp">
+	      android:orientation="vertical"
+	      android:layout_width="fill_parent"
+	      android:layout_height="fill_parent">
     <LinearLayout android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
+		  android:layout_height="wrap_content"
+		  android:padding="10dp"
 		  android:gravity="center_vertical"
-                  android:orientation="horizontal">
+		  android:orientation="horizontal">
 	<com.makeramen.RoundedImageView
 		xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/user_image"
@@ -23,10 +23,10 @@
 		      android:orientation="vertical"
 		      android:layout_width="0dp"
 		      android:layout_weight="1"
-                      android:layout_height="wrap_content"
-                      android:layout_marginLeft="20dp"
+		      android:layout_height="wrap_content"
+		      android:layout_marginLeft="20dp"
 		      android:paddingRight="10dp">
-	    <TextView android:id="@+id/layout_width"
+	    <TextView android:id="@+id/user_name"
 		      android:layout_width="fill_parent" android:layout_height="wrap_content"
 		      android:text="User Name" android:textSize="24dp" android:textStyle="bold" />
 	    <TextView android:id="@+id/user_program"
@@ -46,6 +46,9 @@
     <android.support.v4.view.ViewPager
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/pager"
+	    android:paddingTop="10dp"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
 </LinearLayout>
