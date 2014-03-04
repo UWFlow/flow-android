@@ -2,8 +2,65 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+	      android:gravity="center_horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent"
+		  android:layout_height="wrap_content"
+		  android:orientation="horizontal"
+		  android:gravity="center"
+		  android:background="@color/flow_blue"
+		  android:paddingTop="10dp"
+		  android:paddingBottom="10dp"
+		  android:paddingLeft="20dp"
+		  android:paddingRight="20dp"
+	    >
+	<ImageView android:layout_width="35dp"
+		   android:layout_height="35dp"
+		   android:src="@drawable/ic_drawer_search_white"/>
+	<EditText android:id="@+id/search_box"
+		  android:layout_width="0dp"
+		  android:layout_height="wrap_content"
+		  android:layout_weight="1"
+		  android:textSize="22dp"
+		  android:singleLine="true"
+		  android:textColor="@color/white"
+		  android:text="e.g. econ101, psych"
+		/>
+	<Button android:id="@+id/temp_search_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="14dp"
+		android:text="Search!"
+		/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+		  android:layout_height="wrap_content"
+		  android:orientation="horizontal"
+		  android:gravity="center"
+		  android:paddingLeft="20dp"
+		  android:paddingRight="20dp"
+	    >
+	<TextView android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+		android:text="Sort by: "/>
+
+	<Spinner android:id="@+id/sort_spinner"
+		 android:layout_width="wrap_content"
+		 android:layout_height="wrap_content"
+		 android:entries="@array/explore_sort_array"
+		 android:prompt="@string/explore_sort_prompt"
+		/>
+    </LinearLayout>
+    <CheckBox android:id="@+id/checkbox_include_taken"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:text="Include courses I've taken" />
+    <ListView android:id="@+id/results_list"
+	      android:layout_width="match_parent"
+	      android:layout_height="0dp"
+	      android:layout_weight="1" />
+
     <Button style="@style/Flow.StyledButton"
             android:id="@+id/btn_open_course"
             android:layout_width="match_parent"
