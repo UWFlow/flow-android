@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	      xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
+	      android:layout_height="fill_parent"
+	      android:padding="10dp">
     <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
+		  android:gravity="center_vertical"
                   android:orientation="horizontal">
 	<com.makeramen.RoundedImageView
 		xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,34 +17,31 @@
 		android:scaleType="centerCrop"
 		app:is_oval="true"
                 android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"/>
+		android:layout_height="80dp"/>
 
-        <LinearLayout android:layout_width="wrap_content"
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		      android:orientation="vertical"
+		      android:layout_width="0dp"
+		      android:layout_weight="1"
                       android:layout_height="wrap_content"
                       android:layout_marginLeft="20dp"
-                      android:layout_marginTop="15dp"
-                      android:orientation="vertical">
-            <TextView
-                    android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="User Name"/>
-
-            <TextView
-                    android:id="@+id/user_program"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Computer Science"/>
+		      android:paddingRight="10dp">
+	    <TextView android:id="@+id/layout_width"
+		      android:layout_width="fill_parent" android:layout_height="wrap_content"
+		      android:text="User Name" android:textSize="24dp" android:textStyle="bold" />
+	    <TextView android:id="@+id/user_program"
+		      android:layout_width="fill_parent" android:layout_height="wrap_content"
+		      android:text="Computer Science"
+		      android:textSize="18dp" />
         </LinearLayout>
     </LinearLayout>
 
     <com.astuetz.PagerSlidingTabStrip
             android:id="@+id/pager_tabs"
             android:layout_width="fill_parent"
-            android:layout_height="48dip" />
+	    android:layout_height="48dip"
+	    app:pstsIndicatorColor="@color/flow_blue"
+	    app:pstsShouldExpand="true"/>
 
     <android.support.v4.view.ViewPager
             xmlns:android="http://schemas.android.com/apk/res/android"
