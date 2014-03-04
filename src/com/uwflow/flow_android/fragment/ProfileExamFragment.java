@@ -7,6 +7,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,6 +34,14 @@ public class ProfileExamFragment extends Fragment implements LoaderManager.Loade
         rootView = inflater.inflate(R.layout.profile_exam_layout, container, false);
         mExamsList = (ListView)rootView.findViewById(R.id.exam_list);
         mLastUpdatedText = (TextView)rootView.findViewById(R.id.text_last_updated);
+
+	mExamsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	    @Override
+	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		// TODO: fire intent to add the exam to the users calendar
+		Exam exam = (Exam)profileExamAdapter.getItem(position);
+	    }
+	});
 
         getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_EXAMS_LOADER_ID, null, this);
         return rootView;
