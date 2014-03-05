@@ -102,10 +102,6 @@ public class CourseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
-<<<<<<< HEAD
-        fetchCourseInfo("psych101");
-=======
     }
 
     @Override
@@ -115,7 +111,6 @@ public class CourseFragment extends Fragment {
         // TODO(david): Should show a spinner here while course info is loading
         String courseId = getArguments().getString(COURSE_ID_ARG);
         fetchCourseInfo(courseId);
->>>>>>> Get explore page to show search results
     }
 
     private void fetchCourseInfo(String course){
