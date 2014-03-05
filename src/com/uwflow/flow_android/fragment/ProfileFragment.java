@@ -25,6 +25,7 @@ import com.uwflow.flow_android.loaders.UserMeLoader;
 import java.util.List;
 
 public class ProfileFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<User>> {
+    private String mProfileID;
 
     protected ImageView userImage;
     protected TextView userName;
@@ -48,6 +49,9 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         userName = (TextView) rootView.findViewById(R.id.user_name);
         userProgram = (TextView) rootView.findViewById(R.id.user_program);
         viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+
+        mProfileID = getArguments().getString(Constants.PROFILE_ID_KEY, "" /* default value */);
+
         getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_LOADER_ID, null, this);
         return rootView;
     }

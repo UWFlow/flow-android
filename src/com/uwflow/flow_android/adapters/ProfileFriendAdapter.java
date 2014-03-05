@@ -1,6 +1,7 @@
 package com.uwflow.flow_android.adapters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,12 @@ import java.util.List;
 public class ProfileFriendAdapter extends BaseAdapter {
     private List<User> mFriends;
     private Context mContext;
+    private FragmentManager mFragmentManager;
 
-    public ProfileFriendAdapter(List<User> friends, Context context) {
+    public ProfileFriendAdapter(List<User> friends, Context context, FragmentManager fragmentManager) {
         mFriends = friends;
         mContext = context;
+	mFragmentManager = fragmentManager;
     }
 
     public int getCount() {
@@ -55,7 +58,7 @@ public class ProfileFriendAdapter extends BaseAdapter {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FacebookUtilities.createUserDialog(mContext, user).show();
+		FacebookUtilities.createUserDialog(mContext, user, R.id.content_frame, mFragmentManager).show();
             }
         };
         convertView.setOnClickListener(onClickListener);
