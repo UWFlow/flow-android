@@ -55,7 +55,7 @@ public class AboutFragment extends Fragment {
 
     public void fetchCourseData() {
         tv.setText("Start Fetch Courses Details!\n");
-        FlowApiRequests.searchCourse(
+        FlowApiRequests.getCourse(
                 "psych101",
                 new FlowApiRequestCallbackAdapter() {
                     @Override
@@ -64,7 +64,7 @@ public class AboutFragment extends Fragment {
                             tv.setText(tv.getText() + "Course Done\n");
                     }
                 });
-        FlowApiRequests.searchCourseUsers(
+        FlowApiRequests.getCourseUsers(
                 "psych101",
                 new FlowApiRequestCallbackAdapter() {
                     @Override
@@ -73,7 +73,7 @@ public class AboutFragment extends Fragment {
                             tv.setText(tv.getText() + "Course Users Done\n");
                     }
                 });
-        FlowApiRequests.searchCourseExams(
+        FlowApiRequests.getCourseExams(
                 "psych101",
                 new FlowApiRequestCallbackAdapter() {
                     @Override
@@ -82,7 +82,7 @@ public class AboutFragment extends Fragment {
                             tv.setText(tv.getText() + "Course Exams Done\n");
                     }
                 });
-        FlowApiRequests.searchCourseProfessors(
+        FlowApiRequests.getCourseProfessors(
                 "psych101",
                 new FlowApiRequestCallbackAdapter() {
                     @Override
@@ -91,7 +91,7 @@ public class AboutFragment extends Fragment {
                             tv.setText(tv.getText() + "Course Professor Done\n");
                     }
                 });
-        FlowApiRequests.searchCourseSections(
+        FlowApiRequests.getCourseSections(
                 "psych101",
                 new FlowApiRequestCallbackAdapter() {
                     @Override
@@ -104,35 +104,35 @@ public class AboutFragment extends Fragment {
 
     public void fetchUserData() {
         tv.setText("Fetch User Data ...\n");
-        FlowApiRequests.searchUser(
+        FlowApiRequests.getUser(
                 "5061a8db44957127ebf1bc9a",
                 new FlowApiRequestCallbackAdapter() {
                     public void getUserCallback(User user) {
                         tv.setText(tv.getText() + "Fetch User Done!\n");
                     }
                 });
-        FlowApiRequests.searchUserSchedule(
+        FlowApiRequests.getUserSchedule(
                 "5061a8db44957127ebf1bc9a",
                 new FlowApiRequestCallbackAdapter() {
                     public void getUserScheduleCallback(ScheduleCourses scheduleCourses) {
                         tv.setText(tv.getText() + "Fetch User Schedule Done!\n");
                     }
                 });
-        FlowApiRequests.searchUserExams(
+        FlowApiRequests.getUserExams(
                 "5061a8db44957127ebf1bc9a",
                 new FlowApiRequestCallbackAdapter() {
                     public void getUserExamsCallback(Exams exams) {
                         tv.setText(tv.getText() + "Fetch User Exams Done!\n");
                     }
                 });
-        FlowApiRequests.searchUserCourses(
+        FlowApiRequests.getUserCourses(
                 "5061a8db44957127ebf1bc9a",
                 new FlowApiRequestCallbackAdapter() {
                     public void getUserCoursesCallback(UserCourseDetail userCourseDetail) {
                         tv.setText(tv.getText() + "Fetch User Courses Done!\n");
                     }
                 });
-        FlowApiRequests.searchUserFriends(
+        FlowApiRequests.getUserFriends(
                 "5061a8db44957127ebf1bc9a",
                 new FlowApiRequestCallbackAdapter() {
                     public void getUserFriendsCallback(UserFriends userFriends) {
@@ -142,7 +142,7 @@ public class AboutFragment extends Fragment {
     }
 
     public void fetchMe() {
-        FlowApiRequests.searchUser(new FlowApiRequestCallbackAdapter() {
+        FlowApiRequests.getUser(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();

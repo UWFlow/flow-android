@@ -89,7 +89,8 @@ public class CourseFragment extends Fragment {
     }
 
     private void fetchCourseInfo(String course){
-        FlowApiRequests.searchCourse(
+
+        FlowApiRequests.getCourse(
                 course,
                 new FlowApiRequestCallbackAdapter() {
                     @Override
