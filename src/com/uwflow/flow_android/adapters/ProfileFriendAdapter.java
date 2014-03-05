@@ -47,18 +47,18 @@ public class ProfileFriendAdapter extends BaseAdapter {
         first.setText(mFriends.get(position).getName());
         second.setText(mFriends.get(position).getProgramName());
 
-	Picasso.with(mContext).load(mFriends.get(position).getProfilePicUrls().getSquare()).placeholder(R.drawable.kitty).into(image);
+        Picasso.with(mContext).load(mFriends.get(position).getProfilePicUrls().getSquare()).placeholder(R.drawable.kitty).into(image);
 
-	final User user = mFriends.get(position);
+        final User user = mFriends.get(position);
 
-	// Make this View clickable to open a dialog for Facebook/Flow profile links
-	View.OnClickListener onClickListener = new View.OnClickListener() {
-	    @Override
-	    public void onClick(View v) {
-		FacebookUtilities.createUserDialog(mContext, user).show();
-	    }
-	};
-	convertView.setOnClickListener(onClickListener);
+        // Make this View clickable to open a dialog for Facebook/Flow profile links
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FacebookUtilities.createUserDialog(mContext, user).show();
+            }
+        };
+        convertView.setOnClickListener(onClickListener);
 
         return convertView;
     }
@@ -68,7 +68,7 @@ public class ProfileFriendAdapter extends BaseAdapter {
     }
 
     public long getItemId(int position) {
-	return mFriends.get(position).getFbid();
+        return mFriends.get(position).getFbid();
     }
 }
 

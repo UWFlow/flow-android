@@ -37,35 +37,35 @@ public class ProfileExamAdapter extends BaseAdapter {
         }
 
         // Fill view with appropriate data
-	TextView first, second;
+        TextView first, second;
 
         first = (TextView) convertView.findViewById(R.id.first);
         second = (TextView) convertView.findViewById(R.id.second);
 
-	Exam exam = mExamList.get(position);
+        Exam exam = mExamList.get(position);
 
-	String examID = exam.getCourseId();
-	long startDateSeconds = exam.getStartDate();
-	long endDateSeconds = exam.getEndDate();
-	String location = exam.getLocation();
-	String sections = exam.getSections();
+        String examID = exam.getCourseId();
+        long startDateSeconds = exam.getStartDate();
+        long endDateSeconds = exam.getEndDate();
+        String location = exam.getLocation();
+        String sections = exam.getSections();
 
-	if (examID == null || startDateSeconds == 0 || endDateSeconds == 0) {
-	    // Don't bother printing out this exam. Insufficient information
-	    new View(mContext).setLayoutParams(new TableLayout.LayoutParams(0, 0));
-	}
+        if (examID == null || startDateSeconds == 0 || endDateSeconds == 0) {
+            // Don't bother printing out this exam. Insufficient information
+            new View(mContext).setLayoutParams(new TableLayout.LayoutParams(0, 0));
+        }
 
-	Date startDate = new Date(startDateSeconds);
-	Date endDate = new Date(endDateSeconds);
-	SimpleDateFormat startDateFormat = new SimpleDateFormat ("E, MMM d    h:mma");
-	SimpleDateFormat endDateFormat = new SimpleDateFormat ("hh:mma");
+        Date startDate = new Date(startDateSeconds);
+        Date endDate = new Date(endDateSeconds);
+        SimpleDateFormat startDateFormat = new SimpleDateFormat ("E, MMM d    h:mma");
+        SimpleDateFormat endDateFormat = new SimpleDateFormat ("hh:mma");
 
-	first.setText(examID.toUpperCase());
+        first.setText(examID.toUpperCase());
 	/* TODO: fetch the course name and place it in a third TextView */
-	second.setText(String.format("%s - %s    %s",
-		startDateFormat.format(startDate),
-		endDateFormat.format(endDate),
-		location));
+        second.setText(String.format("%s - %s    %s",
+                startDateFormat.format(startDate),
+                endDateFormat.format(endDate),
+                location));
 
 
         return convertView;

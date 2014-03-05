@@ -29,41 +29,41 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         mImageSchedule = (ImageView)rootView.findViewById(R.id.image_schedule);
         mBtnExportCal = (Button)rootView.findViewById(R.id.btn_export_calendar);
         mBtnShare = (Button)rootView.findViewById(R.id.btn_share);
-	mScheduleListLayout = (LinearLayout)rootView.findViewById(R.id.list_layout);
-	mScheduleWeekLayout = (LinearLayout)rootView.findViewById(R.id.week_layout);
+        mScheduleListLayout = (LinearLayout)rootView.findViewById(R.id.list_layout);
+        mScheduleWeekLayout = (LinearLayout)rootView.findViewById(R.id.week_layout);
 
-	mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-	    @Override
-	    public void onCheckedChanged(RadioGroup group, int checkedId) {
-		switch (checkedId) {
-		    case R.id.radio_list_view:
-			// List layout selected
-			mScheduleListLayout.setVisibility(View.VISIBLE);
-			mScheduleWeekLayout.setVisibility(View.GONE);
-			break;
-		    case R.id.radio_week_view:
-			// Week layout selected
-			mScheduleListLayout.setVisibility(View.GONE);
-			mScheduleWeekLayout.setVisibility(View.VISIBLE);
-		}
-	    }
-	});
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radio_list_view:
+                        // List layout selected
+                        mScheduleListLayout.setVisibility(View.VISIBLE);
+                        mScheduleWeekLayout.setVisibility(View.GONE);
+                        break;
+                    case R.id.radio_week_view:
+                        // Week layout selected
+                        mScheduleListLayout.setVisibility(View.GONE);
+                        mScheduleWeekLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         mBtnShare.setOnClickListener(this);
-	mBtnExportCal.setOnClickListener(this);
+        mBtnExportCal.setOnClickListener(this);
 
         return rootView;
 
     }
 
     public void onClick(View v) {
-	switch (v.getId()) {
-	    case R.id.btn_export_calendar:
-		// TODO: handle calendar export
-		break;
-	    case R.id.btn_share:
-		// TODO: handle profile share
-		break;
+        switch (v.getId()) {
+            case R.id.btn_export_calendar:
+                // TODO: handle calendar export
+                break;
+            case R.id.btn_share:
+                // TODO: handle profile share
+                break;
         }
     }
 

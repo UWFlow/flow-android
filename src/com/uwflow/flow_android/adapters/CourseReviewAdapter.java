@@ -67,73 +67,73 @@ public class CourseReviewAdapter extends BaseAdapter {
         status2 = (CheckBox) convertView.findViewById(R.id.status2);
         status3 = (CheckBox) convertView.findViewById(R.id.status3);
 
-	final Review review = mReviews.get(position);
+        final Review review = mReviews.get(position);
 
-	String programName = review.getAuthor().getProgramName();
-	if (programName != null) {
-	    // Set reviewer name
-	    first.setText(String.format("A %s student", programName));
+        String programName = review.getAuthor().getProgramName();
+        if (programName != null) {
+            // Set reviewer name
+            first.setText(String.format("A %s student", programName));
 
-	    // Use placeholder image
-	    image.setImageResource(R.drawable.kitty);
+            // Use placeholder image
+            image.setImageResource(R.drawable.kitty);
 
-	    // Remove any OnClickListeners that may be attached to this review
-	    image.setOnClickListener(null);
-	    first.setOnClickListener(null);
-	} else {
-	    // Set reviewer name
-	    first.setText(review.getAuthor().getName());
-
-	    // Fetch facebook image
-	    Picasso.with(mContext).load(review.getAuthor().getProfilePicUrl()).placeholder(R.drawable.kitty).into(image);
-
-	    // Make this View clickable to open a dialog for Facebook/Flow profile links
-	    View.OnClickListener onClickListener = new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-		    User user = new User();
-
-		    // The API currently doesn't provide the users fbid, so we must parse it out ourselves
-		    String[] tokens = review.getAuthor().getProfilePicUrl().split("/");
-
-		    // We expect the fbid value at index 3
-		    user.setFbid(Long.valueOf(tokens[3]).longValue());
-
-		    user.setId(review.getAuthor().getId());
-		    user.setFirstName(FacebookUtilities.getFirstWord(review.getAuthor().getName()));
-		    FacebookUtilities.createUserDialog(mContext, user).show();
-		}
-	    };
-	    image.setOnClickListener(onClickListener);
-	    first.setOnClickListener(onClickListener);
-	}
-
-	// Set date field
-	second.setText(DateHelper.getShortString(new Date(review.getCommentDate())));
-	reviewText.setText(review.getComment());
-
-	// Set state of ratings
-	String usefulRating = review.getRatings().get(Rating.USEFULNESS).getRating();
-	String easyRating = review.getRatings().get(Rating.EASINESS).getRating();
-	String likedItRating = review.getRatings().get(Rating.INTEREST).getRating();
-
-	if (usefulRating == null) {
-	    status1.setEnabled(true);
-	} else {
-	    status1.setEnabled(false);
-	    status1.setChecked(Double.valueOf(usefulRating) == 1);
-	}
-	if (easyRating== null) {
-	    status2.setEnabled(true);
-	} else {
-	    status2.setEnabled(false);
-	    status2.setChecked(Double.valueOf(easyRating) == 1);
-	}
-	if (likedItRating == null) {
-	    status3.setEnabled(true);
+            // Remove any OnClickListeners that may be attached to this review
+            image.setOnClickListener(null);
+            first.setOnClickListener(null);
         } else {
-	    status3.setEnabled(false);
-	    status3.setChecked(Double.valueOf(likedItRating) == 1);
+            // Set reviewer name
+            first.setText(review.getAuthor().getName());
+
+            // Fetch facebook image
+            Picasso.with(mContext).load(review.getAuthor().getProfilePicUrl()).placeholder(R.drawable.kitty).into(image);
+
+            // Make this View clickable to open a dialog for Facebook/Flow profile links
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    User user = new User();
+
+                    // The API currently doesn't provide the users fbid, so we must parse it out ourselves
+                    String[] tokens = review.getAuthor().getProfilePicUrl().split("/");
+
+                    // We expect the fbid value at index 3
+                    user.setFbid(Long.valueOf(tokens[3]).longValue());
+
+                    user.setId(review.getAuthor().getId());
+                    user.setFirstName(FacebookUtilities.getFirstWord(review.getAuthor().getName()));
+                    FacebookUtilities.createUserDialog(mContext, user).show();
+                }
+            };
+            image.setOnClickListener(onClickListener);
+            first.setOnClickListener(onClickListener);
+        }
+
+        // Set date field
+        second.setText(DateHelper.getShortString(new Date(review.getCommentDate())));
+        reviewText.setText(review.getComment());
+
+        // Set state of ratings
+        String usefulRating = review.getRatings().get(Rating.USEFULNESS).getRating();
+        String easyRating = review.getRatings().get(Rating.EASINESS).getRating();
+        String likedItRating = review.getRatings().get(Rating.INTEREST).getRating();
+
+        if (usefulRating == null) {
+            status1.setEnabled(true);
+        } else {
+            status1.setEnabled(false);
+            status1.setChecked(Double.valueOf(usefulRating) == 1);
+        }
+        if (easyRating== null) {
+            status2.setEnabled(true);
+        } else {
+            status2.setEnabled(false);
+            status2.setChecked(Double.valueOf(easyRating) == 1);
+        }
+        if (likedItRating == null) {
+            status3.setEnabled(true);
+        } else {
+            status3.setEnabled(false);
+            status3.setChecked(Double.valueOf(likedItRating) == 1);
         }
 
         return convertView;

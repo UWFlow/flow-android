@@ -35,13 +35,13 @@ public class ProfileExamFragment extends Fragment implements LoaderManager.Loade
         mExamsList = (ListView)rootView.findViewById(R.id.exam_list);
         mLastUpdatedText = (TextView)rootView.findViewById(R.id.text_last_updated);
 
-	mExamsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-	    @Override
-	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO: fire intent to add the exam to the users calendar
-		Exam exam = (Exam)profileExamAdapter.getItem(position);
-	    }
-	});
+        mExamsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // TODO: fire intent to add the exam to the users calendar
+                Exam exam = (Exam)profileExamAdapter.getItem(position);
+            }
+        });
 
         getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_EXAMS_LOADER_ID, null, this);
         return rootView;

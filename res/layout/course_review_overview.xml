@@ -9,13 +9,13 @@
                   android:orientation="vertical">
         <TextView android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-		  android:id="@+id/overall_rating"
+                  android:id="@+id/overall_rating"
                   android:gravity="center"
                   android:textSize="40dp"
                   android:textStyle="bold"
                   android:text="98%" />
-	<TextView android:id="@+id/overall_count"
-		  android:layout_width="match_parent"
+        <TextView android:id="@+id/overall_count"
+                  android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:gravity="center"
                   android:textSize="15dp"
@@ -57,8 +57,8 @@
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:progressDrawable="@drawable/blue_progress_bar"
                     android:progress="80"/>
-	    <TextView android:id="@+id/useful_count"
-		      android:layout_width="wrap_content"
+            <TextView android:id="@+id/useful_count"
+                      android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="26 ratings"
                       android:layout_gravity="center"
@@ -70,15 +70,15 @@
                      android:layout_weight="1"
                      android:gravity="center">
             <ProgressBar
-		    android:id="@+id/easy_bar"
+                    android:id="@+id/easy_bar"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:progressDrawable="@drawable/blue_progress_bar"
                     android:progress="45"/>
-	    <TextView android:id="@+id/easy_count"
-		      android:layout_width="wrap_content"
+            <TextView android:id="@+id/easy_count"
+                      android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="26 ratings"
                       android:layout_gravity="center"

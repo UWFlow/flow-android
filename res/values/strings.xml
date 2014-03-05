@@ -12,11 +12,11 @@
 
     <string name="explore_sort_prompt">Sort by...</string>
     <string-array name="explore_sort_array">
-	<item>Popular</item>
-	<item>Friends Taken</item>
-	<item>Easy</item>
-	<item>Hard</item>
-	<item>Course code</item>
+        <item>Popular</item>
+        <item>Friends Taken</item>
+        <item>Easy</item>
+        <item>Hard</item>
+        <item>Course code</item>
     </string-array>
 
 </resources>

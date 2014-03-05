@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +77,7 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
             User me = users.get(0);
             userName.setText(me.getName());
             userProgram.setText(me.getProgramName());
-	    Picasso.with(getActivity()).load(me.getProfilePicUrls().getLarge()).into(new Target() {
+            Picasso.with(getActivity()).load(me.getProfilePicUrls().getLarge()).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
                     if (userImage != null)
@@ -88,12 +87,12 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                 }
 
                 @Override
-		public void onBitmapFailed(Drawable drawable) {
+                public void onBitmapFailed(Drawable drawable) {
 
-		}
+                }
 
-		@Override
-		public void onPrepareLoad(Drawable drawable) {
+                @Override
+                public void onPrepareLoad(Drawable drawable) {
 
                 }
             });

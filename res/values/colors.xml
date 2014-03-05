@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="flow_blue">#33b4e5</color>
-    <color name="flow_light_blue">#9bdaf2</color>
-    <color name="flow_dark_blue">#ff20a3d9</color>
-    <color name="divider">#DADADA</color>
-    <color name="grey_light">#CCCCCC</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+<color name="flow_blue">#33b4e5</color>
+<color name="flow_light_blue">#9bdaf2</color>
+<color name="flow_dark_blue">#ff20a3d9</color>
+<color name="divider">#DADADA</color>
+<color name="grey_light">#CCCCCC</color>
+<color name="white">#FFFFFF</color>
+<color name="black">#000000</color>
 </resources>

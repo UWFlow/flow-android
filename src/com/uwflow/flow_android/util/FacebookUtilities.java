@@ -33,57 +33,57 @@ public class FacebookUtilities {
     }
 
     public static Bitmap getFacebookProfilePicture(String url){
-	if (url != null) {
-	    try {
-		URL imageURL = new URL(url);
-		Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-		return bitmap;
-	    } catch (MalformedURLException e) {
-		Log.e(Constants.UW_FLOW, "Error creating image URL: " + e);
-	    } catch (IOException e) {
-		Log.e(Constants.UW_FLOW, "Error opening connection during image fetch: " + e);
-	    }
-	}
-	return null;
+        if (url != null) {
+            try {
+                URL imageURL = new URL(url);
+                Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+                return bitmap;
+            } catch (MalformedURLException e) {
+                Log.e(Constants.UW_FLOW, "Error creating image URL: " + e);
+            } catch (IOException e) {
+                Log.e(Constants.UW_FLOW, "Error opening connection during image fetch: " + e);
+            }
+        }
+        return null;
     }
 
     public static AlertDialog createUserDialog(final Context context, final User user) {
-	String firstName = user.getFirstName();
+        String firstName = user.getFirstName();
 
-	final String[] dialogOptions = {
-		String.format("View %s on Flow", firstName),
-		String.format("View %s on Facebook", firstName)};
+        final String[] dialogOptions = {
+                String.format("View %s on Flow", firstName),
+                String.format("View %s on Facebook", firstName)};
 
-	AlertDialog dialog = new AlertDialog.Builder(context)
-		.setTitle("View Profile")
-		.setItems(dialogOptions, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 1:
-                        // View friend on Facebook
-                        Intent profileIntent =
-                                FacebookUtilities.getOpenFBProfileIntent(context, user.getFbid());
-                        context.startActivity(profileIntent);
-                        break;
-                    case 0:
-                    default:
-                        // View friend on Flow
-                        // TODO: route to a user's profile on flow
-                        break;
-                }
-                dialog.dismiss();
-            }
-        }).create();
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle("View Profile")
+                .setItems(dialogOptions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 1:
+                                // View friend on Facebook
+                                Intent profileIntent =
+                                        FacebookUtilities.getOpenFBProfileIntent(context, user.getFbid());
+                                context.startActivity(profileIntent);
+                                break;
+                            case 0:
+                            default:
+                                // View friend on Flow
+                                // TODO: route to a user's profile on flow
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+                }).create();
 
-	return dialog;
+        return dialog;
     }
 
     public static String getFirstWord(String string) {
-	String firstWord = null;
-	if(string.contains(" ")){
-	    firstWord= string.substring(0, string.indexOf(" "));
-	}
-	return firstWord;
+        String firstWord = null;
+        if(string.contains(" ")){
+            firstWord= string.substring(0, string.indexOf(" "));
+        }
+        return firstWord;
     }
 }

@@ -36,7 +36,7 @@ public class FriendListAdapter extends BaseAdapter {
     }
 
     public long getItemId(int position) {
-	return mList.get(position).getUser().getFbid();
+        return mList.get(position).getUser().getFbid();
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -55,19 +55,19 @@ public class FriendListAdapter extends BaseAdapter {
         second = (TextView) convertView.findViewById(R.id.second);
         image = (ImageView) convertView.findViewById(R.id.image);
 
-	final User user = mList.get(position).getUser();
+        final User user = mList.get(position).getUser();
 
-	// Set text fields
-	first.setText(user.getName());
-	second.setText(mList.get(position).getTermName());
+        // Set text fields
+        first.setText(user.getName());
+        second.setText(mList.get(position).getTermName());
 
-	Picasso.with(mContext).load(user.getProfilePicUrls().getLarge()).placeholder(R.drawable.kitty).into(image);
+        Picasso.with(mContext).load(user.getProfilePicUrls().getLarge()).placeholder(R.drawable.kitty).into(image);
 
         // Make this View clickable to open a dialog for Facebook/Flow profile links
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-		FacebookUtilities.createUserDialog(mContext, user).show();
+                FacebookUtilities.createUserDialog(mContext, user).show();
             }
         };
         convertView.setOnClickListener(onClickListener);

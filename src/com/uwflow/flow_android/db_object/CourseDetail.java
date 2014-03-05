@@ -34,11 +34,11 @@ public class CourseDetail {
     protected String description;
 
     public List<Rating> getRatings() {
-	return ratings;
+        return ratings;
     }
 
     public void setRatings(List<Rating> ratings) {
-	this.ratings = ratings;
+        this.ratings = ratings;
     }
 
     public List<Review> getReviews() {

@@ -11,23 +11,23 @@ public class CourseFriend {
     private User user;
 
     public CourseFriend(String termName, User user) {
-	this.termName = termName;
-	this.user = user;
+        this.termName = termName;
+        this.user = user;
     }
 
     public String getTermName() {
-	return termName;
+        return termName;
     }
 
     public void setTermName(String termName) {
-	this.termName = termName;
+        this.termName = termName;
     }
 
     public User getUser() {
-	return user;
+        return user;
     }
 
     public void setUser(User user) {
-	this.user = user;
+        this.user = user;
     }
 }

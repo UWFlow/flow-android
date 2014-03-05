@@ -19,51 +19,51 @@ public class SearchResultAdapter extends BaseAdapter {
     private Context mContext;
 
     public SearchResultAdapter(List<Course> results, Context context) {
-	mResults = results;
-	mContext = context;
+        mResults = results;
+        mContext = context;
     }
 
     public int getCount() {
-	return mResults.size();
+        return mResults.size();
     }
 
     public Object getItem(int arg0) {
-	return mResults.get(arg0);
+        return mResults.get(arg0);
     }
 
     public long getItemId(int position) {
-	// TODO Auto-generated method stub
-	return position;
+        // TODO Auto-generated method stub
+        return position;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-	// verify that convertView is not null
-	if (convertView == null) {
-	    // inflate a new view
-	    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    convertView = inflater.inflate(R.layout.search_row_item, parent, false);
-	}
+        // verify that convertView is not null
+        if (convertView == null) {
+            // inflate a new view
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.search_row_item, parent, false);
+        }
 
-	// Fill view with appropriate data
-	TextView first, second, third, fourth;
+        // Fill view with appropriate data
+        TextView first, second, third, fourth;
 
-	first = (TextView) convertView.findViewById(R.id.course_code);
-	second = (TextView) convertView.findViewById(R.id.course_name);
-	third = (TextView) convertView.findViewById(R.id.rating);
-	fourth = (TextView) convertView.findViewById(R.id.rating_count);
+        first = (TextView) convertView.findViewById(R.id.course_code);
+        second = (TextView) convertView.findViewById(R.id.course_name);
+        third = (TextView) convertView.findViewById(R.id.rating);
+        fourth = (TextView) convertView.findViewById(R.id.rating_count);
 
-	final Course course = mResults.get(position);
+        final Course course = mResults.get(position);
 
-	first.setText(course.getCode());
-	second.setText(course.getName());
-	Double rating = course.getOverall().getRating();
-	if (rating == null) {
-	    third.setText("---");
-	} else {
-	    third.setText(String.format("%d%%", (int)(rating * 100)));
-	}
-	fourth.setText(String.format("%d ratings", (int)(course.getOverall().getCount())));
+        first.setText(course.getCode());
+        second.setText(course.getName());
+        Double rating = course.getOverall().getRating();
+        if (rating == null) {
+            third.setText("---");
+        } else {
+            third.setText(String.format("%d%%", (int)(rating * 100)));
+        }
+        fourth.setText(String.format("%d ratings", (int)(course.getOverall().getCount())));
 
-	return convertView;
+        return convertView;
     }
 }

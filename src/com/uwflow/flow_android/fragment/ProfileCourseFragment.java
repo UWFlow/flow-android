@@ -12,11 +12,8 @@ import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfileCoursesAdapter;
 import com.uwflow.flow_android.constant.Constants;
-import com.uwflow.flow_android.db_object.Course;
 import com.uwflow.flow_android.db_object.UserCourseDetail;
 import com.uwflow.flow_android.loaders.UserCoursesLoader;
-
-import java.util.List;
 
 public class ProfileCourseFragment extends Fragment implements LoaderManager.LoaderCallbacks<UserCourseDetail>{
 
