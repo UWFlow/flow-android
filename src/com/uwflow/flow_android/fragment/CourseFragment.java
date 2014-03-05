@@ -30,6 +30,7 @@ public class CourseFragment extends Fragment {
     private static final String TAG = "CourseFragment";
 
     private String mCourseID;
+    private CoursePagerAdapter mCoursePagerAdapter;
 
     private View rootView;
     private ViewPager mViewPager;
@@ -69,23 +70,19 @@ public class CourseFragment extends Fragment {
         mTabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
 
         mCourseScheduleFragment = new CourseScheduleFragment();
-	mCourseScheduleFragment.setArguments(getArguments());
+        mCourseScheduleFragment.setArguments(getArguments());
         mCourseAboutFragment = new CourseAboutFragment();
-	mCourseAboutFragment.setArguments(getArguments());
+        mCourseAboutFragment.setArguments(getArguments());
         mCourseReviewsFragment = new CourseReviewsFragment();
-	mCourseReviewsFragment.setArguments(getArguments());
+        mCourseReviewsFragment.setArguments(getArguments());
 
-        return rootView;
-    }
+        mCoursePagerAdapter = new CoursePagerAdapter(getChildFragmentManager(),
+                mCourseScheduleFragment,
+                mCourseAboutFragment,
+                mCourseReviewsFragment);
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
-	mViewPager.setAdapter(new CoursePagerAdapter(getActivity().getSupportFragmentManager(),
-		mCourseScheduleFragment,
-		mCourseAboutFragment,
-		mCourseReviewsFragment));
+        mViewPager.setAdapter(mCoursePagerAdapter);
         mTabs.setViewPager(mViewPager);
 
         // Set default tab to About
@@ -113,7 +110,15 @@ public class CourseFragment extends Fragment {
                 startActivity(Intent.createChooser(shareIntent, "Share"));
             }
         });
+
+	    return rootView;
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+	super.onViewCreated(view, savedInstanceState);
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){

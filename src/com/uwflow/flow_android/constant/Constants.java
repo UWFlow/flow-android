@@ -61,7 +61,6 @@ public class Constants {
     public static final String COURSE_ID_KEY = "course_id";
     public static final String COURSE_ID_DEFAULT = "econ101";
     public static final String PROFILE_ID_KEY = "profile_id";
-    public static final String PROFILE_ID_DEFAULT = "5061a8db44957127ebf1bc9a";
 
     public static final int COURSE_SCHEDULE_PAGE_INDEX = 0;
     public static final int COURSE_ABOUT_PAGE_INDEX = 1;

@@ -5,10 +5,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import com.uwflow.flow_android.R;
+import com.uwflow.flow_android.constant.Constants;
 
 public class ProfileScheduleFragment extends Fragment implements View.OnClickListener {
+    private String mProfileID;
 
     private RadioGroup mRadioGroup;
     private ImageView mImageSchedule;
@@ -22,6 +27,8 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+	mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
+
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.profile_schedule_layout, container, false);
 
