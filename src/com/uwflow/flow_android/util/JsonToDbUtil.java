@@ -65,7 +65,13 @@ public class JsonToDbUtil {
         return new Gson().fromJson(gsonObject, CourseUserDetail.class);
     }
 
+    public static SearchResults getSearchResults(JSONObject jsonObject) {
+        JsonObject gsonObject = getJsonObject(jsonObject);
+        return new Gson().fromJson(gsonObject, SearchResults.class);
+    }
+
     private static JsonObject getJsonObject(JSONObject jsonObject) {
         return (JsonObject) new JsonParser().parse(jsonObject.toString());
     }
+
 }

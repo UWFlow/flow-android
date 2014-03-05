@@ -36,6 +36,13 @@ public class FlowApiRequests {
         });
     }
 
+    public static void searchCourses(final FlowApiRequestCallback callback) {
+        // TODO(david): This needs to take search parameters
+        // XXX needs to go into constants
+        final String uri = Constants.API_SEARCH_COURSES;
+        getDetails(Constants.API_REQUEST_CALL_ID.API_SEARCH_COURSES, uri, callback);
+    }
+
     public static void getUser(final FlowApiRequestCallback callback) {
         final String uri = Constants.API_USER;
         getDetails(uri, callback);
@@ -228,6 +235,11 @@ public class FlowApiRequests {
 
                 case Constants.API_REQUEST_CALL_ID.API_USER_SCHEDULE:
                     return JsonToDbUtil.getUserSchedule(jsonObject);
+
+                case Constants.API_REQUEST_CALL_ID.API_SEARCH_COURSES:
+                    return JsonToDbUtil.getSearchResults(jsonObject);
+
+                // TODO(david): Handle default case which throws an exception
             }
             return jsonObject;
         }
@@ -249,7 +261,7 @@ public class FlowApiRequests {
                         callback.getCourseUsersCallback((CourseUserDetail) result);
                         break;
                     case Constants.API_REQUEST_CALL_ID.API_COURSE_SECTIONS:
-			callback.getCourseSectionsCallback((Sections) result);
+                        callback.getCourseSectionsCallback((Sections) result);
                         break;
                     case Constants.API_REQUEST_CALL_ID.API_USER:
                         callback.getUserCallback((User) result);
@@ -265,6 +277,9 @@ public class FlowApiRequests {
                         break;
                     case Constants.API_REQUEST_CALL_ID.API_USER_COURSE:
                         callback.getUserCoursesCallback((UserCourseDetail) result);
+                        break;
+                    case Constants.API_REQUEST_CALL_ID.API_SEARCH_COURSES:
+                        callback.searchCoursesCallback((SearchResults) result);
                         break;
                     default:
                         callback.onSuccess((JSONObject) result);

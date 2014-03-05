@@ -19,6 +19,8 @@
 		   android:layout_height="35dp"
 		   android:src="@drawable/ic_drawer_search_white"/>
 	<EditText android:id="@+id/search_box"
+          android:imeOptions="actionSearch"
+          android:inputType="text"
 		  android:layout_width="0dp"
 		  android:layout_height="wrap_content"
 		  android:layout_weight="1"

@@ -24,6 +24,7 @@ public class Constants {
     public static final String API_USERS_COURSES = "api/v1/users/%s/courses";
     public static final String API_USER_FRIENDS = "api/v1/user/friends";
     public static final String API_USERS_FRIENDS = "api/v1/users/%s/friends";
+    public static final String API_SEARCH_COURSES = "api/v1/search/courses";
 
 
     public static class DatabaseColumnName{
@@ -50,6 +51,7 @@ public class Constants {
         public static final int API_COURSE_PROFESSORS = 7;
         public static final int API_COURSE_USERS = 8;
         public static final int API_COURSE = 9;
+        public static final int API_SEARCH_COURSES = 10;
     }
 
     public static final String UW_FLOW = "uwflow";
