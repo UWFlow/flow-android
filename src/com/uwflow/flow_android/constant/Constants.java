@@ -58,6 +58,9 @@ public class Constants {
 
     public static final String UW_FLOW = "uwflow";
 
+    public static final String COURSE_ID_KEY = "course_id";
+    public static final String PROFILE_ID_KEY = "profile_id";
+
     public static final int COURSE_SCHEDULE_PAGE_INDEX = 0;
     public static final int COURSE_ABOUT_PAGE_INDEX = 1;
     public static final int COURSE_REVIEWS_PAGE_INDEX = 2;
