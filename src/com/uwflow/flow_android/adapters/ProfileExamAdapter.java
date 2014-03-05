@@ -5,15 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.Exam;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Chinmay on 3/1/14.
- */
 public class ProfileExamAdapter extends BaseAdapter {
 
     private List<Exam> mExamList;
@@ -37,15 +37,35 @@ public class ProfileExamAdapter extends BaseAdapter {
         }
 
         // Fill view with appropriate data
-        TextView first, second, third;
+	TextView first, second;
 
         first = (TextView) convertView.findViewById(R.id.first);
         second = (TextView) convertView.findViewById(R.id.second);
-        third = (TextView) convertView.findViewById(R.id.third);
 
-        first.setText(mExamList.get(position).getCourseId());
-        second.setText(mExamList.get(position).getLocation());
-        third.setText(mExamList.get(position).getSections());
+	Exam exam = mExamList.get(position);
+
+	String examID = exam.getCourseId();
+	long startDateSeconds = exam.getStartDate();
+	long endDateSeconds = exam.getEndDate();
+	String location = exam.getLocation();
+	String sections = exam.getSections();
+
+	if (examID == null || startDateSeconds == 0 || endDateSeconds == 0) {
+	    // Don't bother printing out this exam. Insufficient information
+	    new View(mContext).setLayoutParams(new TableLayout.LayoutParams(0, 0));
+	}
+
+	Date startDate = new Date(startDateSeconds);
+	Date endDate = new Date(endDateSeconds);
+	SimpleDateFormat startDateFormat = new SimpleDateFormat ("E, MMM d    h:mma");
+	SimpleDateFormat endDateFormat = new SimpleDateFormat ("hh:mma");
+
+	first.setText(examID.toUpperCase());
+	/* TODO: fetch the course name and place it in a third TextView */
+	second.setText(String.format("%s - %s    %s",
+		startDateFormat.format(startDate),
+		endDateFormat.format(endDate),
+		location));
 
 
         return convertView;

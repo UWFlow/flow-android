@@ -10,16 +10,14 @@ import com.uwflow.flow_android.R;
 
 public class ProfileScheduleFragment extends Fragment implements View.OnClickListener {
 
-    protected RadioGroup mRadioGroup;
-    protected RadioButton mListViewRadioButton;
-    protected RadioButton mWeekViewRadioButton;
-    protected TextView mDateView;
-    protected ImageView mImageSchedule;
-    protected Button mBtnExportCal;
-    protected Button mBtnShare;
-    protected Button mBtnAddAlarm;
+    private RadioGroup mRadioGroup;
+    private ImageView mImageSchedule;
+    private Button mBtnExportCal;
+    private Button mBtnShare;
+    private LinearLayout mScheduleListLayout;
+    private LinearLayout mScheduleWeekLayout;
 
-    protected View rootView;
+    private View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,33 +26,45 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         rootView = inflater.inflate(R.layout.profile_schedule_layout, container, false);
 
         mRadioGroup = (RadioGroup)rootView.findViewById(R.id.radio_group_view);
-        mListViewRadioButton = (RadioButton)rootView.findViewById(R.id.radio_list_view);
-        mWeekViewRadioButton = (RadioButton)rootView.findViewById(R.id.radio_week_view);
-        mDateView = (TextView)rootView.findViewById(R.id.text_view_date);
         mImageSchedule = (ImageView)rootView.findViewById(R.id.image_schedule);
         mBtnExportCal = (Button)rootView.findViewById(R.id.btn_export_calendar);
         mBtnShare = (Button)rootView.findViewById(R.id.btn_share);
-        mBtnAddAlarm = (Button)rootView.findViewById(R.id.btn_schedule_profile);
+	mScheduleListLayout = (LinearLayout)rootView.findViewById(R.id.list_layout);
+	mScheduleWeekLayout = (LinearLayout)rootView.findViewById(R.id.week_layout);
 
-        mImageSchedule.setImageResource(R.drawable.photo_profile_empty);
+	mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+	    @Override
+	    public void onCheckedChanged(RadioGroup group, int checkedId) {
+		switch (checkedId) {
+		    case R.id.radio_list_view:
+			// List layout selected
+			mScheduleListLayout.setVisibility(View.VISIBLE);
+			mScheduleWeekLayout.setVisibility(View.GONE);
+			break;
+		    case R.id.radio_week_view:
+			// Week layout selected
+			mScheduleListLayout.setVisibility(View.GONE);
+			mScheduleWeekLayout.setVisibility(View.VISIBLE);
+		}
+	    }
+	});
 
         mBtnShare.setOnClickListener(this);
+	mBtnExportCal.setOnClickListener(this);
 
         return rootView;
 
     }
 
     public void onClick(View v) {
-        if (v == mBtnShare) {
-
+	switch (v.getId()) {
+	    case R.id.btn_export_calendar:
+		// TODO: handle calendar export
+		break;
+	    case R.id.btn_share:
+		// TODO: handle profile share
+		break;
         }
-        if (v == mBtnExportCal) {
-
-        }
-        if (v == mBtnAddAlarm) {
-
-        }
-
     }
 
     @Override
