@@ -1,17 +1,18 @@
 flow-android
 ============
 
-Android app for UW Flow
+Android app for [UW Flow](https://uwflow.com).
 
-Overview:
-This project uses Gradle build system
-Setup instructions:
-1. Go to gradle.org and get the 1.10(working) or later versions (not sure if it will work)
-2. unzip the tar file
-3. open intellij (or android studio)
-4. select import new project
-5. select "import project from external model"
-6. pick Gradle -> next
-7. Select Use local gradle distribution and set gradle home to the unzipped tar file location
-8. Let intellij download gradle tools
-9. Done! You can press run to deploy to a device or simulator
+This project uses the [Gradle build system](http://www.gradle.org).
+
+## Setup
+
+1. Go to gradle.org and get the 1.10 (tested) or later versions (not sure if it will work)
+1. Unzip the file
+1. Open Intellij (or Android Studio)
+1. Select "Import new project"
+1. Select "Import project from external model"
+1. Pick Gradle -> next
+1. Select Use local gradle distribution and set gradle home to the unzipped tar file location
+1. Let Intellij download gradle tools
+1. Done! You can press run to deploy to a device or simulator
