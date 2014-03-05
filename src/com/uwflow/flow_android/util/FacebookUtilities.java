@@ -7,9 +7,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.User;
+import com.uwflow.flow_android.fragment.ProfileFragment;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -47,7 +52,7 @@ public class FacebookUtilities {
         return null;
     }
 
-    public static AlertDialog createUserDialog(final Context context, final User user) {
+    public static AlertDialog createUserDialog(final Context context, final User user, final int resId, final FragmentManager fragmentManager) {
         String firstName = user.getFirstName();
 
         final String[] dialogOptions = {
@@ -69,7 +74,16 @@ public class FacebookUtilities {
                             case 0:
                             default:
                                 // View friend on Flow
-                                // TODO: route to a user's profile on flow
+
+				Fragment profileFragment = new ProfileFragment();
+				Bundle bundle = new Bundle();
+				bundle.putString(Constants.PROFILE_ID_KEY, user.getId());
+				profileFragment.setArguments(bundle);
+
+				FragmentTransaction transaction = fragmentManager.beginTransaction(); // TODO: the fragmentmanager argument is final, this might be problematic
+				transaction.replace(resId, profileFragment);
+				transaction.addToBackStack(null);
+				transaction.commit();
                                 break;
                         }
                         dialog.dismiss();

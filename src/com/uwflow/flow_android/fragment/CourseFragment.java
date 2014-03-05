@@ -29,9 +29,6 @@ import java.util.Map;
 public class CourseFragment extends Fragment {
     private static final String TAG = "CourseFragment";
 
-    private View rootView;
-    protected ViewPager mViewPager;
-    protected PagerSlidingTabStrip mTabs;
     private String mCourseID;
 
     private View rootView;
@@ -72,8 +69,12 @@ public class CourseFragment extends Fragment {
         mTabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
 
         mCourseScheduleFragment = new CourseScheduleFragment();
+	mCourseScheduleFragment.setArguments(getArguments());
         mCourseAboutFragment = new CourseAboutFragment();
+	mCourseAboutFragment.setArguments(getArguments());
         mCourseReviewsFragment = new CourseReviewsFragment();
+	mCourseReviewsFragment.setArguments(getArguments());
+
         return rootView;
     }
 

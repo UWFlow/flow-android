@@ -50,7 +50,7 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         userProgram = (TextView) rootView.findViewById(R.id.user_program);
         viewPager = (ViewPager) rootView.findViewById(R.id.pager);
 
-	mProfileID = getArguments().getString(Constants.PROFILE_ID_KEY, "" /* default value */);
+        mProfileID = getArguments().getString(Constants.PROFILE_ID_KEY, "" /* default value */);
 
         getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_LOADER_ID, null, this);
         return rootView;
