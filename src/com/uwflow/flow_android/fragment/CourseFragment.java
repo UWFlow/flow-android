@@ -26,6 +26,7 @@ public class CourseFragment extends Fragment {
     private static final String TAG = "CourseFragment";
 
     private String mCourseID;
+    private CoursePagerAdapter mCoursePagerAdapter;
 
     private View rootView;
     private ViewPager mViewPager;
@@ -71,17 +72,13 @@ public class CourseFragment extends Fragment {
         mCourseReviewsFragment = new CourseReviewsFragment();
 	mCourseReviewsFragment.setArguments(getArguments());
 
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
-	mViewPager.setAdapter(new CoursePagerAdapter(getActivity().getSupportFragmentManager(),
+	mCoursePagerAdapter = new CoursePagerAdapter(getChildFragmentManager(),
 		mCourseScheduleFragment,
 		mCourseAboutFragment,
-		mCourseReviewsFragment));
+		mCourseReviewsFragment);
+
+        mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+	mViewPager.setAdapter(mCoursePagerAdapter);
         mTabs.setViewPager(mViewPager);
 
         // Set default tab to About
@@ -109,7 +106,15 @@ public class CourseFragment extends Fragment {
                 startActivity(Intent.createChooser(shareIntent, "Share"));
             }
         });
+
+	    return rootView;
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+	super.onViewCreated(view, savedInstanceState);
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
