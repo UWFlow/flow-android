@@ -27,6 +27,9 @@ import java.util.HashMap;
  */
 public class CourseAboutFragment extends Fragment {
     private static final String TAG = "CourseAboutFragment";
+
+    private String mCourseID;
+
     private BaseAdapter mFriendListAdapter;
     private LinearLayout mFriendListContainer;
     private TextView mFriendListTextView;
@@ -40,6 +43,9 @@ public class CourseAboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+	mCourseID = getArguments() != null ? getArguments().getString(Constants.COURSE_ID_KEY,
+		Constants.COURSE_ID_DEFAULT) : Constants.COURSE_ID_DEFAULT;
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.course_about, container, false);
 
@@ -65,7 +71,7 @@ public class CourseAboutFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
 	super.onActivityCreated(savedInstanceState);
 
-	fetchCourseFriends("psych101");
+	fetchCourseFriends(mCourseID);
     }
 
     public void loadCourseInfo(CourseDetail courseDetail) {
@@ -96,26 +102,26 @@ public class CourseAboutFragment extends Fragment {
 
     private void fetchCourseFriends(String course){
 	FlowApiRequests.getCourseUsers(
-            course,
-            new FlowApiRequestCallbackAdapter() {
-                @Override
-                public void getCourseUsersCallback(CourseUserDetail courseUserDetail) {
-                    ArrayList<CourseFriend> courseFriends = getConsolidatedCourseFriendList(courseUserDetail);
+		course,
+		new FlowApiRequestCallbackAdapter() {
+		    @Override
+		    public void getCourseUsersCallback(CourseUserDetail courseUserDetail) {
+			ArrayList<CourseFriend> courseFriends = getConsolidatedCourseFriendList(courseUserDetail);
 
-                    mFriendListAdapter = new FriendListAdapter(courseFriends, getActivity());
+			mFriendListAdapter = new FriendListAdapter(courseFriends, getActivity(), getFragmentManager());
 
-                    // Reload the TextView indicating the number of course friends
-                    mFriendListTextView.setText(String.format("%d friends took this", mFriendListAdapter.getCount()));
+			// Reload the TextView indicating the number of course friends
+			mFriendListTextView.setText(String.format("%d friends took this", mFriendListAdapter.getCount()));
 
-                    // Re-populate UI with new data
-                    mFriendListContainer.removeAllViews();
-                    for (int i = 0; i < mFriendListAdapter.getCount(); i++) {
-                        View item = mFriendListAdapter.getView(i, null, null);
+			// Re-populate UI with new data
+			mFriendListContainer.removeAllViews();
+			for (int i = 0; i < mFriendListAdapter.getCount(); i++) {
+			    View item = mFriendListAdapter.getView(i, null, null);
 
-                        mFriendListContainer.addView(item);
+			    mFriendListContainer.addView(item);
+			}
                     }
-                }
-            });
+		});
     }
 
     private ArrayList<CourseFriend> getConsolidatedCourseFriendList(CourseUserDetail courseUserDetail) {

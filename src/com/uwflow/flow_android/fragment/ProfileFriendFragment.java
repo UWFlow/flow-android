@@ -47,7 +47,7 @@ public class ProfileFriendFragment extends Fragment implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<User>> listLoader, List<User> users) {
-        profileFriendAdapter = new ProfileFriendAdapter(users, getActivity());
+	profileFriendAdapter = new ProfileFriendAdapter(users, getActivity(), getFragmentManager());
         mProfileFriendList.setAdapter(profileFriendAdapter);
     }
 
