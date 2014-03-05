@@ -23,7 +23,7 @@ import com.uwflow.flow_android.network.FlowApiRequests;
  * Created by jasperfung on 2/21/14.
  */
 public class CourseFragment extends Fragment {
-    private static final String COURSE_ID_ARG = "courseId";
+    private static final String TAG = "CourseFragment";
 
     private View rootView;
     protected ViewPager mViewPager;
@@ -37,7 +37,7 @@ public class CourseFragment extends Fragment {
     private CourseReviewsFragment mCourseReviewsFragment;
 
     /**
-     * Static method to create a new instance of this class with arguments passed as a bundle.
+     * Static method to instantiate this class with arguments passed as a bundle.
      * @param courseId The ID of the course to show.
      * @return A new instance.
      */
@@ -45,10 +45,14 @@ public class CourseFragment extends Fragment {
         CourseFragment courseFragment = new CourseFragment();
 
         Bundle args = new Bundle();
-        args.putString(COURSE_ID_ARG, courseId);
+        args.putString(Constants.COURSE_ID_KEY, courseId);
         courseFragment.setArguments(args);
 
         return courseFragment;
+    }
+
+    // Only allow instantiation via the static method.
+    private CourseFragment() {
     }
 
     @Override
@@ -109,8 +113,13 @@ public class CourseFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         // TODO(david): Should show a spinner here while course info is loading
-        String courseId = getArguments().getString(COURSE_ID_ARG);
-        fetchCourseInfo(courseId);
+        Bundle args = getArguments();
+        if (args != null) {
+            String courseId = getArguments().getString(Constants.COURSE_ID_KEY);
+            fetchCourseInfo(courseId);
+        } else {
+            Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
+        }
     }
 
     private void fetchCourseInfo(String course){

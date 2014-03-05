@@ -2,6 +2,7 @@ package com.uwflow.flow_android.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -24,14 +25,6 @@ import java.util.List;
  */
 public class ExploreFragment extends Fragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "ExploreFragment";
-
-    // NOTE: The positions here need to be in sync with
-    private static final int SORT_POPULAR = 0;
-    private static final int SORT_FRIENDS_TAKEN = 1;
-    private static final int SORT_INTERESTING = 5;
-    private static final int SORT_EASY = 2;
-    private static final int SORT_HARD = 3;
-    private static final int SORT_COURSE_CODE = 4;
 
     // TODO(david): Convert all the search stuff to use a SearchView, which gets us things like suggestions
     //     See http://developer.android.com/guide/topics/search/search-dialog.html
@@ -80,15 +73,6 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
             }
         });
 
-        // Do search on search submit button click
-        Button searchButton = (Button)rootView.findViewById(R.id.temp_search_button);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                   doSearch();
-            }
-        });
-
         // Do search on edit text submit
         mSearchBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -126,7 +110,12 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
      */
     private void doSearch() {
         // TODO(david): We should first gray-out results and show a spinner
-        String searchString = mSearchBox.getText().toString();
+
+        Editable searchBoxText = mSearchBox.getText();
+        String searchString = "";
+        if (searchBoxText != null) {
+            searchString = searchBoxText.toString();
+        }
 
         // TODO(david): Do search based on parameters
 
