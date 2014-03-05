@@ -13,7 +13,8 @@
     <string name="explore_sort_prompt">Sort by...</string>
     <string-array name="explore_sort_array">
         <item>Popular</item>
-        <item>Friends Taken</item>
+        <item>Friends taken</item>
+        <item>Interesting</item>
         <item>Easy</item>
         <item>Hard</item>
         <item>Course code</item>

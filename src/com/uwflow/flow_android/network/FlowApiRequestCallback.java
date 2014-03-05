@@ -38,4 +38,7 @@ public abstract class FlowApiRequestCallback {
 
     public void getCourseProfessorCallback(Professors professors) {
     }
+
+    public void searchCoursesCallback(SearchResults searchResults) {
+    }
 }

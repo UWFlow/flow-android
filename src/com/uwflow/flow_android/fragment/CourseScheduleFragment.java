@@ -100,7 +100,7 @@ public class CourseScheduleFragment extends Fragment {
     }
 
     private void fetchCourseSections(String course){
-        FlowApiRequests.searchCourseSections(
+        FlowApiRequests.getCourseSections(
                 course,
                 new FlowApiRequestCallbackAdapter() {
                     @Override

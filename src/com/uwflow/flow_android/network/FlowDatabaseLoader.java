@@ -3,14 +3,12 @@ package com.uwflow.flow_android.network;
 import android.content.Context;
 import android.os.AsyncTask;
 import com.j256.ormlite.dao.Dao;
-import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.util.JsonToDbUtil;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  * This method fetches data from the network and populates the database
@@ -34,10 +32,10 @@ public class FlowDatabaseLoader {
     }
 
     public void reloadUserMe(final int index, final FlowResultCollector flowResultCollector){
-        FlowApiRequests.searchUser(new FlowApiRequestCallbackAdapter() {
+        FlowApiRequests.getUser(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
-                new AsyncTask<JSONObject, Void, Object>(){
+                new AsyncTask<JSONObject, Void, Object>() {
 
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
@@ -67,10 +65,10 @@ public class FlowDatabaseLoader {
     }
 
     public void reloadProfileFriends(final int index, final FlowResultCollector flowResultCollector){
-        FlowApiRequests.searchUserFriends(new FlowApiRequestCallbackAdapter() {
+        FlowApiRequests.getUserFriends(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
-                new AsyncTask<JSONObject, Void, Object>(){
+                new AsyncTask<JSONObject, Void, Object>() {
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
                         UserFriends userFriends = JsonToDbUtil.getUserFriends(jsonObjects[0]);
@@ -100,10 +98,10 @@ public class FlowDatabaseLoader {
     }
 
     public void reloadProfileSchedule(final int index, final FlowResultCollector flowResultCollector){
-        FlowApiRequests.searchUserSchedule(new FlowApiRequestCallbackAdapter() {
+        FlowApiRequests.getUserSchedule(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
-                new AsyncTask<JSONObject, Void, Object>(){
+                new AsyncTask<JSONObject, Void, Object>() {
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
                         ScheduleCourses scheduleCourses = JsonToDbUtil.getUserSchedule(jsonObjects[0]);
@@ -133,11 +131,11 @@ public class FlowDatabaseLoader {
     }
 
     public void reloadProfileExams(final int index, final FlowResultCollector flowResultCollector){
-        FlowApiRequests.searchUserExams(new FlowApiRequestCallbackAdapter() {
+        FlowApiRequests.getUserExams(new FlowApiRequestCallbackAdapter() {
 
             @Override
             public void onSuccess(JSONObject response) {
-                new AsyncTask<JSONObject, Void, Object>(){
+                new AsyncTask<JSONObject, Void, Object>() {
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
                         Exams userExams = JsonToDbUtil.getUserExams(jsonObjects[0]);
@@ -167,10 +165,10 @@ public class FlowDatabaseLoader {
     }
 
     public void reloadProfileCourses(final int index, final FlowResultCollector flowResultCollector){
-        FlowApiRequests.searchUserCourses(new FlowApiRequestCallbackAdapter() {
+        FlowApiRequests.getUserCourses(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
-                new AsyncTask<JSONObject, Void, Object>(){
+                new AsyncTask<JSONObject, Void, Object>() {
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
                         UserCourseDetail userCourses = JsonToDbUtil.getUserCourseDetail(jsonObjects[0]);

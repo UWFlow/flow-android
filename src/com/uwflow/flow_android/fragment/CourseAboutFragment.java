@@ -95,27 +95,27 @@ public class CourseAboutFragment extends Fragment {
 
 
     private void fetchCourseFriends(String course){
-	FlowApiRequests.searchCourseUsers(
-		course,
-		new FlowApiRequestCallbackAdapter() {
-		    @Override
-		    public void getCourseUsersCallback(CourseUserDetail courseUserDetail) {
-			ArrayList<CourseFriend> courseFriends = getConsolidatedCourseFriendList(courseUserDetail);
+	FlowApiRequests.getCourseUsers(
+            course,
+            new FlowApiRequestCallbackAdapter() {
+                @Override
+                public void getCourseUsersCallback(CourseUserDetail courseUserDetail) {
+                    ArrayList<CourseFriend> courseFriends = getConsolidatedCourseFriendList(courseUserDetail);
 
-			mFriendListAdapter = new FriendListAdapter(courseFriends, getActivity());
+                    mFriendListAdapter = new FriendListAdapter(courseFriends, getActivity());
 
-			// Reload the TextView indicating the number of course friends
-			mFriendListTextView.setText(String.format("%d friends took this", mFriendListAdapter.getCount()));
+                    // Reload the TextView indicating the number of course friends
+                    mFriendListTextView.setText(String.format("%d friends took this", mFriendListAdapter.getCount()));
 
-			// Re-populate UI with new data
-			mFriendListContainer.removeAllViews();
-			for (int i = 0; i < mFriendListAdapter.getCount(); i++) {
-			    View item = mFriendListAdapter.getView(i, null, null);
+                    // Re-populate UI with new data
+                    mFriendListContainer.removeAllViews();
+                    for (int i = 0; i < mFriendListAdapter.getCount(); i++) {
+                        View item = mFriendListAdapter.getView(i, null, null);
 
-			    mFriendListContainer.addView(item);
-			}
-		    }
-		});
+                        mFriendListContainer.addView(item);
+                    }
+                }
+            });
     }
 
     private ArrayList<CourseFriend> getConsolidatedCourseFriendList(CourseUserDetail courseUserDetail) {

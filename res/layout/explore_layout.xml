@@ -19,20 +19,16 @@
                    android:layout_height="35dp"
                    android:src="@drawable/ic_drawer_search_white"/>
         <EditText android:id="@+id/search_box"
+                  android:imeOptions="actionSearch"
+                  android:inputType="text"
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
                   android:textSize="22dp"
                   android:singleLine="true"
                   android:textColor="@color/white"
-                  android:text="e.g. econ101, psych"
-                />
-        <Button android:id="@+id/temp_search_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14dp"
-                android:text="Search!"
-                />
+                  android:textColorHint="@color/grey_lightest"
+                  android:hint="eg. econ101, cs"/>
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -60,11 +56,4 @@
               android:layout_width="match_parent"
               android:layout_height="0dp"
               android:layout_weight="1" />
-
-    <Button style="@style/Flow.StyledButton"
-            android:id="@+id/btn_open_course"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="Open Course" />
 </LinearLayout>

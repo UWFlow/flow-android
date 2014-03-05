@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.uwflow.flow_android.network.FlowApiRequests;
  * Created by jasperfung on 2/21/14.
  */
 public class CourseFragment extends Fragment {
+    private static final String TAG = "CourseFragment";
+
     private View rootView;
     protected ViewPager mViewPager;
     protected PagerSlidingTabStrip mTabs;
@@ -32,6 +35,25 @@ public class CourseFragment extends Fragment {
     private CourseScheduleFragment mCourseScheduleFragment;
     private CourseAboutFragment mCourseAboutFragment;
     private CourseReviewsFragment mCourseReviewsFragment;
+
+    /**
+     * Static method to instantiate this class with arguments passed as a bundle.
+     * @param courseId The ID of the course to show.
+     * @return A new instance.
+     */
+    public static CourseFragment newInstance(String courseId) {
+        CourseFragment courseFragment = new CourseFragment();
+
+        Bundle args = new Bundle();
+        args.putString(Constants.COURSE_ID_KEY, courseId);
+        courseFragment.setArguments(args);
+
+        return courseFragment;
+    }
+
+    // Only allow instantiation via the static method.
+    private CourseFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,12 +106,25 @@ public class CourseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+    }
 
-        fetchCourseInfo("psych101");
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // TODO(david): Should show a spinner here while course info is loading
+        Bundle args = getArguments();
+        if (args != null) {
+            String courseId = getArguments().getString(Constants.COURSE_ID_KEY);
+            fetchCourseInfo(courseId);
+        } else {
+            Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
+        }
     }
 
     private void fetchCourseInfo(String course){
-        FlowApiRequests.searchCourse(
+
+        FlowApiRequests.getCourse(
                 course,
                 new FlowApiRequestCallbackAdapter() {
                     @Override
