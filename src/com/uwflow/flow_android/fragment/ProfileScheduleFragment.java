@@ -29,6 +29,7 @@ import java.util.List;
 
 public class ProfileScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ScheduleCourse>>, View.OnClickListener {
     private String mProfileID;
+    private String mScheduleImageURL;
 
     private RadioGroup mRadioGroup;
     private ImageView mImageSchedule;
@@ -70,6 +71,7 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
             }
         });
 
+	mBtnShare.setEnabled(false);
         mBtnShare.setOnClickListener(this);
         mBtnExportCal.setOnClickListener(this);
 
@@ -89,7 +91,11 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
                 // TODO: handle calendar export
                 break;
             case R.id.btn_share:
-                // TODO: handle profile share
+		Intent shareIntent = new Intent(Intent.ACTION_SEND);
+		shareIntent.setType("text/plain");
+		shareIntent.putExtra(Intent.EXTRA_TEXT, mScheduleImageURL);
+		shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out my schedule!");
+		startActivity(Intent.createChooser(shareIntent, "Share schedule"));
                 break;
         }
     }
@@ -107,13 +113,15 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
     }
 
     @Override
-    public void onLoadFinished(Loader<List<ScheduleCourse>> arrayListLoader, List<ScheduleCourse> scheduleCourses) {
+    public void onLoadFinished(Loader<List<ScheduleCourse>> arrayListLoader, final List<ScheduleCourse> scheduleCourses) {
         if (!scheduleCourses.isEmpty() && scheduleCourses.get(0).getScheduleUrl() != null){
             Picasso.with(getActivity().getApplicationContext()).load(scheduleCourses.get(0).getScheduleUrl()).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
                     scheduleBitmap = bitmap;
                     mImageSchedule.setImageBitmap(bitmap);
+		    mScheduleImageURL = scheduleCourses.get(0).getScheduleUrl();
+		    mBtnShare.setEnabled(true);
                 }
 
                 @Override
@@ -145,8 +153,10 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
 			if (scheduleCourses.getScreenshotUrl() != null) {
 			    // assume the URL is valid and an image will be returned
 			    // TODO: change this conditional to 'if the image is successfully fetched'
+			    mScheduleImageURL = scheduleCourses.getScreenshotUrl();
 			    Picasso.with(getActivity().getApplicationContext())
-				    .load(scheduleCourses.getScreenshotUrl()).into(mImageSchedule);
+				    .load(mScheduleImageURL).into(mImageSchedule);
+			    mBtnShare.setEnabled(true);
 			}
 		    }
 		});

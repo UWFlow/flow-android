@@ -112,7 +112,7 @@ public class CourseFragment extends Fragment {
                 // TODO: we need to construct a valid share-link
                 shareIntent.putExtra(Intent.EXTRA_TEXT, "http://www.uwflow.com");
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out this course!");
-                startActivity(Intent.createChooser(shareIntent, "Share"));
+		startActivity(Intent.createChooser(shareIntent, "Share course"));
             }
         });
 

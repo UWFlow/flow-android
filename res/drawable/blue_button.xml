@@ -2,14 +2,21 @@
 
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true">
+    <item android:state_enabled="false">
+	<shape xmlns:android="http://schemas.android.com/apk/res/android"
+	       android:shape="rectangle">
+	    <solid android:color="@color/grey_light"/>
+	    <corners android:radius="8dp"/>
+	</shape>
+    </item>
+    <item android:state_enabled="true" android:state_pressed="true">
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
                android:shape="rectangle">
             <solid android:color="@color/flow_dark_blue"/>
             <corners android:radius="8dp"/>
         </shape>
     </item>
-    <item>
+    <item android:state_enabled="true">
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
                android:shape="rectangle">
             <solid android:color="@color/flow_blue"/>
