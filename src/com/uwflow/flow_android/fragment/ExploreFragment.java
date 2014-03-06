@@ -17,8 +17,7 @@ import com.uwflow.flow_android.db_object.SearchResults;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by wentaoji on 2014-02-18.
@@ -37,9 +36,25 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
 
     private SearchResultAdapter mSearchResultAdapter;
 
+    private static final Map<String, String> mSortModesMap;
+    static {
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put("Popular", "popular");
+        map.put("Friends taken", "friends_taken");
+        map.put("Interesting", "interesting");
+        map.put("Easy", "easy");
+        map.put("Hard", "hard");
+        map.put("Course code", "course code");
+        mSortModesMap = Collections.unmodifiableMap(map);
+    }
+
+    private ArrayAdapter<CharSequence> mSortModesAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // TODO(david): Restore search results from bundle (don't re-fetch when pressing back)
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.explore_layout, container, false);
         mSearchBox = (EditText)rootView.findViewById(R.id.search_box);
@@ -51,6 +66,12 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mSearchResultAdapter = new SearchResultAdapter(mSearchResultList, getActivity());
         mResultsListView.setAdapter(mSearchResultAdapter);
         mResultsListView.setOnItemClickListener(this);
+
+        // Populate the sort spinner
+        mSortModesAdapter = new ArrayAdapter <CharSequence>(getActivity(), android.R.layout.simple_spinner_item,
+                mSortModesMap.keySet().toArray(new CharSequence[0]));
+        mSortModesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSortSpinner.setAdapter(mSortModesAdapter);
 
         // Do search on sort mode change
         mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -111,21 +132,29 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     private void doSearch() {
         // TODO(david): We should first gray-out results and show a spinner
 
+        // Get keywords
         Editable searchBoxText = mSearchBox.getText();
-        String searchString = "";
+        String keywords = "";
         if (searchBoxText != null) {
-            searchString = searchBoxText.toString();
+            keywords = searchBoxText.toString();
         }
 
-        // TODO(david): Do search based on parameters
+        // Get sort mode
+        Object sortItem = mSortSpinner.getSelectedItem();
+        String sortMode = sortItem == null ? "" : mSortModesMap.get(sortItem.toString());
 
-        FlowApiRequests.searchCourses(new FlowApiRequestCallbackAdapter() {
+        // Get whether we should exclude taken courses
+        // TODO(david): Change this checkbox to say "exclude courses I've taken" like on the web app
+        boolean excludeTakenCourses = !mIncludeTakenCheckBox.isChecked();
+
+        FlowApiRequests.searchCourses(keywords, sortMode, excludeTakenCourses, new FlowApiRequestCallbackAdapter() {
             @Override
             public void searchCoursesCallback(SearchResults searchResults) {
-                // TODO(david): Is there a way to reset contents of a List?
                 mSearchResultList.clear();
                 mSearchResultList.addAll(searchResults.getCourses());
                 mSearchResultAdapter.notifyDataSetChanged();
+
+                mResultsListView.setSelectionAfterHeaderView();
             }
         });
 

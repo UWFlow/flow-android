@@ -44,7 +44,6 @@
         <Spinner android:id="@+id/sort_spinner"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
-                 android:entries="@array/explore_sort_array"
                  android:prompt="@string/explore_sort_prompt"
                 />
     </LinearLayout>
