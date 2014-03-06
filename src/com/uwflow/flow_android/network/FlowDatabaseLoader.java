@@ -3,6 +3,7 @@ package com.uwflow.flow_android.network;
 import android.content.Context;
 import android.os.AsyncTask;
 import com.j256.ormlite.dao.Dao;
+import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.util.JsonToDbUtil;
@@ -42,6 +43,12 @@ public class FlowDatabaseLoader {
                         try {
                             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
                             User user = JsonToDbUtil.getUserMe(jsonObjects[0]);
+                            if (user.getProfilePicUrls().getSquare() != null){
+                                Picasso.with(context).load(user.getProfilePicUrls().getSquare()).fetch();
+                            }
+                            if (user.getProfilePicUrls().getLarge() != null){
+                                Picasso.with(context).load(user.getProfilePicUrls().getLarge()).fetch();
+                            }
                             if (user != null)
                                 userDao.createOrUpdate(user);
                         } catch (SQLException e) {
@@ -75,6 +82,9 @@ public class FlowDatabaseLoader {
                         try {
                             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
                             for (User u : userFriends.getFriends()) {
+                                if (u.getProfilePicUrls().getSquare() != null){
+                                    Picasso.with(context).load(u.getProfilePicUrls().getSquare()).fetch();
+                                }
                                 userDao.createOrUpdate(u);
                             }
                         } catch (SQLException e) {
@@ -105,9 +115,13 @@ public class FlowDatabaseLoader {
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
                         ScheduleCourses scheduleCourses = JsonToDbUtil.getUserSchedule(jsonObjects[0]);
+                        if (scheduleCourses.getScreenshotUrl() != null){
+                            Picasso.with(context).load(scheduleCourses.getScreenshotUrl()).fetch();
+                        }
                         try {
                             Dao<ScheduleCourse, String> userCourseSchedule = flowDatabaseHelper.getUserScheduleCourseDao();
                             for (ScheduleCourse sc : scheduleCourses.getScheduleCourses()) {
+                                sc.setScheduleUrl(scheduleCourses.getScreenshotUrl());
                                 userCourseSchedule.createOrUpdate(sc);
                             }
                         } catch (SQLException e) {

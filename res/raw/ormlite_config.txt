@@ -1,5 +1,5 @@
 #
-# generated on 2014/03/03 02:49:50
+# generated on 2014/03/06 01:10:38
 #
 # --table-start--
 dataClass=com.uwflow.flow_android.db_object.Course
@@ -108,6 +108,9 @@ fieldName=sectionNum
 # --field-end--
 # --field-start--
 fieldName=classNum
+# --field-end--
+# --field-start--
+fieldName=scheduleUrl
 # --field-end--
 # --table-fields-end--
 # --table-end--
