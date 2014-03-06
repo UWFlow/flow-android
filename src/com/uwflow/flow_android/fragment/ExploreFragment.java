@@ -34,6 +34,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     private Spinner mSortSpinner;
     private CheckBox mIncludeTakenCheckBox;
     private ListView mResultsListView;
+    private View mFooterView;
 
     private List<Course> mSearchResultList;
 
@@ -66,17 +67,12 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mResultsListView = (ListView)rootView.findViewById(R.id.results_list);
 
         mSearchResultList = new ArrayList<Course>();
+        mFooterView = inflater.inflate(R.layout.search_results_footer, null, false);
+        mResultsListView.addFooterView(mFooterView);
         mSearchResultAdapter = new SearchResultAdapter(mSearchResultList, getActivity());
         mResultsListView.setAdapter(mSearchResultAdapter);
         mResultsListView.setOnItemClickListener(this);
 
-        // Infinite scroll: load next page of results when scrolled towards the end of the list.
-        mResultsListView.setOnScrollListener(new InfiniteScrollListener() {
-            @Override
-            public void onLoadMore(int page) {
-                doSearch(page);
-            }
-        });
 
         // Populate the sort spinner
         mSortModesAdapter = new ArrayAdapter <CharSequence>(getActivity(), android.R.layout.simple_spinner_item,
@@ -84,6 +80,12 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mSortModesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSortSpinner.setAdapter(mSortModesAdapter);
 
+        setUpListeners();
+
+        return rootView;
+    }
+
+    private void setUpListeners() {
         // Do search on sort mode change
         mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -124,13 +126,20 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
             }
         });
 
-        return rootView;
+        // Infinite scroll: load next page of results when scrolled towards the end of the list.
+        mResultsListView.setOnScrollListener(new InfiniteScrollListener() {
+            @Override
+            public void onLoadMore(int page) {
+                doSearch(page);
+            }
+        });
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
+        // TODO(david): Figure out why three requests are kicked off instead of just one on fragment loaded
         // TODO(david): Add a "fetching results..." empty state here
         doSearch(0);
     }
@@ -149,7 +158,8 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
      * @param page The page to load. Pass 0 if loading search results for a different query/filters.
      */
     private void doSearch(final int page) {
-        // TODO(david): We should first gray-out results and show a spinner
+        // TODO(david): Fade-out existing search results if page == 0
+        mFooterView.setVisibility(View.VISIBLE);
 
         // Get keywords
         Editable searchBoxText = mSearchBox.getText();
@@ -179,6 +189,8 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
                 if (page == 0) {
                     mResultsListView.setSelectionAfterHeaderView();
                 }
+
+                mFooterView.setVisibility(View.GONE);
             }
         });
     }
