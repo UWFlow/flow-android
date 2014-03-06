@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:padding="5dp"
+              android:padding="6dp"
               android:gravity="center_vertical"
               android:orientation="horizontal">
 
@@ -13,9 +13,9 @@
             android:layout_width="141dp"
             android:layout_height="wrap_content"
             android:text="PHIL 110A"
-            android:padding="3dp"
             android:textSize="22sp"
             android:textStyle="bold"
+            android:textAllCaps="true"
             android:gravity="center"/>
 
     <TextView
@@ -23,7 +23,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Introduction to Philosophy: Knowledge and Reality"
-            android:padding="3dp"
             android:textSize="15sp" />
 
 
