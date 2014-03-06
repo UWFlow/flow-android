@@ -1,5 +1,6 @@
 package com.uwflow.flow_android.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.SearchResultAdapter;
@@ -109,6 +111,13 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     doSearch(0);
+
+                    // Hide the keyboard. See http://stackoverflow.com/questions/1109022
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
                     return true;
                 }
                 return false;
