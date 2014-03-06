@@ -20,10 +20,10 @@
                       android:layout_marginRight="10dp">
             <TextView android:id="@+id/course_code"
                       android:layout_width="fill_parent" android:layout_height="wrap_content"
-                      android:text="MUSIC 140" android:textSize="24dp" android:textStyle="bold" />
+                      android:text="" android:textSize="24dp" android:textStyle="bold" />
             <TextView android:id="@+id/course_name"
                       android:layout_width="fill_parent" android:layout_height="wrap_content"
-                      android:text="Popular Music and Culture Forever and Ever and Ever and Ever and Ever"
+                      android:text=""
                       android:textSize="18dp" android:maxLines="2" android:ellipsize="end"/>
         </LinearLayout>
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
