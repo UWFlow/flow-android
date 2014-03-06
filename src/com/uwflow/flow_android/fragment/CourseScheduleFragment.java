@@ -17,7 +17,7 @@ import com.uwflow.flow_android.db_object.Section;
 import com.uwflow.flow_android.db_object.Sections;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
-import com.uwflow.flow_android.util.DateHelper;
+import com.uwflow.flow_android.util.CalendarHelper;
 
 import java.util.List;
 
@@ -81,7 +81,7 @@ public class CourseScheduleFragment extends Fragment {
                             // Generate LinearLayouts for every list item
                             String lastTerm = "";
                             for (int i = 0; i < mCourseClassListAdapter.getCount(); i++) {
-				String currentTerm = DateHelper.formatTermNicely(((Section) mCourseClassListAdapter.getItem(i)).getTermId());
+				String currentTerm = CalendarHelper.formatTermNicely(((Section) mCourseClassListAdapter.getItem(i)).getTermId());
                                 if (!currentTerm.equals(lastTerm)) {
                                     // Insert a header for a new term
                                     lastTerm = currentTerm;

@@ -14,7 +14,7 @@ import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.Rating;
 import com.uwflow.flow_android.db_object.Review;
 import com.uwflow.flow_android.db_object.User;
-import com.uwflow.flow_android.util.DateHelper;
+import com.uwflow.flow_android.util.CalendarHelper;
 import com.uwflow.flow_android.util.FacebookUtilities;
 
 import java.util.Date;
@@ -112,7 +112,7 @@ public class CourseReviewAdapter extends BaseAdapter {
         }
 
         // Set date field
-        second.setText(DateHelper.getShortString(new Date(review.getCommentDate())));
+        second.setText(CalendarHelper.getShortString(new Date(review.getCommentDate())));
         reviewText.setText(review.getComment());
 
         // Set state of ratings

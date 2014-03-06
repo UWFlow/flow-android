@@ -9,18 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
-import com.uwflow.flow_android.adapters.CourseClassListAdapter;
 import com.uwflow.flow_android.adapters.ProfileFriendAdapter;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.loaders.UserFriendsLoader;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
-import com.uwflow.flow_android.util.DateHelper;
 
 import java.util.List;
 
