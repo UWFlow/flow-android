@@ -113,7 +113,10 @@ public class CourseAboutFragment extends Fragment {
 		    public void getCourseUsersCallback(CourseUserDetail courseUserDetail) {
 			ArrayList<CourseFriend> courseFriends = getConsolidatedCourseFriendList(courseUserDetail);
 
-			mFriendListAdapter = new FriendListAdapter(courseFriends, getActivity(), getActivity().getSupportFragmentManager());
+			mFriendListAdapter = new FriendListAdapter(
+                    courseFriends,
+                    getActivity(),
+                    getActivity().getSupportFragmentManager());
 
 			// Reload the TextView indicating the number of course friends
 			mFriendListTextView.setText(String.format("%d friends took this", mFriendListAdapter.getCount()));

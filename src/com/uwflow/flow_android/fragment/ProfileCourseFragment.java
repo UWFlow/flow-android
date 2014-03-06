@@ -53,7 +53,10 @@ public class ProfileCourseFragment extends Fragment implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<UserCourseDetail> listLoader, UserCourseDetail userCourseDetail) {
-        profileListAdapter = new ProfileCoursesAdapter(userCourseDetail.getCourses(), getActivity());
+        profileListAdapter = new ProfileCoursesAdapter(
+                userCourseDetail.getCourses(),
+                getActivity(),
+                getActivity().getSupportFragmentManager());
         mCoursesListView.setAdapter(profileListAdapter);
     }
 
@@ -67,15 +70,18 @@ public class ProfileCourseFragment extends Fragment implements LoaderManager.Loa
 	if (id == null) return;
 
 	FlowApiRequests.getUserCourses(
-		id,
-		new FlowApiRequestCallbackAdapter() {
-		    @Override
-		    public void getUserCoursesCallback(UserCourseDetail userCourseDetail) {
-			profileListAdapter = new ProfileCoursesAdapter(userCourseDetail.getCourses(), getActivity());
-			mCoursesListView.setAdapter(profileListAdapter);
-			profileListAdapter.notifyDataSetChanged();
-		    }
-		});
+            id,
+            new FlowApiRequestCallbackAdapter() {
+                @Override
+                public void getUserCoursesCallback(UserCourseDetail userCourseDetail) {
+                    profileListAdapter = new ProfileCoursesAdapter(
+                            userCourseDetail.getCourses(),
+                            getActivity(),
+                            getActivity().getSupportFragmentManager());
+                    mCoursesListView.setAdapter(profileListAdapter);
+                    profileListAdapter.notifyDataSetChanged();
+                }
+            });
     }
 
 
