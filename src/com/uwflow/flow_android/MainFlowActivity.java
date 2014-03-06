@@ -1,5 +1,6 @@
 package com.uwflow.flow_android;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -149,17 +150,19 @@ public class MainFlowActivity extends FlowActivity {
                 fragment = new AboutFragment();
                 break;
             case(Constants.NAV_DRAWER_LOG_OUT_INDEX) :
-                // Log out (clear Facebook session)
-                Session session = Session.getActiveSession();
-                if (session != null) {
-                    if (!session.isClosed()) {
-                        session.closeAndClearTokenInformation();
-                    }
-                } else {
-                    session = new Session(getApplicationContext());
-                    Session.setActiveSession(session);
-                    session.closeAndClearTokenInformation();
+                if (Session.getActiveSession() != null) {
+                    Session.getActiveSession().closeAndClearTokenInformation();
                 }
+                Session.setActiveSession(null);
+                mDrawerLayout.closeDrawer(mDrawerList);
+
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.putExtra("finish", true); // if you are checking for this in your other Activities
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
                 return;
         }
 
