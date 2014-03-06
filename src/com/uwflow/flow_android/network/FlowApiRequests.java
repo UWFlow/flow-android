@@ -1,5 +1,6 @@
 package com.uwflow.flow_android.network;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -7,7 +8,9 @@ import com.loopj.android.http.RequestParams;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.util.JsonToDbUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.cookie.Cookie;
 import org.json.JSONObject;
 
@@ -36,10 +39,24 @@ public class FlowApiRequests {
         });
     }
 
-    public static void searchCourses(final FlowApiRequestCallback callback) {
-        // TODO(david): This needs to take search parameters
-        // XXX needs to go into constants
-        final String uri = Constants.API_SEARCH_COURSES;
+    public static void searchCourses(String keywords, String sortMode, Boolean excludeTakenCourses,
+                                     final FlowApiRequestCallback callback) {
+        // Build the search query string
+        Uri.Builder uriBuilder = new Uri.Builder();
+        if (StringUtils.isNotBlank(keywords)) {
+            uriBuilder.appendQueryParameter("keywords", keywords);
+        }
+        if (StringUtils.isNotEmpty(sortMode)) {
+            uriBuilder.appendQueryParameter("sort_mode", sortMode);
+        }
+        if (excludeTakenCourses) {
+            uriBuilder.appendQueryParameter("exclude_taken_courses", "yes");
+        }
+        final String encodedQuery = uriBuilder.build().getEncodedQuery();
+
+        final String uri = String.format(Constants.API_SEARCH_COURSES, encodedQuery);
+        Log.w("", "search uri is " + uri);
+
         getDetails(Constants.API_REQUEST_CALL_ID.API_SEARCH_COURSES, uri, callback);
     }
 

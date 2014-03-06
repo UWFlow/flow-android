@@ -17,8 +17,7 @@ import com.uwflow.flow_android.db_object.SearchResults;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by wentaoji on 2014-02-18.
@@ -133,21 +132,29 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     private void doSearch() {
         // TODO(david): We should first gray-out results and show a spinner
 
+        // Get keywords
         Editable searchBoxText = mSearchBox.getText();
-        String searchString = "";
+        String keywords = "";
         if (searchBoxText != null) {
-            searchString = searchBoxText.toString();
+            keywords = searchBoxText.toString();
         }
 
-        // TODO(david): Do search based on parameters
+        // Get sort mode
+        Object sortItem = mSortSpinner.getSelectedItem();
+        String sortMode = sortItem == null ? "" : mSortModesMap.get(sortItem.toString());
 
-        FlowApiRequests.searchCourses(new FlowApiRequestCallbackAdapter() {
+        // Get whether we should exclude taken courses
+        // TODO(david): Change this checkbox to say "exclude courses I've taken" like on the web app
+        boolean excludeTakenCourses = !mIncludeTakenCheckBox.isChecked();
+
+        FlowApiRequests.searchCourses(keywords, sortMode, excludeTakenCourses, new FlowApiRequestCallbackAdapter() {
             @Override
             public void searchCoursesCallback(SearchResults searchResults) {
-                // TODO(david): Is there a way to reset contents of a List?
                 mSearchResultList.clear();
                 mSearchResultList.addAll(searchResults.getCourses());
                 mSearchResultAdapter.notifyDataSetChanged();
+
+                mResultsListView.setSelectionAfterHeaderView();
             }
         });
 

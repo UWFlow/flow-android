@@ -24,7 +24,7 @@ public class Constants {
     public static final String API_USERS_COURSES = "api/v1/users/%s/courses";
     public static final String API_USER_FRIENDS = "api/v1/user/friends";
     public static final String API_USERS_FRIENDS = "api/v1/users/%s/friends";
-    public static final String API_SEARCH_COURSES = "api/v1/search/courses";
+    public static final String API_SEARCH_COURSES = "api/v1/search/courses?%s";
 
     public static final String COURSE_ID_KEY = "courseId";
 
