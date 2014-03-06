@@ -77,7 +77,7 @@ public class ProfileExamFragment extends Fragment implements LoaderManager.Loade
     private void fetchUserExams(String id){
 	if (id == null) return;
 
-	FlowApiRequests.searchUserExams(
+	FlowApiRequests.getUserExams(
 		id,
 		new FlowApiRequestCallbackAdapter() {
 		    @Override

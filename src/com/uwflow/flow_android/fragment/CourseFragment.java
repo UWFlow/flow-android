@@ -81,6 +81,15 @@ public class CourseFragment extends Fragment {
                 mCourseAboutFragment,
                 mCourseReviewsFragment);
 
+        // TODO(david): Should show a spinner here while course info is loading
+        Bundle args = getArguments();
+        if (args != null) {
+            mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
+            fetchCourseInfo(mCourseID);
+        } else {
+            Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
+        }
+
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
         mViewPager.setAdapter(mCoursePagerAdapter);
         mTabs.setViewPager(mViewPager);
@@ -123,20 +132,6 @@ public class CourseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // TODO(david): Should show a spinner here while course info is loading
-        Bundle args = getArguments();
-        if (args != null) {
-            mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
-            fetchCourseInfo(mCourseID);
-        } else {
-            Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
-        }
     }
 
     private void fetchCourseInfo(String course){
