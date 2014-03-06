@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.uwflow.flow_android.adapters.NavDrawerAdapter;
+import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.entities.NavDrawerItem;
 import com.uwflow.flow_android.fragment.AboutFragment;
 import com.uwflow.flow_android.fragment.ExploreFragment;
@@ -112,6 +113,12 @@ public class MainFlowActivity extends FlowActivity {
         }
         // Handle action buttons
         switch(item.getItemId()) {
+            case R.id.action_search:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, new ExploreFragment())
+                        .addToBackStack(null)
+                        .commit();
+                // TODO: mark the Explore page as checked in the nav drawer
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -122,10 +129,18 @@ public class MainFlowActivity extends FlowActivity {
         // Create a new fragment and specify the planet to show based on position
         Fragment fragment = null;
         switch (position){
-            case(0) : fragment = new ProfileFragment();break;
-            case(1) : fragment = new ExploreFragment();break;
-            case(2) : fragment = new ShortlistFragment();break;
-            case(3) : fragment = new AboutFragment();break;
+            case(Constants.NAV_DRAWER_PROFILE_INDEX) :
+                fragment = new ProfileFragment();
+                break;
+            case(Constants.NAV_DRAWER_EXPLORE_INDEX) :
+                fragment = new ExploreFragment();
+                break;
+            case(Constants.NAV_DRAWER_SHORTLIST_INDEX) :
+                fragment = new ShortlistFragment();
+                break;
+            case(Constants.NAV_DRAWER_ABOUT_INDEX) :
+                fragment = new AboutFragment();
+                break;
         }
 
         if (fragment != null){
