@@ -24,6 +24,7 @@ import java.util.*;
  */
 public class ExploreFragment extends Fragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "ExploreFragment";
+    private static final int ITEMS_PER_PAGE = 20;
 
     // TODO(david): Convert all the search stuff to use a SearchView, which gets us things like suggestions
     //     See http://developer.android.com/guide/topics/search/search-dialog.html
@@ -67,6 +68,14 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mResultsListView.setAdapter(mSearchResultAdapter);
         mResultsListView.setOnItemClickListener(this);
 
+        // Infinite scroll: load next page of results when scrolled towards the end of the list.
+        mResultsListView.setOnScrollListener(new InfiniteScrollListener() {
+            @Override
+            public void onLoadMore(int page) {
+                doSearch(page);
+            }
+        });
+
         // Populate the sort spinner
         mSortModesAdapter = new ArrayAdapter <CharSequence>(getActivity(), android.R.layout.simple_spinner_item,
                 mSortModesMap.keySet().toArray(new CharSequence[0]));
@@ -77,7 +86,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                doSearch();
+                doSearch(0);
             }
 
             @Override
@@ -90,7 +99,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mIncludeTakenCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                doSearch();
+                doSearch(0);
             }
         });
 
@@ -99,7 +108,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    doSearch();
+                    doSearch(0);
                     return true;
                 }
                 return false;
@@ -114,7 +123,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         super.onActivityCreated(savedInstanceState);
 
         // TODO(david): Add a "fetching results..." empty state here
-        doSearch();
+        doSearch(0);
     }
 
     @Override
@@ -128,8 +137,9 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
 
     /**
      * Performs a search with parameters set on the UI.
+     * @param page The page to load. Pass 0 if loading search results for a different query/filters.
      */
-    private void doSearch() {
+    private void doSearch(final int page) {
         // TODO(david): We should first gray-out results and show a spinner
 
         // Get keywords
@@ -147,17 +157,59 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         // TODO(david): Change this checkbox to say "exclude courses I've taken" like on the web app
         boolean excludeTakenCourses = !mIncludeTakenCheckBox.isChecked();
 
-        FlowApiRequests.searchCourses(keywords, sortMode, excludeTakenCourses, new FlowApiRequestCallbackAdapter() {
+        FlowApiRequests.searchCourses(keywords, sortMode, excludeTakenCourses, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE,
+                new FlowApiRequestCallbackAdapter() {
             @Override
             public void searchCoursesCallback(SearchResults searchResults) {
-                mSearchResultList.clear();
+                if (page == 0) {
+                    mSearchResultList.clear();
+                }
                 mSearchResultList.addAll(searchResults.getCourses());
                 mSearchResultAdapter.notifyDataSetChanged();
 
-                mResultsListView.setSelectionAfterHeaderView();
+                if (page == 0) {
+                    mResultsListView.setSelectionAfterHeaderView();
+                }
             }
         });
+    }
 
-        // TODO(david): Load more search results button or pager or infinite scroll
+    // Adapted from http://guides.thecodepath.com/android/Endless-Scrolling-with-AdapterViews
+    private abstract class InfiniteScrollListener implements AbsListView.OnScrollListener {
+        private final int remainingThreshold = 5;
+        private int currentPage = 0;
+        private int currentTotalItems = 0;
+        private boolean loading = true;
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            // If total items has somehow gone down, then search results were probably refreshed.
+            if (totalItemCount < currentTotalItems) {
+                currentPage = 0;
+                currentTotalItems = totalItemCount;
+                if (totalItemCount == 0) {
+                    loading = true;
+                }
+            }
+
+            // See if loading has just completed.
+            if (loading && totalItemCount > currentTotalItems) {
+                currentTotalItems = totalItemCount;
+                currentPage++;
+                loading = false;
+            }
+
+            // If we're not already loading, see if the remaining items below the fold is about to exceed the threshold.
+            if (!loading && totalItemCount - (firstVisibleItem + visibleItemCount) <= remainingThreshold) {
+                onLoadMore(currentPage + 1);
+                loading = true;
+            }
+        }
+
+        public abstract void onLoadMore(int page);
     }
 }

@@ -19,10 +19,6 @@ import com.uwflow.flow_android.db_object.CourseDetail;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * Created by jasperfung on 2/21/14.
  */
