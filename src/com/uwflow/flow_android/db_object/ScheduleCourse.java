@@ -52,6 +52,9 @@ public class ScheduleCourse implements Serializable {
     @DatabaseField
     private String classNum;
 
+    @DatabaseField
+    private String scheduleUrl;
+
     public ScheduleCourse() {
     }
 
@@ -141,5 +144,13 @@ public class ScheduleCourse implements Serializable {
 
     public void setClassNum(String classNum) {
         this.classNum = classNum;
+    }
+
+    public String getScheduleUrl() {
+        return scheduleUrl;
+    }
+
+    public void setScheduleUrl(String scheduleUrl) {
+        this.scheduleUrl = scheduleUrl;
     }
 }

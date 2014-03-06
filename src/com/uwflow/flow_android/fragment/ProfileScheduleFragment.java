@@ -1,14 +1,26 @@
 package com.uwflow.flow_android.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
+import com.uwflow.flow_android.constant.Constants;
+import com.uwflow.flow_android.db_object.ScheduleCourse;
+import com.uwflow.flow_android.loaders.UserScheduleLoader;
 
-public class ProfileScheduleFragment extends Fragment implements View.OnClickListener {
+import java.util.List;
+
+public class ProfileScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ScheduleCourse>>, View.OnClickListener {
 
     private RadioGroup mRadioGroup;
     private ImageView mImageSchedule;
@@ -16,7 +28,7 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
     private Button mBtnShare;
     private LinearLayout mScheduleListLayout;
     private LinearLayout mScheduleWeekLayout;
-
+    private Bitmap scheduleBitmap;
     private View rootView;
 
     @Override
@@ -31,7 +43,6 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         mBtnShare = (Button)rootView.findViewById(R.id.btn_share);
         mScheduleListLayout = (LinearLayout)rootView.findViewById(R.id.list_layout);
         mScheduleWeekLayout = (LinearLayout)rootView.findViewById(R.id.week_layout);
-
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -52,6 +63,7 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         mBtnShare.setOnClickListener(this);
         mBtnExportCal.setOnClickListener(this);
 
+        getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_SCHEDULE_LOADER_ID, null, this);
         return rootView;
 
     }
@@ -73,6 +85,39 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
     }
 
 
+    @Override
+    public Loader<List<ScheduleCourse>> onCreateLoader(int i, Bundle bundle) {
+        return new UserScheduleLoader(getActivity(), ((MainFlowActivity)getActivity()).getHelper());
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<ScheduleCourse>> arrayListLoader, List<ScheduleCourse> scheduleCourses) {
+        if (!scheduleCourses.isEmpty() && scheduleCourses.get(0).getScheduleUrl() != null){
+            Picasso.with(getActivity().getApplicationContext()).load(scheduleCourses.get(0).getScheduleUrl()).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                    scheduleBitmap = bitmap;
+                    mImageSchedule.setImageBitmap(bitmap);
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable drawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable drawable) {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<ScheduleCourse>> arrayListLoader) {
+
+    }
 }
 
 
