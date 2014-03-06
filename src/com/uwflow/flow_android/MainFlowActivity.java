@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import com.facebook.Session;
 import com.uwflow.flow_android.adapters.NavDrawerAdapter;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.entities.NavDrawerItem;
@@ -39,6 +40,7 @@ public class MainFlowActivity extends FlowActivity {
         mDrawerItems.add(new NavDrawerItem("Explore", R.drawable.drawer_explore_icon));
         mDrawerItems.add(new NavDrawerItem("Shortlist", R.drawable.drawer_shortlist_icon));
         mDrawerItems.add(new NavDrawerItem("About", R.drawable.drawer_about_icon));
+        mDrawerItems.add(new NavDrawerItem("Log out", R.drawable.drawer_log_out_icon));
 
         mNavDrawerAdapter = new NavDrawerAdapter(mDrawerItems, this);
         mDrawerList.setAdapter(mNavDrawerAdapter);
@@ -146,6 +148,19 @@ public class MainFlowActivity extends FlowActivity {
             case(Constants.NAV_DRAWER_ABOUT_INDEX) :
                 fragment = new AboutFragment();
                 break;
+            case(Constants.NAV_DRAWER_LOG_OUT_INDEX) :
+                // Log out (clear Facebook session)
+                Session session = Session.getActiveSession();
+                if (session != null) {
+                    if (!session.isClosed()) {
+                        session.closeAndClearTokenInformation();
+                    }
+                } else {
+                    session = new Session(getApplicationContext());
+                    Session.setActiveSession(session);
+                    session.closeAndClearTokenInformation();
+                }
+                return;
         }
 
         if (fragment != null){

@@ -72,5 +72,6 @@ public class Constants {
     public static final int NAV_DRAWER_EXPLORE_INDEX = 1;
     public static final int NAV_DRAWER_SHORTLIST_INDEX = 2;
     public static final int NAV_DRAWER_ABOUT_INDEX = 3;
+    public static final int NAV_DRAWER_LOG_OUT_INDEX = 4;
 
 }
