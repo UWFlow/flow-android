@@ -1,6 +1,7 @@
 package com.uwflow.flow_android.adapters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +26,12 @@ import java.util.List;
 public class CourseReviewAdapter extends BaseAdapter {
     private List<Review> mReviews;
     private Context mContext;
+    private FragmentManager mFragmentManager;
 
-    public CourseReviewAdapter(List<Review> reviews, Context context) {
+    public CourseReviewAdapter(List<Review> reviews, Context context, FragmentManager fragmentManager) {
         mReviews = reviews;
         mContext = context;
+	mFragmentManager = fragmentManager;
     }
 
     public int getCount() {
@@ -101,7 +104,7 @@ public class CourseReviewAdapter extends BaseAdapter {
 
                     user.setId(review.getAuthor().getId());
                     user.setFirstName(FacebookUtilities.getFirstWord(review.getAuthor().getName()));
-                    FacebookUtilities.createUserDialog(mContext, user).show();
+		    FacebookUtilities.createUserDialog(mContext, user, R.id.content_frame, mFragmentManager).show();
                 }
             };
             image.setOnClickListener(onClickListener);

@@ -54,7 +54,7 @@ public class CourseReviewsFragment extends Fragment{
     }
 
     private void reloadReviews() {
-        mCourseReviewListAdapter = new CourseReviewAdapter(mCourseDetail.getReviews(), getActivity());
+	mCourseReviewListAdapter = new CourseReviewAdapter(mCourseDetail.getReviews(), getActivity(), getActivity().getSupportFragmentManager());
         // clear existing content
         // TODO: we need a smarter way of doing this so that we don't redundantly redraw review objects
         mCourseReviewListContainer.removeAllViews();

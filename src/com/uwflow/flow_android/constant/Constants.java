@@ -26,9 +26,6 @@ public class Constants {
     public static final String API_USERS_FRIENDS = "api/v1/users/%s/friends";
     public static final String API_SEARCH_COURSES = "api/v1/search/courses?%s";
 
-    public static final String COURSE_ID_KEY = "courseId";
-
-
     public static class DatabaseColumnName{
         public static final String USER_ID = "user_id";
 
@@ -57,6 +54,9 @@ public class Constants {
     }
 
     public static final String UW_FLOW = "uwflow";
+
+    public static final String COURSE_ID_KEY = "course_id";
+    public static final String PROFILE_ID_KEY = "profile_id";
 
     public static final int COURSE_SCHEDULE_PAGE_INDEX = 0;
     public static final int COURSE_ABOUT_PAGE_INDEX = 1;

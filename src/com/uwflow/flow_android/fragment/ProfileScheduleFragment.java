@@ -9,7 +9,10 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.uwflow.flow_android.MainFlowActivity;
@@ -21,6 +24,7 @@ import com.uwflow.flow_android.loaders.UserScheduleLoader;
 import java.util.List;
 
 public class ProfileScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ScheduleCourse>>, View.OnClickListener {
+    private String mProfileID;
 
     private RadioGroup mRadioGroup;
     private ImageView mImageSchedule;
@@ -34,6 +38,8 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+	mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
+
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.profile_schedule_layout, container, false);
 
