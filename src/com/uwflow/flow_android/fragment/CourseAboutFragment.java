@@ -5,6 +5,7 @@ package com.uwflow.flow_android.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +43,16 @@ public class CourseAboutFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-	mCourseID = getArguments() != null ? getArguments().getString(Constants.COURSE_ID_KEY,
-		Constants.COURSE_ID_DEFAULT) : Constants.COURSE_ID_DEFAULT;
+			     Bundle savedInstanceState) {
+	Bundle args = getArguments();
+	if (args != null) {
+	    mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
+	} else {
+	    Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
+	}
 
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.course_about, container, false);
+	// Inflate the layout for this fragment
+	View rootView = inflater.inflate(R.layout.course_about, container, false);
 
         mFriendListContainer = (LinearLayout)rootView.findViewById(R.id.friend_list);
 	mFriendListTextView = (TextView)rootView.findViewById(R.id.friend_list_title);

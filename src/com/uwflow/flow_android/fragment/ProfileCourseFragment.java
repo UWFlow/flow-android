@@ -66,7 +66,7 @@ public class ProfileCourseFragment extends Fragment implements LoaderManager.Loa
     private void fetchCourses(String id){
 	if (id == null) return;
 
-	FlowApiRequests.searchUserCourses(
+	FlowApiRequests.getUserCourses(
 		id,
 		new FlowApiRequestCallbackAdapter() {
 		    @Override

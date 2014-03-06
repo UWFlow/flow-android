@@ -5,6 +5,7 @@ package com.uwflow.flow_android.fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import java.util.List;
  * Created by jasperfung on 2/21/14.
  */
 public class CourseScheduleFragment extends Fragment {
+    private static final String TAG = "CourseScheduleFragment";
     private String mCourseID;
 
     private LinearLayout mScheduleContainer;
@@ -34,8 +36,12 @@ public class CourseScheduleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-	mCourseID = getArguments() != null ? getArguments().getString(Constants.COURSE_ID_KEY,
-		Constants.COURSE_ID_DEFAULT) : Constants.COURSE_ID_DEFAULT;
+	Bundle args = getArguments();
+	if (args != null) {
+	    mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
+	} else {
+	    Log.e(TAG, "Attempted instantiation without bundle: cannot fetch course details.");
+	}
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.course_schedule, container, false);
@@ -75,7 +81,7 @@ public class CourseScheduleFragment extends Fragment {
                             // Generate LinearLayouts for every list item
                             String lastTerm = "";
                             for (int i = 0; i < mCourseClassListAdapter.getCount(); i++) {
-                                String currentTerm = DateHelper.formatTermNicely(((Section)mCourseClassListAdapter.getItem(i)).getTermId());
+				String currentTerm = DateHelper.formatTermNicely(((Section) mCourseClassListAdapter.getItem(i)).getTermId());
                                 if (!currentTerm.equals(lastTerm)) {
                                     // Insert a header for a new term
                                     lastTerm = currentTerm;

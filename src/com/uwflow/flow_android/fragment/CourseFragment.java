@@ -77,9 +77,18 @@ public class CourseFragment extends Fragment {
 		mCourseAboutFragment,
 		mCourseReviewsFragment);
 
-        mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+	// TODO(david): Should show a spinner here while course info is loading
+	Bundle args = getArguments();
+	if (args != null) {
+	    mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
+	    fetchCourseInfo(mCourseID);
+	} else {
+	    Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
+	}
+
+	mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
 	mViewPager.setAdapter(mCoursePagerAdapter);
-        mTabs.setViewPager(mViewPager);
+	mTabs.setViewPager(mViewPager);
 
         // Set default tab to About
         mViewPager.setCurrentItem(Constants.COURSE_ABOUT_PAGE_INDEX);
@@ -118,26 +127,12 @@ public class CourseFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // TODO(david): Should show a spinner here while course info is loading
-        Bundle args = getArguments();
-        if (args != null) {
-	    mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
-	    fetchCourseInfo(mCourseID);
-        } else {
-            Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
-        }
+	super.onActivityCreated(savedInstanceState);
     }
 
     private void fetchCourseInfo(String course){
 
-        FlowApiRequests.getCourse(
+	FlowApiRequests.getCourse(
                 course,
                 new FlowApiRequestCallbackAdapter() {
                     @Override
