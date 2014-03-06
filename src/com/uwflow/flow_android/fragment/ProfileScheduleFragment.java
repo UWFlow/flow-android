@@ -1,12 +1,18 @@
 package com.uwflow.flow_android.fragment;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +30,10 @@ import com.uwflow.flow_android.db_object.ScheduleCourses;
 import com.uwflow.flow_android.loaders.UserScheduleLoader;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
+import com.uwflow.flow_android.fragment.FullScreenImageFragment;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 public class ProfileScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ScheduleCourse>>, View.OnClickListener {
@@ -43,13 +52,14 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-	mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
+	    mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
 
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.profile_schedule_layout, container, false);
 
         mRadioGroup = (RadioGroup)rootView.findViewById(R.id.radio_group_view);
         mImageSchedule = (ImageView)rootView.findViewById(R.id.image_schedule);
+        mImageSchedule.setOnClickListener(this);
         mBtnExportCal = (Button)rootView.findViewById(R.id.btn_export_calendar);
         mBtnShare = (Button)rootView.findViewById(R.id.btn_share);
         mScheduleListLayout = (LinearLayout)rootView.findViewById(R.id.list_layout);
@@ -91,14 +101,32 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
                 // TODO: handle calendar export
                 break;
             case R.id.btn_share:
-		Intent shareIntent = new Intent(Intent.ACTION_SEND);
-		shareIntent.setType("text/plain");
-		shareIntent.putExtra(Intent.EXTRA_TEXT, mScheduleImageURL);
-		shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out my schedule!");
-		startActivity(Intent.createChooser(shareIntent, "Share schedule"));
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, mScheduleImageURL);
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out my schedule!");
+                startActivity(Intent.createChooser(shareIntent, "Share schedule"));
+                break;
+            case R.id.image_schedule:
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                Fragment fullScreenImageFragment = new FullScreenImageFragment();
+
+                //TODO:Replace this with original bitmap once the scheduleBitmap is being loaded properly from URL
+                Bitmap catImage = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(),
+                        R.drawable.kitty);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("ScheduleImage", catImage);
+                fullScreenImageFragment.setArguments(bundle);
+
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.content_frame, fullScreenImageFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
                 break;
         }
     }
+
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
@@ -120,8 +148,8 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
                     scheduleBitmap = bitmap;
                     mImageSchedule.setImageBitmap(bitmap);
-		    mScheduleImageURL = scheduleCourses.get(0).getScheduleUrl();
-		    mBtnShare.setEnabled(true);
+		            mScheduleImageURL = scheduleCourses.get(0).getScheduleUrl();
+		            mBtnShare.setEnabled(true);
                 }
 
                 @Override

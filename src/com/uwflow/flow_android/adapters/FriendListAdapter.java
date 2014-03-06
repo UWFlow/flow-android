@@ -27,7 +27,7 @@ public class FriendListAdapter extends BaseAdapter {
     public FriendListAdapter(ArrayList<CourseFriend> list, Context context, FragmentManager fragmentManager) {
         mList = list;
         mContext = context;
-	mFragmentManager = fragmentManager;
+	    mFragmentManager = fragmentManager;
     }
 
     public int getCount() {

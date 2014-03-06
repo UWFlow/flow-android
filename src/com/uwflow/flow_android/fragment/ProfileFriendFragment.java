@@ -29,7 +29,7 @@ public class ProfileFriendFragment extends Fragment implements LoaderManager.Loa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-	mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
+	    mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
 
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.profile_friend_layout, container, false);
@@ -51,8 +51,8 @@ public class ProfileFriendFragment extends Fragment implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<User>> listLoader, List<User> users) {
-	mProfileFriendAdapter = new ProfileFriendAdapter(users, getActivity(), getActivity().getSupportFragmentManager());
-	mProfileFriendList.setAdapter(mProfileFriendAdapter);
+	    mProfileFriendAdapter = new ProfileFriendAdapter(users, getActivity(), getActivity().getSupportFragmentManager());
+	    mProfileFriendList.setAdapter(mProfileFriendAdapter);
     }
 
     @Override

@@ -52,24 +52,24 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         View rootView =  inflater.inflate(R.layout.profile_layout, container, false);
         userImage = (ImageView) rootView.findViewById(R.id.user_image);
         userName = (TextView) rootView.findViewById(R.id.user_name);
-	userProgram = (TextView) rootView.findViewById(R.id.user_program);
-	viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+	    userProgram = (TextView) rootView.findViewById(R.id.user_program);
+	    viewPager = (ViewPager) rootView.findViewById(R.id.pager);
 
-	mProfilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments());
+	    mProfilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments());
 
-	viewPager.setAdapter(mProfilePagerAdapter);
-	tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
-	tabs.setViewPager(viewPager);
+	    viewPager.setAdapter(mProfilePagerAdapter);
+	    tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
+	    tabs.setViewPager(viewPager);
         // Set default tab to Schedule
         viewPager.setCurrentItem(Constants.PROFILE_SCHEDULE_PAGE_INDEX);
 
-	mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
+	    mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
 
-	if (mProfileID == null) {
+	    if (mProfileID == null) {
 	    // Load logged-in users profile if an ID is unspecified.
-	    getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_LOADER_ID, null, this);
-	}
-	return rootView;
+	        getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_LOADER_ID, null, this);
+	    }
+	    return rootView;
     }
 
     @Override

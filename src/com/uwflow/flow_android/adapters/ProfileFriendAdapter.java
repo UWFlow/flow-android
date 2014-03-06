@@ -23,7 +23,7 @@ public class ProfileFriendAdapter extends BaseAdapter {
     public ProfileFriendAdapter(List<User> friends, Context context, FragmentManager fragmentManager) {
         mFriends = friends;
         mContext = context;
-	mFragmentManager = fragmentManager;
+	    mFragmentManager = fragmentManager;
     }
 
     public int getCount() {
@@ -58,7 +58,7 @@ public class ProfileFriendAdapter extends BaseAdapter {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-		FacebookUtilities.createUserDialog(mContext, user, R.id.content_frame, mFragmentManager).show();
+		        FacebookUtilities.createUserDialog(mContext, user, R.id.content_frame, mFragmentManager).show();
             }
         };
         convertView.setOnClickListener(onClickListener);

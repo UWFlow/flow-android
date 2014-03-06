@@ -19,7 +19,7 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
 
     public ProfilePagerAdapter(FragmentManager fm, Bundle bundle) {
         super(fm);
-	mBundle = bundle;
+	    mBundle = bundle;
     }
 
     @Override

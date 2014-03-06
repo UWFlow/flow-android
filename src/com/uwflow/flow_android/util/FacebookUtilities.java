@@ -74,16 +74,15 @@ public class FacebookUtilities {
                             case 0:
                             default:
                                 // View friend on Flow
+                                Fragment profileFragment = new ProfileFragment();
+                                Bundle bundle = new Bundle();
+                                bundle.putString(Constants.PROFILE_ID_KEY, user.getId());
+                                profileFragment.setArguments(bundle);
 
-				Fragment profileFragment = new ProfileFragment();
-				Bundle bundle = new Bundle();
-				bundle.putString(Constants.PROFILE_ID_KEY, user.getId());
-				profileFragment.setArguments(bundle);
-
-				FragmentTransaction transaction = fragmentManager.beginTransaction(); // TODO: the fragmentmanager argument is final, this might be problematic
-				transaction.replace(resId, profileFragment);
-				transaction.addToBackStack(null);
-				transaction.commit();
+                                FragmentTransaction transaction = fragmentManager.beginTransaction(); // TODO: the fragmentmanager argument is final, this might be problematic
+                                transaction.replace(resId, profileFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
                                 break;
                         }
                         dialog.dismiss();
