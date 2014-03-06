@@ -1,5 +1,6 @@
 package com.uwflow.flow_android.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -19,7 +20,10 @@ import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.ScheduleCourse;
+import com.uwflow.flow_android.db_object.ScheduleCourses;
 import com.uwflow.flow_android.loaders.UserScheduleLoader;
+import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
+import com.uwflow.flow_android.network.FlowApiRequests;
 
 import java.util.List;
 
@@ -69,7 +73,12 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
         mBtnShare.setOnClickListener(this);
         mBtnExportCal.setOnClickListener(this);
 
-        getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_SCHEDULE_LOADER_ID, null, this);
+	if (mProfileID == null) {
+	    getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_SCHEDULE_LOADER_ID, null, this);
+	} else {
+	    fetchScheduleImage(mProfileID);
+	}
+
         return rootView;
 
     }
@@ -123,6 +132,24 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
     @Override
     public void onLoaderReset(Loader<List<ScheduleCourse>> arrayListLoader) {
 
+    }
+
+    private void fetchScheduleImage(String id){
+	if (id == null) return;
+
+	FlowApiRequests.getUserSchedule(
+		id,
+		new FlowApiRequestCallbackAdapter() {
+		    @Override
+		    public void getUserScheduleCallback(ScheduleCourses scheduleCourses) {
+			if (scheduleCourses.getScreenshotUrl() != null) {
+			    // assume the URL is valid and an image will be returned
+			    // TODO: change this conditional to 'if the image is successfully fetched'
+			    Picasso.with(getActivity().getApplicationContext())
+				    .load(scheduleCourses.getScreenshotUrl()).into(mImageSchedule);
+			}
+		    }
+		});
     }
 }
 
