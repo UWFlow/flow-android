@@ -39,8 +39,8 @@ public class FlowApiRequests {
         });
     }
 
-    public static void searchCourses(String keywords, String sortMode, Boolean excludeTakenCourses,
-                                     final FlowApiRequestCallback callback) {
+    public static void searchCourses(String keywords, String sortMode, Boolean excludeTakenCourses, Integer count,
+                                     Integer offset, final FlowApiRequestCallback callback) {
         // Build the search query string
         Uri.Builder uriBuilder = new Uri.Builder();
         if (StringUtils.isNotBlank(keywords)) {
@@ -52,6 +52,13 @@ public class FlowApiRequests {
         if (excludeTakenCourses) {
             uriBuilder.appendQueryParameter("exclude_taken_courses", "yes");
         }
+        if (count != null && count >= 0) {
+            uriBuilder.appendQueryParameter("count", String.valueOf(count));
+        }
+        if (offset != null && offset >= 0) {
+            uriBuilder.appendQueryParameter("offset", String.valueOf(offset));
+        }
+
         final String encodedQuery = uriBuilder.build().getEncodedQuery();
 
         final String uri = String.format(Constants.API_SEARCH_COURSES, encodedQuery);
