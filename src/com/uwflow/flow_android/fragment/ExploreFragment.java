@@ -37,9 +37,25 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
 
     private SearchResultAdapter mSearchResultAdapter;
 
+    private static final Map<String, String> mSortModesMap;
+    static {
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put("Popular", "popular");
+        map.put("Friends taken", "friends_taken");
+        map.put("Interesting", "interesting");
+        map.put("Easy", "easy");
+        map.put("Hard", "hard");
+        map.put("Course code", "course code");
+        mSortModesMap = Collections.unmodifiableMap(map);
+    }
+
+    private ArrayAdapter<CharSequence> mSortModesAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // TODO(david): Restore search results from bundle (don't re-fetch when pressing back)
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.explore_layout, container, false);
         mSearchBox = (EditText)rootView.findViewById(R.id.search_box);
@@ -51,6 +67,12 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mSearchResultAdapter = new SearchResultAdapter(mSearchResultList, getActivity());
         mResultsListView.setAdapter(mSearchResultAdapter);
         mResultsListView.setOnItemClickListener(this);
+
+        // Populate the sort spinner
+        mSortModesAdapter = new ArrayAdapter <CharSequence>(getActivity(), android.R.layout.simple_spinner_item,
+                mSortModesMap.keySet().toArray(new CharSequence[0]));
+        mSortModesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSortSpinner.setAdapter(mSortModesAdapter);
 
         // Do search on sort mode change
         mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
