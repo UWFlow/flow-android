@@ -115,7 +115,7 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
                 Bitmap catImage = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(),
                         R.drawable.kitty);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("ScheduleImage", catImage);
+                bundle.putParcelable("ScheduleImage", scheduleBitmap);
                 fullScreenImageFragment.setArguments(bundle);
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();

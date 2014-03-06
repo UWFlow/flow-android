@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import com.uwflow.flow_android.R;
 
@@ -36,12 +37,24 @@ public class FullScreenImageFragment extends Fragment {
         bitmapImage = getArguments().getParcelable("ScheduleImage");
         mImageShow.setImageBitmap(bitmapImage);
 
+        mImageShow.setScaleType(ImageView.ScaleType.FIT_XY);
         return rootView;
+    }
+
+    private void rotate(float degree) {
+        final RotateAnimation rotateAnim = new RotateAnimation(0.0f, degree,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+
+        rotateAnim.setDuration(0);
+        rotateAnim.setFillAfter(true);
+        mImageShow.startAnimation(rotateAnim);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+        rotate(90);
     }
 
 }
