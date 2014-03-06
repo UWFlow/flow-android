@@ -60,6 +60,8 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 	viewPager.setAdapter(mProfilePagerAdapter);
 	tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
 	tabs.setViewPager(viewPager);
+        // Set default tab to Schedule
+        viewPager.setCurrentItem(Constants.PROFILE_SCHEDULE_PAGE_INDEX);
 
 	mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
 

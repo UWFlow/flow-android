@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.fragment.*;
 
 public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
@@ -25,16 +26,16 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
 	Fragment fragment = null;
         switch (position){
-	    case 0 :
+	    case Constants.PROFILE_FRIENDS_PAGE_INDEX:
 		fragment = new ProfileFriendFragment();
 		break;
-	    case 1 :
+	    case Constants.PROFILE_SCHEDULE_PAGE_INDEX:
 		fragment = new ProfileScheduleFragment();
 		break;
-	    case 2 :
+	    case Constants.PROFILE_EXAMS_PAGE_INDEX:
 		fragment = new ProfileExamFragment();
 		break;
-	    case 3 :
+	    case Constants.PROFILE_COURSES_PAGE_INDEX:
 		fragment = new ProfileCourseFragment();
 		break;
         }
