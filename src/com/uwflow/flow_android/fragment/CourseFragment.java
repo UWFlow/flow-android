@@ -103,18 +103,22 @@ public class CourseFragment extends Fragment {
         });
 
 
-        Button shareButton = (Button)rootView.findViewById(R.id.share_btn);
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                // TODO: we need to construct a valid share-link
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "http://www.uwflow.com");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out this course!");
-		startActivity(Intent.createChooser(shareIntent, "Share course"));
-            }
-        });
+        final Button shareButton = (Button)rootView.findViewById(R.id.share_btn);
+        if (mCourseID != null) {
+            shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra(Intent.EXTRA_TEXT,
+                            String.format("http://www.uwflow.com/course/%s", mCourseID));
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out this course!");
+                    startActivity(Intent.createChooser(shareIntent, "Share course"));
+                }
+            });
+        } else {
+            shareButton.setEnabled(false);
+        }
 
 	    return rootView;
     }
