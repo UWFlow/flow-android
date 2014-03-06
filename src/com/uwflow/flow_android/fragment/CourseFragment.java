@@ -25,10 +25,12 @@ import com.uwflow.flow_android.network.FlowApiRequests;
 public class CourseFragment extends Fragment {
     private static final String TAG = "CourseFragment";
 
-    private View rootView;
-    protected ViewPager mViewPager;
-    protected PagerSlidingTabStrip mTabs;
+    private String mCourseID;
+    private CoursePagerAdapter mCoursePagerAdapter;
 
+    private View rootView;
+    private ViewPager mViewPager;
+    private PagerSlidingTabStrip mTabs;
     private TextView mCourseCodeTextView;
     private TextView mCourseNameTextView;
 
@@ -64,16 +66,28 @@ public class CourseFragment extends Fragment {
         mTabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
 
         mCourseScheduleFragment = new CourseScheduleFragment();
+        mCourseScheduleFragment.setArguments(getArguments());
         mCourseAboutFragment = new CourseAboutFragment();
+        mCourseAboutFragment.setArguments(getArguments());
         mCourseReviewsFragment = new CourseReviewsFragment();
-        return rootView;
-    }
+        mCourseReviewsFragment.setArguments(getArguments());
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        mCoursePagerAdapter = new CoursePagerAdapter(getChildFragmentManager(),
+                mCourseScheduleFragment,
+                mCourseAboutFragment,
+                mCourseReviewsFragment);
+
+        // TODO(david): Should show a spinner here while course info is loading
+        Bundle args = getArguments();
+        if (args != null) {
+            mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
+            fetchCourseInfo(mCourseID);
+        } else {
+            Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
+        }
+
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
-        mViewPager.setAdapter(new CoursePagerAdapter(getActivity().getSupportFragmentManager(), mCourseScheduleFragment, mCourseAboutFragment, mCourseReviewsFragment));
+        mViewPager.setAdapter(mCoursePagerAdapter);
         mTabs.setViewPager(mViewPager);
 
         // Set default tab to About
@@ -101,25 +115,19 @@ public class CourseFragment extends Fragment {
                 startActivity(Intent.createChooser(shareIntent, "Share"));
             }
         });
+
+	    return rootView;
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+	super.onViewCreated(view, savedInstanceState);
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // TODO(david): Should show a spinner here while course info is loading
-        Bundle args = getArguments();
-        if (args != null) {
-            String courseId = getArguments().getString(Constants.COURSE_ID_KEY);
-            fetchCourseInfo(courseId);
-        } else {
-            Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
-        }
     }
 
     private void fetchCourseInfo(String course){

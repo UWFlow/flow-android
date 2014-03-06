@@ -5,26 +5,29 @@ package com.uwflow.flow_android.fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.CourseClassListAdapter;
+import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.Section;
 import com.uwflow.flow_android.db_object.Sections;
-import com.uwflow.flow_android.entities.CourseClass;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
 import com.uwflow.flow_android.util.DateHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by jasperfung on 2/21/14.
  */
 public class CourseScheduleFragment extends Fragment {
+    private static final String TAG = "CourseScheduleFragment";
+    private String mCourseID;
+
     private LinearLayout mScheduleContainer;
     private TableLayout mClassListContainer;
     private TextView mEmptyScheduleView;
@@ -33,61 +36,18 @@ public class CourseScheduleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        if (args != null) {
+            mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
+        } else {
+            Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
+        }
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.course_schedule, container, false);
         mScheduleContainer = (LinearLayout)rootView.findViewById(R.id.schedule);
         mClassListContainer = (TableLayout)rootView.findViewById(R.id.class_list);
         mEmptyScheduleView = (TextView)rootView.findViewById(R.id.empty_schedule);
-
-
-        // TODO: replace this arraylist with whatever real data source
-        ArrayList<String> daySelection = new ArrayList<String>();
-        daySelection.add("M");
-        daySelection.add("T");
-        daySelection.add("W");
-        daySelection.add("Th");
-        daySelection.add("F");
-        daySelection.add("S");
-        daySelection.add("Su");
-        ArrayList<CourseClass> courseClassList = new ArrayList<CourseClass>();
-        for (int i = 0; i < 5; i++) {
-            String sectionType = "LEC";
-            Integer sectionNum = 1 + i;
-
-            String professor = "Richard Ennis";
-
-            Integer enrollmentTotal = 661 - i * 100;
-            Integer enrollmentCapacity = 675 - i * 100;
-
-            Integer startTimeSeconds = 30600 + i * 3600;
-            Integer endTimeSeconds = 35400 + i * 3600;
-            ArrayList<String> days = new ArrayList<String>();
-            for (int j = 0; j < daySelection.size(); j++) {
-                if (j % (i + 1) == 0) {
-                    days.add(daySelection.get(j));
-                }
-            }
-
-            String building = "RCH";
-            String room = "301";
-            String campus = "UW U";
-
-            courseClassList.add(
-                    new CourseClass(
-                            sectionType,
-                            sectionNum,
-                            professor,
-                            (i % 3 == 0)? enrollmentCapacity : enrollmentTotal,
-                            enrollmentCapacity,
-                            startTimeSeconds,
-                            endTimeSeconds,
-                            days,
-                            building,
-                            room,
-                            campus,
-                            (i % 2 == 0)));
-        }
-
 
         return rootView;
     }
@@ -96,7 +56,7 @@ public class CourseScheduleFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        fetchCourseSections("psych101");
+	fetchCourseSections(mCourseID);
     }
 
     private void fetchCourseSections(String course){
@@ -121,7 +81,7 @@ public class CourseScheduleFragment extends Fragment {
                             // Generate LinearLayouts for every list item
                             String lastTerm = "";
                             for (int i = 0; i < mCourseClassListAdapter.getCount(); i++) {
-                                String currentTerm = DateHelper.formatTermNicely(((Section)mCourseClassListAdapter.getItem(i)).getTermId());
+                                String currentTerm = DateHelper.formatTermNicely(((Section) mCourseClassListAdapter.getItem(i)).getTermId());
                                 if (!currentTerm.equals(lastTerm)) {
                                     // Insert a header for a new term
                                     lastTerm = currentTerm;
