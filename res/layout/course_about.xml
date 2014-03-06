@@ -9,7 +9,7 @@
                   android:layout_height="match_parent"
                   android:paddingTop="10dp"
                   android:orientation="vertical">
-        <TextView android:id="@+id/course_desc" android:text="An examination of the styles, forms and development of 20th-century popular music. The social, commercial and technological aspects of popular music are considered."
+        <TextView android:id="@+id/course_desc" android:text=""
                   android:layout_width="match_parent" android:layout_height="wrap_content"/>
 
         <View android:layout_height="0.5dp"
@@ -33,7 +33,7 @@
               android:background="@color/divider" />
 
         <TextView android:id="@+id/friend_list_title"
-                  android:text="16 friends took this"
+                  android:text="0 friends took this"
                   android:textSize="20dp"
                   android:gravity="center_horizontal"
                   android:padding="7dp"

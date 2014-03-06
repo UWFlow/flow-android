@@ -25,7 +25,7 @@
                     android:layout_alignParentRight="true">
         <TextView
                 android:id="@+id/second"
-                android:text="Sept 2013"
+                android:text="Date"
                 android:textSize="14dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                 android:layout_alignParentRight="true" />
         <TextView
                 android:id="@+id/first"
-                android:text="Buff Badger"
+                android:text="User name"
                 android:textSize="14dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@drawable/review_bubble_grey_top"
-              android:text="I loved this course. You don't just learn about music, you also learn about American history, politics, psychology, etc. This isn't just a plain old music class, but a course that ties together a number of subjects into one big real picture. It's not a hard course, but it's not easy. If you attend every lecture, take good notes, and read the textbook every now and then, you'll do fine."
+              android:text="Course review text"
               android:textColor="@color/black"
               android:textSize="14dp"
               android:layout_below="@id/image"

@@ -13,13 +13,13 @@
                   android:gravity="center"
                   android:textSize="40dp"
                   android:textStyle="bold"
-                  android:text="98%" />
+                  android:text="--" />
         <TextView android:id="@+id/overall_count"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:gravity="center"
                   android:textSize="15dp"
-                  android:text="43 ratings" />
+                  android:text="0 ratings" />
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="vertical"
@@ -56,11 +56,11 @@
                     android:layout_gravity="center"
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:progressDrawable="@drawable/blue_progress_bar"
-                    android:progress="80"/>
+                    android:progress="100"/>
             <TextView android:id="@+id/useful_count"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="26 ratings"
+                      android:text="0 ratings"
                       android:layout_gravity="center"
                       android:textColor="#ff000000" />
         </FrameLayout>
@@ -76,11 +76,11 @@
                     android:layout_gravity="center"
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:progressDrawable="@drawable/blue_progress_bar"
-                    android:progress="45"/>
+                    android:progress="100"/>
             <TextView android:id="@+id/easy_count"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="26 ratings"
+                      android:text="0 ratings"
                       android:layout_gravity="center"
                       android:textColor="#ff000000" />
         </FrameLayout>

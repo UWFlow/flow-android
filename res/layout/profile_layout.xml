@@ -28,10 +28,10 @@
                       android:paddingRight="10dp">
             <TextView android:id="@+id/user_name"
                       android:layout_width="fill_parent" android:layout_height="wrap_content"
-                      android:text="User Name" android:textSize="24dp" android:textStyle="bold" />
+                      android:text="" android:textSize="24dp" android:textStyle="bold" />
             <TextView android:id="@+id/user_program"
                       android:layout_width="fill_parent" android:layout_height="wrap_content"
-                      android:text="Computer Science"
+                      android:text=""
                       android:textSize="18dp" />
         </LinearLayout>
     </LinearLayout>
