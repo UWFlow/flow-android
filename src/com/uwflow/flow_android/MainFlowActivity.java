@@ -137,8 +137,4 @@ public class MainFlowActivity extends FlowActivity {
             mDrawerLayout.closeDrawer(mDrawerList);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-    }
 }
