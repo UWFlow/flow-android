@@ -40,6 +40,7 @@ public class ProfileExamFragment extends Fragment implements LoaderManager.Loade
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.profile_exam_layout, container, false);
         mExamsList = (ListView)rootView.findViewById(R.id.exam_list);
+        mExamsList.setEmptyView(rootView.findViewById(R.id.exam_list_empty));
         mLastUpdatedText = (TextView)rootView.findViewById(R.id.text_last_updated);
 
         mExamsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
