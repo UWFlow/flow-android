@@ -7,11 +7,13 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfileCoursesAdapter;
+import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.entities.CourseFriend;
@@ -61,6 +63,7 @@ public class ProfileCourseFragment extends Fragment implements LoaderManager.Loa
                 getActivity().getSupportFragmentManager());
         mCoursesListView.setAdapter(profileListAdapter);
         profileListAdapter.notifyDataSetChanged();
+        expandAllGroups(mCoursesListView);
     }
 
     @Override
@@ -83,7 +86,14 @@ public class ProfileCourseFragment extends Fragment implements LoaderManager.Loa
                                 getActivity().getSupportFragmentManager());
                         mCoursesListView.setAdapter(profileListAdapter);
                         profileListAdapter.notifyDataSetChanged();
+                        expandAllGroups(mCoursesListView);
                     }
                 });
+    }
+
+    private void expandAllGroups(ExpandableListView listView) {
+        for (int i = 0; i < listView.getExpandableListAdapter().getGroupCount(); i++) {
+            listView.expandGroup(i);
+        }
     }
 }
