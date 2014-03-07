@@ -14,12 +14,12 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:text="PHIL 110A"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"/>
     <TextView
             android:id="@+id/second"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Mon, Apr 21    9:00AM - 11:30AM    PAC 1,2,3"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 </LinearLayout>
