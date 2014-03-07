@@ -9,10 +9,10 @@
             android:id="@+id/course_code"
             android:text="PSYCH 101"
             android:textSize="18dp"
-            android:gravity="center"
+            android:gravity="center|left"
             android:layout_width="100dp"
             android:layout_height="fill_parent"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="8dp"
             />
     <TextView
@@ -31,7 +31,7 @@
                   android:layout_gravity="center_vertical"
                   android:gravity="center"
                   android:orientation="vertical"
-                  android:layout_marginRight="4dp"
+                  android:layout_marginRight="15dp"
             >
         <TextView
                 android:id="@+id/rating"

@@ -32,7 +32,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     //     See http://developer.android.com/guide/topics/search/search-dialog.html
     private EditText mSearchBox;
     private Spinner mSortSpinner;
-    private CheckBox mIncludeTakenCheckBox;
+    private CheckBox mExcludeTakenCheckBox;
     private ListView mResultsListView;
     private View mFooterView;
 
@@ -63,7 +63,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         View rootView = inflater.inflate(R.layout.explore_layout, container, false);
         mSearchBox = (EditText)rootView.findViewById(R.id.search_box);
         mSortSpinner = (Spinner)rootView.findViewById(R.id.sort_spinner);
-        mIncludeTakenCheckBox = (CheckBox)rootView.findViewById(R.id.checkbox_include_taken);
+        mExcludeTakenCheckBox = (CheckBox)rootView.findViewById(R.id.checkbox_exclude_taken);
         mResultsListView = (ListView)rootView.findViewById(R.id.results_list);
 
         mSearchResultList = new ArrayList<Course>();
@@ -100,7 +100,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         });
 
         // Do search on checkbox include/exclude courses taken change
-        mIncludeTakenCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mExcludeTakenCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 doSearch(0);
@@ -173,8 +173,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         String sortMode = sortItem == null ? "" : mSortModesMap.get(sortItem.toString());
 
         // Get whether we should exclude taken courses
-        // TODO(david): Change this checkbox to say "exclude courses I've taken" like on the web app
-        boolean excludeTakenCourses = !mIncludeTakenCheckBox.isChecked();
+        boolean excludeTakenCourses = mExcludeTakenCheckBox.isChecked();
 
         FlowApiRequests.searchCourses(keywords, sortMode, excludeTakenCourses, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE,
                 new FlowApiRequestCallbackAdapter() {

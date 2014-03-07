@@ -4,7 +4,8 @@
               android:orientation="vertical"
               android:gravity="center_horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:background="@color/grey_lightest">
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
@@ -12,12 +13,13 @@
                   android:background="@color/flow_blue"
                   android:paddingTop="10dp"
                   android:paddingBottom="10dp"
-                  android:paddingLeft="20dp"
-                  android:paddingRight="20dp"
+                  android:paddingLeft="15dp"
+                  android:paddingRight="15dp"
             >
         <ImageView android:layout_width="35dp"
                    android:layout_height="35dp"
-                   android:src="@drawable/ic_drawer_search_white"/>
+                   android:src="@drawable/ic_drawer_search_white"
+                   android:paddingRight="10dp" />
         <EditText android:id="@+id/search_box"
                   android:imeOptions="actionSearch"
                   android:inputType="text"
@@ -35,8 +37,7 @@
                   android:orientation="horizontal"
                   android:gravity="center"
                   android:paddingLeft="20dp"
-                  android:paddingRight="20dp"
-            >
+                  android:paddingRight="20dp">
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="Sort by: "/>
@@ -47,12 +48,14 @@
                  android:prompt="@string/explore_sort_prompt"
                 />
     </LinearLayout>
-    <CheckBox android:id="@+id/checkbox_include_taken"
+    <CheckBox android:id="@+id/checkbox_exclude_taken"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="Include courses I've taken" />
+              android:text="Exclude courses I've taken"
+              android:checked="false" />
     <ListView android:id="@+id/results_list"
               android:layout_width="match_parent"
               android:layout_height="0dp"
-              android:layout_weight="1" />
+              android:layout_weight="1"
+              android:background="@color/white" />
 </LinearLayout>
