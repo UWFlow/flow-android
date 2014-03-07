@@ -7,82 +7,69 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.Course;
+import com.uwflow.flow_android.db_object.UserCourse;
+import com.uwflow.flow_android.db_object.UserCourseDetail;
 import com.uwflow.flow_android.fragment.CourseFragment;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 public class ProfileCoursesAdapter extends BaseExpandableListAdapter {
 
-    private List<Course> mCourseList;
+    private Map<String,List<Course>> mConsolidatedMap;
     private List<String> mTermList;
-    Map<String,List<Course>> mCoursesCollection;
     private Context mContext;
     private FragmentManager mFragmentManager;
 
-    public ProfileCoursesAdapter(List<Course> courses, Context context, FragmentManager fragmentManager) {
-        mCourseList = courses;
+    public ProfileCoursesAdapter(UserCourseDetail userCourseDetail, Context context, FragmentManager fragmentManager) {
+        mConsolidatedMap = createConsolidatedMap(userCourseDetail);
         mContext = context;
         mFragmentManager = fragmentManager;
-        createTermsList();
-        createCollection();
+        mTermList = new ArrayList<String>(mConsolidatedMap.keySet());
     }
 
-    public void createTermsList() {
-        mTermList = new ArrayList<String>();
-        mTermList.add("Winter 2014");
-        mTermList.add("Fall 2013");
-        mTermList.add("Spring 2013");
-        mTermList.add("Winter 2013");
-    }
+    private Map<String, List<Course>> createConsolidatedMap(UserCourseDetail userCourseDetail) {
+        // Map of Courses to be passed into the adapter, bucketed by term ID
+        Map<String,List<Course>> consolidatedMap = new LinkedHashMap<String, List<Course>>();
 
-    public void createCollection() {
-
-        mCoursesCollection = new LinkedHashMap<String, List<Course>>();
-
-
-
-        //TODO:Once Course has term field, add correct course to the right term
-        for(String term : mTermList) {
-            List<Course> childList = new ArrayList<Course>();
-            if (term.equals("Winter 2014")) {
-                for(int i = 0; i<mCourseList.size()/4; i++) {
-                    childList.add(mCourseList.get(i));
-                }
-            }
-            if (term.equals("Fall 2013")) {
-                for(int i = mCourseList.size()/4; i<mCourseList.size()/2; i++) {
-                    childList.add(mCourseList.get(i));
-                }
-            }
-            if (term.equals("Spring 2013")) {
-                for(int i = mCourseList.size()/2; i<3*mCourseList.size()/4; i++) {
-                    childList.add(mCourseList.get(i));
-                }
-            }
-            if (term.equals("Winter 2013")) {
-                for(int i = 3*mCourseList.size()/4; i<mCourseList.size(); i++) {
-                    childList.add(mCourseList.get(i));
-                }
-            }
-            mCoursesCollection.put(term,childList);
+        // Add all Courses (with names) to a HashMap for lookup
+        HashMap<String, Course> courseMap = new HashMap<String, Course>();
+        List<Course> courses = userCourseDetail.getCourses();
+        for (Course course : courses) {
+            courseMap.put(course.getId(), course);
         }
+
+        // Sort list of UserCourses (without course names) by term number
+        List<UserCourse> userCourseList = userCourseDetail.getUserCourses();
+        Collections.sort(userCourseList, new UserCourseTermComparator());
+
+        // Iterate through sorted list of UserCourses and add the respective Courses (with course names)
+        // to the consolidatedMap, bucketed by term ID
+        for (UserCourse userCourse : userCourseList) {
+            String termName = userCourse.getTermName();
+            if (!consolidatedMap.containsKey(termName)) {
+                consolidatedMap.put(termName, new ArrayList<Course>());
+            }
+
+            (consolidatedMap.get(termName)).add(courseMap.get(userCourse.getCourseId()));
+        }
+        return consolidatedMap;
     }
 
     public int getCount() {
-        return mCourseList.size();
+        int count = 0;
+        for (String term : mTermList) {
+            count += mConsolidatedMap.get(term).size();
+        }
+        return count;
     }
 
     public Object getChild(int groupPosition, int childPosition) {
-        return mCoursesCollection.get(mTermList.get(groupPosition)).get(childPosition);
+        return mConsolidatedMap.get(mTermList.get(groupPosition)).get(childPosition);
     }
 
     public long getChildId(int groupPosition, int childPosition) {
@@ -122,7 +109,7 @@ public class ProfileCoursesAdapter extends BaseExpandableListAdapter {
     }
 
     public int getChildrenCount(int groupPosition) {
-        return mCoursesCollection.get(mTermList.get(groupPosition)).size();
+        return mConsolidatedMap.get(mTermList.get(groupPosition)).size();
     }
 
     public Object getGroup(int groupPosition) {
@@ -137,43 +124,8 @@ public class ProfileCoursesAdapter extends BaseExpandableListAdapter {
         return groupPosition;
     }
 
-/*
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        // verify that convertView is not null
-        if (convertView == null) {
-            // inflate a new view
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.profile_courses_row_item, parent, false);
-        }
-
-        // Fill view with appropriate data
-        TextView first, second;
-
-        first = (TextView) convertView.findViewById(R.id.first);
-        second = (TextView) convertView.findViewById(R.id.second);
-
-        first.setText(mCourseList.get(position).getId());
-        second.setText(mCourseList.get(position).getName());
-
-        // Make this View clickable to open a new CourseFragment
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction transaction = mFragmentManager.beginTransaction();
-                transaction.replace(R.id.content_frame, CourseFragment.newInstance(mCourseList.get(position).getId()))
-                        .addToBackStack(null)
-                        .commit();
-            }
-        };
-        convertView.setOnClickListener(onClickListener);
-
-        return convertView;
-    }
-*/
-
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-
         String termName = (String) getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -194,14 +146,16 @@ public class ProfileCoursesAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
+    class UserCourseTermComparator implements Comparator<UserCourse> {
 
-    public Object getItem(int arg0) {
-        return mCourseList.get(arg0);
+        public UserCourseTermComparator() {}
+
+        public int compare(UserCourse a, UserCourse b) {
+            if (a.getTermId().compareTo(b.getTermId()) > 0) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
     }
-
-    public long getItemId(int position) {
-        // TODO Auto-generated method stub
-        return position;
-    }
-
 }

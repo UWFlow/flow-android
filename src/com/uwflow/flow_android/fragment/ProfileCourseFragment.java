@@ -13,16 +13,13 @@ import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfileCoursesAdapter;
 import com.uwflow.flow_android.constant.Constants;
-import com.uwflow.flow_android.db_object.Course;
-import com.uwflow.flow_android.db_object.UserCourseDetail;
-import com.uwflow.flow_android.db_object.UserFriends;
+import com.uwflow.flow_android.db_object.*;
+import com.uwflow.flow_android.entities.CourseFriend;
 import com.uwflow.flow_android.loaders.UserCoursesLoader;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ProfileCourseFragment extends Fragment implements LoaderManager.LoaderCallbacks<UserCourseDetail>{
     private String mProfileID;
@@ -59,10 +56,11 @@ public class ProfileCourseFragment extends Fragment implements LoaderManager.Loa
     public void onLoadFinished(Loader<UserCourseDetail> listLoader, UserCourseDetail userCourseDetail) {
 
         profileListAdapter = new ProfileCoursesAdapter(
-                userCourseDetail.getCourses(),
+                userCourseDetail,
                 getActivity(),
                 getActivity().getSupportFragmentManager());
         mCoursesListView.setAdapter(profileListAdapter);
+        profileListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -79,9 +77,8 @@ public class ProfileCourseFragment extends Fragment implements LoaderManager.Loa
                 new FlowApiRequestCallbackAdapter() {
                     @Override
                     public void getUserCoursesCallback(UserCourseDetail userCourseDetail) {
-
                         profileListAdapter = new ProfileCoursesAdapter(
-                                userCourseDetail.getCourses(),
+                                userCourseDetail,
                                 getActivity(),
                                 getActivity().getSupportFragmentManager());
                         mCoursesListView.setAdapter(profileListAdapter);
@@ -89,6 +86,4 @@ public class ProfileCourseFragment extends Fragment implements LoaderManager.Loa
                     }
                 });
     }
-
-
 }
