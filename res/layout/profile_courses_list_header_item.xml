@@ -4,6 +4,7 @@
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:padding="6dp"
+              android:background="@color/flow_blue"
               android:gravity="center_vertical"
               android:orientation="horizontal">
 
@@ -12,11 +13,11 @@
             android:id="@+id/first"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Winter 2014"
-            android:textSize="22sp"
+            android:text=""
+            android:textSize="17sp"
+            android:textColor="@color/white"
             android:layout_marginLeft="30dp"
             android:textStyle="bold"
-            android:textAllCaps="true"
             android:gravity="left"/>
 
 

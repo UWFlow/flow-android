@@ -3,7 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="65dp"
-              android:padding="6dip"
+              android:paddingTop="6dip"
+              android:paddingBottom="6dip"
+              android:paddingLeft="15dp"
+              android:paddingRight="15dp"
               android:gravity="center_vertical"
               android:orientation="horizontal">
     <com.makeramen.RoundedImageView
