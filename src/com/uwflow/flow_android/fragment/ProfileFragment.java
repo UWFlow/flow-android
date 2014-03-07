@@ -13,18 +13,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
+import com.facebook.*;
+import com.facebook.model.GraphObject;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
-import com.uwflow.flow_android.adapters.ProfileFriendAdapter;
 import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.User;
-import com.uwflow.flow_android.db_object.UserFriends;
 import com.uwflow.flow_android.loaders.UserMeLoader;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -38,6 +40,7 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
     protected ViewPager viewPager;
     protected PagerSlidingTabStrip tabs;
     private Bitmap imageBitmap;
+    private ImageView mCoverPhoto;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -54,6 +57,7 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         userName = (TextView) rootView.findViewById(R.id.user_name);
 	    userProgram = (TextView) rootView.findViewById(R.id.user_program);
 	    viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        mCoverPhoto = (ImageView) rootView.findViewById(R.id.cover_photo);
 
 	    mProfilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments());
 
@@ -113,46 +117,71 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
                 }
             });
+
+            // fetch and set cover photo
+            fetchCoverPhoto(me.getFbid());
+
         }
     }
 
     @Override
     public void onLoaderReset(Loader<List<User>> listLoader) {
+
+    }
+
+    private void fetchProfileInfo(String id){
+        if (id == null) return;
+
+        FlowApiRequests.getUser(
+                id,
+                new FlowApiRequestCallbackAdapter() {
+                    @Override
+                    public void getUserCallback(User user) {
+
+                        // fetch and set cover photo
+                        fetchCoverPhoto(user.getFbid());
+
+                        // Set profile picture
+                        Picasso.with(getActivity()).load(user.getProfilePicUrls().getLarge()).into(userImage);
+
+                        userName.setText(user.getName());
+                        userProgram.setText(user.getProgramName());
+
+                    }
+                });
     }
 
 
-    private void fetchProfileInfo(String id){
-	if (id == null) return;
+    private void fetchCoverPhoto(long fbid) {
+        Bundle params = new Bundle();
+        params.putString("fields", "cover");
+        new Request(
+                Session.getActiveSession(),
+                "/" + fbid,
+                params,
+                HttpMethod.GET,
+                new Request.Callback() {
+                    public void onCompleted(Response response) {
+                        GraphObject graphObject = response.getGraphObject();
+                        FacebookRequestError error = response.getError();
+                        if (graphObject != null) {
+                            if (graphObject.getProperty("cover") != null) {
+                                try {
+                                    JSONObject json = graphObject.getInnerJSONObject();
+                                    JSONObject coverObject =
+                                            new JSONObject((String) json.getString("cover"));
+                                    String url = coverObject.getString("source");
+                                    Picasso.with(getActivity()).load(url).into(mCoverPhoto);
+                                } catch (JSONException e) {
+                                }
 
-	FlowApiRequests.getUser(
-		id,
-		new FlowApiRequestCallbackAdapter() {
-		    @Override
-		    public void getUserCallback(User user) {
 
-			userName.setText(user.getName());
-			userProgram.setText(user.getProgramName());
-			Picasso.with(getActivity()).load(user.getProfilePicUrls().getLarge()).into(new Target() {
-			    @Override
-			    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-				if (userImage != null)
-				    userImage.setImageBitmap(bitmap);
-				else
-				    imageBitmap = bitmap;
-			    }
-
-			    @Override
-			    public void onBitmapFailed(Drawable drawable) {
-
-			    }
-
-			    @Override
-			    public void onPrepareLoad(Drawable drawable) {
-
-			    }
-			});
-		    }
-		});
+                            } else if (error != null) {
+                            }
+                        }
+                    }
+                }
+        ).executeAsync();
     }
 
 

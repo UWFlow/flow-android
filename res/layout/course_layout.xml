@@ -52,7 +52,7 @@
     <com.astuetz.PagerSlidingTabStrip
             android:id="@+id/pager_tabs"
             android:layout_width="fill_parent"
-            android:layout_height="48dip"
+            android:layout_height="40dip"
             app:pstsIndicatorColor="@color/flow_blue"
             app:pstsShouldExpand="true"
             />

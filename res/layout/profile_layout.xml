@@ -5,41 +5,53 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
-    <LinearLayout android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:padding="10dp"
-                  android:gravity="center_vertical"
-                  android:orientation="horizontal">
-        <com.makeramen.RoundedImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/user_image"
-                android:src="@drawable/kitty"
-                android:scaleType="centerCrop"
-                app:is_oval="true"
-                android:layout_width="80dp"
-                android:layout_height="80dp"/>
+    <FrameLayout android:layout_width="fill_parent"
+                 android:layout_height="110dp">
+        <ImageView android:id="@+id/cover_photo"
+                   android:src="@drawable/kitty"
+                   android:scaleType="centerCrop"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent" />
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:padding="10dp"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+            <com.makeramen.RoundedImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/user_image"
+                    android:src="@drawable/kitty"
+                    android:scaleType="centerCrop"
+                    app:is_oval="true"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"/>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:orientation="vertical"
-                      android:layout_width="0dp"
-                      android:layout_weight="1"
-                      android:layout_height="wrap_content"
-                      android:layout_marginLeft="20dp"
-                      android:paddingRight="10dp">
-            <TextView android:id="@+id/user_name"
-                      android:layout_width="fill_parent" android:layout_height="wrap_content"
-                      android:text="" android:textSize="24dp" android:textStyle="bold" />
-            <TextView android:id="@+id/user_program"
-                      android:layout_width="fill_parent" android:layout_height="wrap_content"
-                      android:text=""
-                      android:textSize="18dp" />
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:orientation="vertical"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:layout_height="wrap_content"
+                          android:layout_marginLeft="20dp"
+                          android:paddingRight="10dp">
+                <TextView android:id="@+id/user_name"
+                          style="@style/Flow.WhiteTextOnPhoto"
+                          android:layout_width="fill_parent" android:layout_height="wrap_content"
+                          android:text="JASPER FUNG"
+                          android:textSize="20dp"
+                          android:textStyle="bold" />
+                <TextView android:id="@+id/user_program"
+                          style="@style/Flow.WhiteTextOnPhoto"
+                          android:layout_width="fill_parent" android:layout_height="wrap_content"
+                          android:text="Mechatronics Engineering"
+                          android:textSize="16dp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </FrameLayout>
 
     <com.astuetz.PagerSlidingTabStrip
             android:id="@+id/pager_tabs"
             android:layout_width="fill_parent"
-            android:layout_height="48dip"
+            android:layout_height="40dip"
             app:pstsIndicatorColor="@color/flow_blue"
             app:pstsShouldExpand="true"/>
 
