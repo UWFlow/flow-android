@@ -9,8 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.*;
 import com.facebook.Session;
 import com.uwflow.flow_android.adapters.NavDrawerAdapter;
 import com.uwflow.flow_android.constant.Constants;
@@ -25,7 +24,9 @@ import java.util.ArrayList;
 public class MainFlowActivity extends FlowActivity {
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
+    private LinearLayout mDrawerContainer;
     private ActionBarDrawerToggle mDrawerToggle;
+    private LinearLayout mLogOutLayout;
     private NavDrawerAdapter mNavDrawerAdapter;
     private ArrayList<NavDrawerItem> mDrawerItems;
     @Override
@@ -33,15 +34,40 @@ public class MainFlowActivity extends FlowActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.flow_main);
 
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerContainer = (LinearLayout) findViewById(R.id.drawer);
+        mDrawerList = (ListView) findViewById(R.id.drawer_list);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mLogOutLayout = (LinearLayout) findViewById(R.id.log_out_item);
 
         mDrawerItems = new ArrayList<NavDrawerItem>();
         mDrawerItems.add(new NavDrawerItem("Profile", R.drawable.drawer_profile_icon));
         mDrawerItems.add(new NavDrawerItem("Explore", R.drawable.drawer_explore_icon));
         mDrawerItems.add(new NavDrawerItem("Shortlist", R.drawable.drawer_shortlist_icon));
         mDrawerItems.add(new NavDrawerItem("About", R.drawable.drawer_about_icon));
-        mDrawerItems.add(new NavDrawerItem("Log out", R.drawable.drawer_log_out_icon));
+
+        // Configure log out button
+        TextView label = (TextView) mLogOutLayout.findViewById(R.id.drawer_item_name);
+        ImageView icon = (ImageView) mLogOutLayout.findViewById(R.id.drawer_item_icon);
+        label.setText("Log out");
+        icon.setImageResource(R.drawable.drawer_log_out_icon);
+        mLogOutLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Session.getActiveSession() != null) {
+                    Session.getActiveSession().closeAndClearTokenInformation();
+                }
+                Session.setActiveSession(null);
+
+                Intent intent = new Intent(MainFlowActivity.this, LoginActivity.class);
+                intent.putExtra("finish", true); // if you are checking for this in your other Activities
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        });
 
         mNavDrawerAdapter = new NavDrawerAdapter(mDrawerItems, this);
         mDrawerList.setAdapter(mNavDrawerAdapter);
@@ -149,21 +175,6 @@ public class MainFlowActivity extends FlowActivity {
             case(Constants.NAV_DRAWER_ABOUT_INDEX) :
                 fragment = new AboutFragment();
                 break;
-            case(Constants.NAV_DRAWER_LOG_OUT_INDEX) :
-                if (Session.getActiveSession() != null) {
-                    Session.getActiveSession().closeAndClearTokenInformation();
-                }
-                Session.setActiveSession(null);
-                mDrawerLayout.closeDrawer(mDrawerList);
-
-                Intent intent = new Intent(this, LoginActivity.class);
-                intent.putExtra("finish", true); // if you are checking for this in your other Activities
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                        Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
-                return;
         }
 
         if (fragment != null){
@@ -173,7 +184,7 @@ public class MainFlowActivity extends FlowActivity {
                     .addToBackStack(null)
                     .commit();
             mDrawerList.setItemChecked(position, true);
-            mDrawerLayout.closeDrawer(mDrawerList);
+            mDrawerLayout.closeDrawer(mDrawerContainer);
         }
     }
 }
