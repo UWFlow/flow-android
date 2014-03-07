@@ -36,6 +36,8 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     private ListView mResultsListView;
     private View mFooterView;
 
+    private boolean mSortSpinnerFired = false;
+
     private List<Course> mSearchResultList;
 
     private SearchResultAdapter mSearchResultAdapter;
@@ -73,7 +75,6 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mResultsListView.setAdapter(mSearchResultAdapter);
         mResultsListView.setOnItemClickListener(this);
 
-
         // Populate the sort spinner
         mSortModesAdapter = new ArrayAdapter <CharSequence>(getActivity(), android.R.layout.simple_spinner_item,
                 mSortModesMap.keySet().toArray(new CharSequence[0]));
@@ -86,10 +87,19 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     private void setUpListeners() {
+        mSortSpinnerFired = false;
+
         // Do search on sort mode change
         mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Android stupidly fires this listener on create of the spinner. This is used to ignore that.
+                if (!mSortSpinnerFired) {
+                    mSortSpinnerFired = true;
+                    return;
+                }
+
+                Log.w(TAG, "on item selected search");
                 doSearch(0);
             }
 
@@ -103,6 +113,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mExcludeTakenCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.w(TAG, "on checked search");
                 doSearch(0);
             }
         });
@@ -112,6 +123,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    Log.w(TAG, "on keyboard search button search");
                     doSearch(0);
 
                     // Hide the keyboard. See http://stackoverflow.com/questions/1109022
@@ -139,7 +151,6 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        // TODO(david): Figure out why three requests are kicked off instead of just one on fragment loaded
         doSearch(0);
     }
 
@@ -210,24 +221,26 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            int totalItemsLessFooter = totalItemCount - 1;
+
             // If total items has somehow gone down, then search results were probably refreshed.
-            if (totalItemCount < currentTotalItems) {
+            if (totalItemsLessFooter< currentTotalItems) {
                 currentPage = 0;
-                currentTotalItems = totalItemCount;
-                if (totalItemCount == 0) {
+                currentTotalItems = totalItemsLessFooter;
+                if (totalItemsLessFooter == 0) {
                     loading = true;
                 }
             }
 
             // See if loading has just completed.
-            if (loading && totalItemCount > currentTotalItems) {
-                currentTotalItems = totalItemCount;
+            if (loading && totalItemsLessFooter > currentTotalItems) {
+                currentTotalItems = totalItemsLessFooter;
                 currentPage++;
                 loading = false;
             }
 
             // If we're not already loading, see if the remaining items below the fold is about to exceed the threshold.
-            if (!loading && totalItemCount - (firstVisibleItem + visibleItemCount) <= remainingThreshold) {
+            if (!loading && totalItemsLessFooter - (firstVisibleItem + visibleItemCount) <= remainingThreshold) {
                 onLoadMore(currentPage + 1);
                 loading = true;
             }
