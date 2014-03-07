@@ -56,8 +56,10 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         userImage = (ImageView) rootView.findViewById(R.id.user_image);
         userName = (TextView) rootView.findViewById(R.id.user_name);
 	    userProgram = (TextView) rootView.findViewById(R.id.user_program);
-	    viewPager = (ViewPager) rootView.findViewById(R.id.pager);
         mCoverPhoto = (ImageView) rootView.findViewById(R.id.cover_photo);
+        viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
+        viewPager.setOffscreenPageLimit(3);
 
 	    mProfilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments());
 

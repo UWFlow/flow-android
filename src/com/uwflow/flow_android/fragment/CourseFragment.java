@@ -86,13 +86,14 @@ public class CourseFragment extends Fragment {
 	    Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
 	}
 
-	mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
-	mViewPager.setAdapter(mCoursePagerAdapter);
-	mTabs.setViewPager(mViewPager);
+        mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
+        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setAdapter(mCoursePagerAdapter);
+        mTabs.setViewPager(mViewPager);
 
         // Set default tab to About
         mViewPager.setCurrentItem(Constants.COURSE_ABOUT_PAGE_INDEX);
-//        mViewPager.setOffscreenPageLimit(2); // TODO: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
 
         Button shortlistButton = (Button)rootView.findViewById(R.id.shortlist_btn);
         shortlistButton.setOnClickListener(new View.OnClickListener() {
