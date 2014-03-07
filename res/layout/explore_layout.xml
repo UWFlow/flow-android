@@ -5,7 +5,7 @@
               android:gravity="center_horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/grey_lightest">
+        >
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
@@ -36,8 +36,9 @@
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:gravity="center"
-                  android:paddingLeft="20dp"
-                  android:paddingRight="20dp">
+                  android:paddingLeft="15dp"
+                  android:paddingRight="15dp"
+                  android:background="@color/grey_lighter">
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="Sort by: "/>
@@ -48,14 +49,19 @@
                  android:prompt="@string/explore_sort_prompt"
                 />
     </LinearLayout>
-    <CheckBox android:id="@+id/checkbox_exclude_taken"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="Exclude courses I've taken"
-              android:checked="false" />
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:gravity="center"
+                  android:background="@color/grey_lighter">
+        <CheckBox android:id="@+id/checkbox_exclude_taken"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Exclude courses I've taken"
+                  android:checked="false"/>
+    </LinearLayout>
     <ListView android:id="@+id/results_list"
               android:layout_width="match_parent"
               android:layout_height="0dp"
-              android:layout_weight="1"
-              android:background="@color/white" />
+              android:layout_weight="1"/>
 </LinearLayout>

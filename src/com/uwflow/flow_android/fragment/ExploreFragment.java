@@ -140,7 +140,6 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         super.onActivityCreated(savedInstanceState);
 
         // TODO(david): Figure out why three requests are kicked off instead of just one on fragment loaded
-        // TODO(david): Add a "fetching results..." empty state here
         doSearch(0);
     }
 
@@ -158,8 +157,11 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
      * @param page The page to load. Pass 0 if loading search results for a different query/filters.
      */
     private void doSearch(final int page) {
-        // TODO(david): Fade-out existing search results if page == 0
         mFooterView.setVisibility(View.VISIBLE);
+
+        if (page == 0) {
+            mResultsListView.setAlpha((float)0.4);
+        }
 
         // Get keywords
         Editable searchBoxText = mSearchBox.getText();
@@ -189,6 +191,7 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
                     mResultsListView.setSelectionAfterHeaderView();
                 }
 
+                mResultsListView.setAlpha((float)1.0);
                 mFooterView.setVisibility(View.GONE);
             }
         });
