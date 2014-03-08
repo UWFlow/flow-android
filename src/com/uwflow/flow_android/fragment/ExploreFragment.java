@@ -37,8 +37,10 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     private View mFooterView;
 
     private boolean mSortSpinnerFired = false;
+    private int mSortSpinnerPosition = -1;
+    private boolean mExcludeTakenCheckBoxChecked = false;
 
-    private List<Course> mSearchResultList;
+    private List<Course> mSearchResultList = new ArrayList<Course>();
 
     private SearchResultAdapter mSearchResultAdapter;
 
@@ -59,8 +61,6 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO(david): Restore search results from bundle (don't re-fetch when pressing back)
-
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.explore_layout, container, false);
         mSearchBox = (EditText)rootView.findViewById(R.id.search_box);
@@ -68,7 +68,6 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mExcludeTakenCheckBox = (CheckBox)rootView.findViewById(R.id.checkbox_exclude_taken);
         mResultsListView = (ListView)rootView.findViewById(R.id.results_list);
 
-        mSearchResultList = new ArrayList<Course>();
         mFooterView = inflater.inflate(R.layout.search_results_footer, null, false);
         mResultsListView.addFooterView(mFooterView);
         mSearchResultAdapter = new SearchResultAdapter(mSearchResultList, getActivity());
@@ -99,6 +98,13 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
                     return;
                 }
 
+                // Item selection didn't actually change. This could happen when back button is pressed to return to
+                // this fragment.
+                if (mSortSpinnerPosition == position) {
+                    return;
+                }
+                mSortSpinnerPosition = position;
+
                 Log.w(TAG, "on item selected search");
                 doSearch(0);
             }
@@ -114,6 +120,14 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.w(TAG, "on checked search");
+
+                // Checkbox selection didn't actually change. This may happen when back button pressed to return to
+                // this fragment.
+                if (isChecked == mExcludeTakenCheckBoxChecked) {
+                    return;
+                }
+                mExcludeTakenCheckBoxChecked = isChecked;
+
                 doSearch(0);
             }
         });
@@ -151,7 +165,9 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        doSearch(0);
+        if (mSearchResultList.isEmpty()) {
+            doSearch(0);
+        }
     }
 
     @Override
