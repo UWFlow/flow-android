@@ -43,11 +43,8 @@ public class FlowDatabaseLoader {
                         try {
                             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
                             User user = JsonToDbUtil.getUserMe(jsonObjects[0]);
-                            if (user.getProfilePicUrls().getLarge() != null){
-                                Picasso.with(context).load(user.getProfilePicUrls().getLarge()).fetch();
-                            }
-                            if (user.getProfilePicUrls().getSquare() != null){
-                                Picasso.with(context).load(user.getProfilePicUrls().getSquare()).fetch();
+                            if (user.getProfilePicUrls().getDefaultPic() != null){
+                                Picasso.with(context).load(user.getProfilePicUrls().getDefaultPic()).fetch();
                             }
                             if (user != null)
                                 userDao.createOrUpdate(user);
@@ -82,7 +79,7 @@ public class FlowDatabaseLoader {
                         try {
                             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
                             for (User u : userFriends.getFriends()) {
-                                if (u.getProfilePicUrls().getLarge() != null){
+                                if (u.getProfilePicUrls().getDefaultPic() != null){
                                     Picasso.with(context).load(u.getProfilePicUrls().getDefaultPic()).fetch();
                                 }
                                 userDao.createOrUpdate(u);

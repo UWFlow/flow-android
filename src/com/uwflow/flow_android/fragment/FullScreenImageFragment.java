@@ -33,7 +33,6 @@ public class FullScreenImageFragment extends Fragment {
 
         bitmapImage = getArguments().getParcelable("ScheduleImage");
         mImageShow.setImageBitmap(bitmapImage);
-
         mImageShow.setScaleType(ImageView.ScaleType.FIT_XY);
         return rootView;
     }

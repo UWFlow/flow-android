@@ -269,7 +269,7 @@ public class ProfileFragment extends Fragment {
                 }
             };
             // Set profile picture
-            Picasso.with(getActivity()).load(user.getProfilePicUrls().getLarge()).into(imageCallback);
+            Picasso.with(getActivity()).load(user.getProfilePicUrls().getDefaultPic()).into(imageCallback);
 
             userName.setText(user.getName());
             userProgram.setText(user.getProgramName());
