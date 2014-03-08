@@ -91,7 +91,7 @@ public class ProfileCoursesAdapter extends BaseExpandableListAdapter {
         TextView first = (TextView) convertView.findViewById(R.id.first);
         TextView second = (TextView) convertView.findViewById(R.id.second);
 
-        first.setText(course.getId());
+        first.setText(course.getCode());
         second.setText(course.getName());
 
         // Make this View clickable to open a new CourseFragment

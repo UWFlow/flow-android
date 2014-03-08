@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.Exam;
 import com.uwflow.flow_android.util.CalendarHelper;
+import com.uwflow.flow_android.util.CourseUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,13 +47,13 @@ public class ProfileExamAdapter extends BaseAdapter {
 
         final Exam exam = mExamList.get(position);
 
-        String examID = exam.getCourseId();
+        String courseId = exam.getCourseId();
         long startDateSeconds = exam.getStartDate();
         long endDateSeconds = exam.getEndDate();
         String location = (exam.getLocation() != null) ? exam.getLocation() : "";
         String sections = (exam.getSections() != null) ? exam.getSections() : "";
 
-        if (examID == null || startDateSeconds == 0 || endDateSeconds == 0) {
+        if (courseId == null || startDateSeconds == 0 || endDateSeconds == 0) {
             // Don't bother printing out this exam. Insufficient information
             // We still want to insert a view so that our list and adapter items/indices remain in sync
             new View(mContext).setLayoutParams(new TableLayout.LayoutParams(0, 0));
@@ -63,7 +64,7 @@ public class ProfileExamAdapter extends BaseAdapter {
         SimpleDateFormat startDateFormat = new SimpleDateFormat ("E, MMM d    h:mma");
         SimpleDateFormat endDateFormat = new SimpleDateFormat ("hh:mma");
 
-        first.setText(String.format("%s - Section %s", examID.toUpperCase(), sections));
+        first.setText(String.format("%s - Section %s", CourseUtil.humanizeCourseId(courseId), sections));
 	/* TODO: fetch the course name and place it in a third TextView */
         second.setText(String.format("%s - %s    %s",
                 startDateFormat.format(startDate),
@@ -76,7 +77,6 @@ public class ProfileExamAdapter extends BaseAdapter {
                 mContext.startActivity(CalendarHelper.getAddCalenderEventIntent(exam));
             }
         });
-
 
         return convertView;
     }
