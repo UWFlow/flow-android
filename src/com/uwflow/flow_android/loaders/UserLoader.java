@@ -1,6 +1,7 @@
 package com.uwflow.flow_android.loaders;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
@@ -10,23 +11,25 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserMeLoader extends FlowAbstractDataLoader<List<User>>{
+public class UserLoader extends FlowAbstractDataLoader<User> {
 
-    public UserMeLoader(Context context, FlowDatabaseHelper flowDatabaseHelper) {
+    public UserLoader(Context context, FlowDatabaseHelper flowDatabaseHelper) {
         super(context, flowDatabaseHelper);
     }
 
     @Override
-    protected List<User> loadDelegate() {
-        List<User> userFriends = new ArrayList<User>();
+    protected User loadDelegate() {
         try {
             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
             QueryBuilder<User, String> queryBuilder =
                     userDao.queryBuilder();
-            userFriends = userDao.query(queryBuilder.where().eq(User.IS_ME, true).prepare());
+            List<User> userFriends = userDao.query(queryBuilder.where().eq(User.IS_ME, true).prepare());
+            if (!userFriends.isEmpty()) {
+                return userFriends.get(0);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return userFriends;
+        return new User();
     }
 }

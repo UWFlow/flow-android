@@ -83,7 +83,7 @@ public class FlowDatabaseLoader {
                             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
                             for (User u : userFriends.getFriends()) {
                                 if (u.getProfilePicUrls().getLarge() != null){
-                                    Picasso.with(context).load(u.getProfilePicUrls().getLarge()).fetch();
+                                    Picasso.with(context).load(u.getProfilePicUrls().getDefaultPic()).fetch();
                                 }
                                 userDao.createOrUpdate(u);
                             }

@@ -19,9 +19,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import android.support.v4.app.Fragment;
 
-/**
- * Created by Chinmay on 3/6/14.
- */
 public class FullScreenImageFragment extends Fragment {
 
     private View rootView;
@@ -54,7 +51,6 @@ public class FullScreenImageFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        rotate(90);
     }
 
 }

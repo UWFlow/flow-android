@@ -5,10 +5,9 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <ImageView
+    <com.uwflow.flow_android.custom_view.DragZoomImageView
             android:id="@+id/image_full_screen"
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:src="@drawable/boolean_icon"/>
-
 </LinearLayout>
