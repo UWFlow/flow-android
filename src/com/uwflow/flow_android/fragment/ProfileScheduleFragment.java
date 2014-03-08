@@ -1,8 +1,9 @@
 package com.uwflow.flow_android.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -10,9 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.util.Log;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,21 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
-import com.uwflow.flow_android.db_object.ScheduleCourse;
 import com.uwflow.flow_android.db_object.ScheduleCourses;
-import com.uwflow.flow_android.loaders.UserScheduleLoader;
-import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
-import com.uwflow.flow_android.network.FlowApiRequests;
-import com.uwflow.flow_android.fragment.FullScreenImageFragment;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.List;
-
-public class ProfileScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ScheduleCourse>>, View.OnClickListener {
+public class ProfileScheduleFragment extends Fragment implements View.OnClickListener {
     private String mProfileID;
     private String mScheduleImageURL;
 
@@ -48,22 +37,24 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
     private LinearLayout mScheduleWeekLayout;
     private Bitmap scheduleBitmap;
     private View rootView;
+    private ProfileScheduleReceiver profileScheduleReceiver;
+    protected Target scheduleImageCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-	    mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
+        mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
 
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.profile_schedule_layout, container, false);
 
-        mRadioGroup = (RadioGroup)rootView.findViewById(R.id.radio_group_view);
-        mImageSchedule = (ImageView)rootView.findViewById(R.id.image_schedule);
+        mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radio_group_view);
+        mImageSchedule = (ImageView) rootView.findViewById(R.id.image_schedule);
         mImageSchedule.setOnClickListener(this);
-        mBtnExportCal = (Button)rootView.findViewById(R.id.btn_export_calendar);
-        mBtnShare = (Button)rootView.findViewById(R.id.btn_share);
-        mScheduleListLayout = (LinearLayout)rootView.findViewById(R.id.list_layout);
-        mScheduleWeekLayout = (LinearLayout)rootView.findViewById(R.id.week_layout);
+        mBtnExportCal = (Button) rootView.findViewById(R.id.btn_export_calendar);
+        mBtnShare = (Button) rootView.findViewById(R.id.btn_share);
+        mScheduleListLayout = (LinearLayout) rootView.findViewById(R.id.list_layout);
+        mScheduleWeekLayout = (LinearLayout) rootView.findViewById(R.id.week_layout);
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -81,16 +72,14 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
             }
         });
 
-	mBtnShare.setEnabled(false);
+        mBtnShare.setEnabled(false);
         mBtnShare.setOnClickListener(this);
         mBtnExportCal.setOnClickListener(this);
-
-	if (mProfileID == null) {
-	    getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_SCHEDULE_LOADER_ID, null, this);
-	} else {
-	    fetchScheduleImage(mProfileID);
-	}
-
+        // call this before setting up the receiver
+        populateData();
+        profileScheduleReceiver = new ProfileScheduleReceiver();
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(profileScheduleReceiver,
+                new IntentFilter(Constants.BroadcastActionId.UPDATE_PROFILE_USER_SCHEDULE));
         return rootView;
 
     }
@@ -126,68 +115,56 @@ public class ProfileScheduleFragment extends Fragment implements LoaderManager.L
         }
     }
 
-
-
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
 
-
     @Override
-    public Loader<List<ScheduleCourse>> onCreateLoader(int i, Bundle bundle) {
-        return new UserScheduleLoader(getActivity(), ((MainFlowActivity)getActivity()).getHelper());
-
+    public void onDestroyView() {
+        // Unregister since the activity is not visible
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(profileScheduleReceiver);
+        super.onDestroyView();
     }
 
-    @Override
-    public void onLoadFinished(Loader<List<ScheduleCourse>> arrayListLoader, final List<ScheduleCourse> scheduleCourses) {
-        if (!scheduleCourses.isEmpty() && scheduleCourses.get(0).getScheduleUrl() != null){
-            Picasso.with(getActivity().getApplicationContext()).load(scheduleCourses.get(0).getScheduleUrl()).into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                    scheduleBitmap = bitmap;
-                    mImageSchedule.setImageBitmap(bitmap);
-		            mScheduleImageURL = scheduleCourses.get(0).getScheduleUrl();
-		            mBtnShare.setEnabled(true);
-                }
 
-                @Override
-                public void onBitmapFailed(Drawable drawable) {
+    protected void populateData() {
+        final Fragment fragment = getParentFragment();
+        if (fragment != null && fragment instanceof ProfileFragment) {
+            ScheduleCourses scheduleCourses = ((ProfileFragment) getParentFragment()).getUserSchedule();
+            if (scheduleCourses != null && scheduleCourses.getScreenshotUrl() != null) {
+                // assume the URL is valid and an image will be returned
+                // TODO: change this conditional to 'if the image is successfully fetched'
+                mScheduleImageURL = scheduleCourses.getScreenshotUrl();
+                scheduleImageCallback = new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                        scheduleBitmap = bitmap;
+                        mImageSchedule.setImageBitmap(scheduleBitmap);
+                    }
 
-                }
+                    @Override
+                    public void onBitmapFailed(Drawable drawable) {
 
-                @Override
-                public void onPrepareLoad(Drawable drawable) {
+                    }
 
-                }
-            });
+                    @Override
+                    public void onPrepareLoad(Drawable drawable) {
+
+                    }
+                };
+                Picasso.with(getActivity().getApplicationContext())
+                        .load(mScheduleImageURL).into(scheduleImageCallback);
+                mBtnShare.setEnabled(true);
+            }
         }
     }
 
-    @Override
-    public void onLoaderReset(Loader<List<ScheduleCourse>> arrayListLoader) {
-
-    }
-
-    private void fetchScheduleImage(String id){
-	if (id == null) return;
-
-	FlowApiRequests.getUserSchedule(
-		id,
-		new FlowApiRequestCallbackAdapter() {
-		    @Override
-		    public void getUserScheduleCallback(ScheduleCourses scheduleCourses) {
-			if (scheduleCourses.getScreenshotUrl() != null) {
-			    // assume the URL is valid and an image will be returned
-			    // TODO: change this conditional to 'if the image is successfully fetched'
-			    mScheduleImageURL = scheduleCourses.getScreenshotUrl();
-			    Picasso.with(getActivity().getApplicationContext())
-				    .load(mScheduleImageURL).into(mImageSchedule);
-			    mBtnShare.setEnabled(true);
-			}
-		    }
-		});
+    protected class ProfileScheduleReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            populateData();
+        }
     }
 }
 

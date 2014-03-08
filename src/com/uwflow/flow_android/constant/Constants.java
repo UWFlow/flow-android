@@ -53,6 +53,14 @@ public class Constants {
         public static final int API_SEARCH_COURSES = 10;
     }
 
+    public static class BroadcastActionId {
+        public static final String UPDATE_PROFILE_USER = "UpdateProfileUser";
+        public static final String UPDATE_PROFILE_USER_FRIENDS = "UpdateProfileUserFriends";
+        public static final String UPDATE_PROFILE_USER_SCHEDULE = "UpdateProfileUserSchedule";
+        public static final String UPDATE_PROFILE_USER_EXAMS = "UpdateProfileUserExams";
+        public static final String UPDATE_PROFILE_USER_COURSES = "UpdateProfileUserCourses";
+    }
+
     public static final String UW_FLOW = "uwflow";
 
     // Keys used in bundles

@@ -10,6 +10,7 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.Dao;
+import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.network.*;

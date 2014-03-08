@@ -1,80 +1,65 @@
 package com.uwflow.flow_android.fragment;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfileFriendAdapter;
 import com.uwflow.flow_android.constant.Constants;
-import com.uwflow.flow_android.db_object.*;
-import com.uwflow.flow_android.loaders.UserFriendsLoader;
-import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
-import com.uwflow.flow_android.network.FlowApiRequests;
+import com.uwflow.flow_android.db_object.UserFriends;
 
-import java.util.List;
-
-public class ProfileFriendFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<User>>{
-    private String mProfileID;
+public class ProfileFriendFragment extends Fragment {
     protected ListView mProfileFriendList;
     protected View rootView;
     protected ProfileFriendAdapter mProfileFriendAdapter;
+    protected ProfileFriendReceiver profileFriendReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-	    mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
-
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.profile_friend_layout, container, false);
-        mProfileFriendList = (ListView)rootView.findViewById(R.id.friend_list);
-
-	if (mProfileID == null) {
-	    getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_FRIENDS_LOADER_ID, null, this);
-	} else {
-	    fetchFriends(mProfileID);
-	}
-
-	return rootView;
+        mProfileFriendList = (ListView) rootView.findViewById(R.id.friend_list);
+        populateData();
+        profileFriendReceiver = new ProfileFriendReceiver();
+        // Register mMessageReceiver to receive messages.
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(profileFriendReceiver,
+                new IntentFilter(Constants.BroadcastActionId.UPDATE_PROFILE_USER_FRIENDS));
+        return rootView;
     }
 
     @Override
-    public Loader<List<User>> onCreateLoader(int i, Bundle bundle) {
-        return new UserFriendsLoader(getActivity(), ((MainFlowActivity)getActivity()).getHelper());
+    public void onDestroyView() {
+        // Unregister since the activity is not visible
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(profileFriendReceiver);
+        super.onDestroyView();
     }
 
-    @Override
-    public void onLoadFinished(Loader<List<User>> listLoader, List<User> users) {
-	    mProfileFriendAdapter = new ProfileFriendAdapter(users, getActivity(), getActivity().getSupportFragmentManager());
-	    mProfileFriendList.setAdapter(mProfileFriendAdapter);
+    protected void populateData() {
+        final Fragment fragment = getParentFragment();
+        if (fragment != null && fragment instanceof ProfileFragment) {
+            UserFriends friends = ((ProfileFragment) getParentFragment()).getUserFriends();
+            if (friends != null) {
+                mProfileFriendAdapter = new ProfileFriendAdapter(friends.getFriends(),
+                        getActivity(), getActivity().getSupportFragmentManager());
+                mProfileFriendList.setAdapter(mProfileFriendAdapter);
+            }
+        }
     }
 
-    @Override
-    public void onLoaderReset(Loader<List<User>> listLoader) {
-        mProfileFriendList.setAdapter(null);
+    protected class ProfileFriendReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            populateData();
+        }
     }
-
-    private void fetchFriends(String id){
-	if (id == null) return;
-
-	FlowApiRequests.getUserFriends(
-		id,
-		new FlowApiRequestCallbackAdapter() {
-		    @Override
-		    public void getUserFriendsCallback(UserFriends userFriends) {
-			List<User> friendList = userFriends.getFriends();
-
-			mProfileFriendAdapter = new ProfileFriendAdapter(friendList, getActivity(), getActivity().getSupportFragmentManager());
-			mProfileFriendList.setAdapter(mProfileFriendAdapter);
-			mProfileFriendAdapter.notifyDataSetChanged();
-		    }
-		});
-    }
-
 }

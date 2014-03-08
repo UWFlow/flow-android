@@ -10,6 +10,6 @@ public class UserFriends {
     }
 
     public void setFriends(ArrayList<User> friends) {
-        friends = friends;
+        this.friends = friends;
     }
 }
