@@ -60,9 +60,7 @@ public class FlowApiRequests {
         }
 
         final String encodedQuery = uriBuilder.build().getEncodedQuery();
-
         final String uri = String.format(Constants.API_SEARCH_COURSES, encodedQuery);
-        Log.w("", "search uri is " + uri);
 
         getDetails(Constants.API_REQUEST_CALL_ID.API_SEARCH_COURSES, uri, callback);
     }

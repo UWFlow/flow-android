@@ -105,7 +105,6 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
                 }
                 mSortSpinnerPosition = position;
 
-                Log.w(TAG, "on item selected search");
                 doSearch(0);
             }
 
@@ -119,8 +118,6 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mExcludeTakenCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.w(TAG, "on checked search");
-
                 // Checkbox selection didn't actually change. This may happen when back button pressed to return to
                 // this fragment.
                 if (isChecked == mExcludeTakenCheckBoxChecked) {
@@ -137,7 +134,6 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Log.w(TAG, "on keyboard search button search");
                     doSearch(0);
 
                     // Hide the keyboard. See http://stackoverflow.com/questions/1109022
