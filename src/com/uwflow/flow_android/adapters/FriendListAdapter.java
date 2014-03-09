@@ -64,7 +64,7 @@ public class FriendListAdapter extends BaseAdapter {
         first.setText(user.getName());
         second.setText(mList.get(position).getTermName());
 
-        Picasso.with(mContext).load(user.getProfilePicUrls().getDefaultPic()).placeholder(R.drawable.kitty).into(image);
+        Picasso.with(mContext).load(user.getProfilePicUrls().getLarge()).placeholder(R.drawable.kitty).into(image);
 
         // Make this View clickable to open a dialog for Facebook/Flow profile links
         View.OnClickListener onClickListener = new View.OnClickListener() {

@@ -23,6 +23,8 @@
                     android:src="@drawable/kitty"
                     android:scaleType="centerCrop"
                     app:is_oval="true"
+                    app:border_width="3dp"
+                    app:border_color="@color/white"
                     android:layout_width="80dp"
                     android:layout_height="80dp"/>
 
