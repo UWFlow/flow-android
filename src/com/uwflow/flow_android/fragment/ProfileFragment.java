@@ -224,16 +224,6 @@ public class ProfileFragment extends Fragment {
                         setUserCourses(userCourseDetail);
                     }
                 });
-
-        // Get user exam data
-        FlowApiRequests.getUserExams(
-                uid,
-                new FlowApiRequestCallbackAdapter() {
-                    @Override
-                    public void getUserExamsCallback(Exams response) {
-                        setUserExams(response);
-                    }
-                });
     }
 
     protected void populateData() {

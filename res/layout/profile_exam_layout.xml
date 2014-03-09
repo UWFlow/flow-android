@@ -18,7 +18,7 @@
                   android:text="No exams to show"
                 android:visibility="invisible"/>
     </FrameLayout>
-    <TextView android:text="Last updated on Feb 7 at 10:04pm"
+    <TextView android:text=""
               android:id="@+id/text_last_updated"
               android:textStyle="italic"
               android:textColor="#888888"

@@ -19,6 +19,9 @@ import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.Exam;
 import com.uwflow.flow_android.db_object.Exams;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 public class ProfileExamFragment extends Fragment {
     protected ListView mExamsList;
     protected TextView mLastUpdatedText;
@@ -61,6 +64,13 @@ public class ProfileExamFragment extends Fragment {
         if (fragment != null && fragment instanceof ProfileFragment) {
             Exams userExams = ((ProfileFragment) getParentFragment()).getUserExams();
             if (userExams != null) {
+                // TODO(david): Ensure we get back last updated timestamp via database as well
+                Timestamp lastUpdatedTimestamp = userExams.getLastUpdatedTimestamp();
+                if (lastUpdatedTimestamp != null) {
+                    String lastUpdatedString = new SimpleDateFormat("MMM d").format(lastUpdatedTimestamp);
+                    mLastUpdatedText.setText("Last updated " + lastUpdatedString);
+                }
+
                 profileExamAdapter = new ProfileExamAdapter(userExams.getExams(), getActivity());
                 mExamsList.setAdapter(profileExamAdapter);
             }
