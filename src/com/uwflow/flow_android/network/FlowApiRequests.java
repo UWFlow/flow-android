@@ -141,49 +141,6 @@ public class FlowApiRequests {
         getDetails(Constants.API_REQUEST_CALL_ID.API_COURSE_USERS, uri, callback);
     }
 
-    private static void getAuthenticatedDetails(final int id, String uri, final FlowApiRequestCallback callback) {
-        HashMap<String, String> headers = new HashMap<String, String>();
-        Cookie cookie = FlowAsyncClient.getCookie();
-        if (cookie == null) {
-            // FIXME(david): Remove this hard-coded session cookie and make sure it's invalidated
-            headers.put(Constants.HEADER_COOKIE, "session=\"BswubxSTbrmP+52mREbNSbAZ0Zk=?_csrf_token=UydENVVURDk1MU8zRktFNEcnCnAxCi4=&user_id=Y2NvcHlfcmVnCl9yZWNvbnN0cnVjdG9yCnAxCihjYnNvbi5vYmplY3RpZApPYmplY3RJZApwMgpjX19idWlsdGluX18Kb2JqZWN0CnAzCk50UnA0ClMnUVJROFx4ZDhceDlkYlx4MGVceGU2XHhjNG5ceDg0JwpwNQpiLg==\";");
-        } else {
-            headers.put(Constants.HEADER_COOKIE, cookie.getName() + "=" + cookie.getValue() + ";");
-        }
-        FlowAsyncClient.get(headers, uri, null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(org.json.JSONObject response) {
-                FlowNetworkAsyncParser parser = new FlowNetworkAsyncParser(callback, id);
-                parser.execute(response);
-            }
-
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                callback.onFailure("Call failed code: " + statusCode);
-            }
-        });
-    }
-
-    private static void getAuthenticatedDetails(String uri, final FlowApiRequestCallback callback) {
-        HashMap<String, String> headers = new HashMap<String, String>();
-        Cookie cookie = FlowAsyncClient.getCookie();
-        if (cookie == null) {
-            headers.put(Constants.HEADER_COOKIE, "session=\"BswubxSTbrmP+52mREbNSbAZ0Zk=?_csrf_token=UydENVVURDk1MU8zRktFNEcnCnAxCi4=&user_id=Y2NvcHlfcmVnCl9yZWNvbnN0cnVjdG9yCnAxCihjYnNvbi5vYmplY3RpZApPYmplY3RJZApwMgpjX19idWlsdGluX18Kb2JqZWN0CnAzCk50UnA0ClMnUVJROFx4ZDhceDlkYlx4MGVceGU2XHhjNG5ceDg0JwpwNQpiLg==\";");
-        } else {
-            headers.put(Constants.HEADER_COOKIE, cookie.getName() + "=" + cookie.getValue() + ";");
-        }
-        FlowAsyncClient.get(headers, uri, null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(org.json.JSONObject response) {
-                // Successfully got a response
-                callback.onSuccess(response);
-            }
-
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                callback.onFailure(null);
-            }
-        });
-    }
-
     private static void getDetails(final int id, String uri, final FlowApiRequestCallback callback) {
         FlowAsyncClient.get(uri, null, new JsonHttpResponseHandler() {
             @Override
