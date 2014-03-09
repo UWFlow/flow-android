@@ -143,18 +143,6 @@ public class ProfileFragment extends Fragment {
 
                                                 new JSONObject((String) json.getString("cover"));
                                         String url = coverObject.getString("source");
-//                                        Picasso.with(getActivity().getApplicationContext()).load(url).into(mCoverPhoto,
-//                                                new Callback() {
-//                                                    @Override
-//                                                    public void onSuccess() {
-//                                                        userCover = ImageHelper.drawableToBitmap(mCoverPhoto.getDrawable());
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onError() {
-//
-//                                                    }
-//                                                });
                                         coverImageCallback = new Target() {
                                             @Override
                                             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
