@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import java.sql.SQLException;
 
 /**
- * This method fetches data from the network and populates the database
+ * This class fetches data from the network and populates the database
  */
 public class FlowDatabaseLoader {
     protected FlowDatabaseHelper flowDatabaseHelper;
