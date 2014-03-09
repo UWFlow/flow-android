@@ -50,7 +50,7 @@ public class ProfileFriendAdapter extends BaseAdapter {
         first.setText(mFriends.get(position).getName());
         second.setText(mFriends.get(position).getProgramName());
 
-        Picasso.with(mContext).load(mFriends.get(position).getProfilePicUrls().getDefaultPic()).placeholder(R.drawable.kitty).into(image);
+        Picasso.with(mContext).load(mFriends.get(position).getProfilePicUrls().getLarge()).placeholder(R.drawable.kitty).into(image);
 
         final User user = mFriends.get(position);
 
