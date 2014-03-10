@@ -1,14 +1,19 @@
 package com.uwflow.flow_android.network;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.util.JsonToDbUtil;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * This class fetches data from the network and populates the database
@@ -17,11 +22,13 @@ public class FlowDatabaseLoader {
     protected FlowDatabaseHelper flowDatabaseHelper;
     protected Context context;
     protected FlowImageLoader flowImageLoader;
+    protected SharedPreferences sp;
 
     public FlowDatabaseLoader(Context context, FlowDatabaseHelper flowDatabaseHelper) {
         this.context = context;
         this.flowDatabaseHelper = flowDatabaseHelper;
         this.flowImageLoader = new FlowImageLoader(context);
+        sp = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public void loadOrReloadProfileData(ResultCollectorCallback callback) {
@@ -33,7 +40,7 @@ public class FlowDatabaseLoader {
         reloadProfileSchedule(4, resultCollector);
     }
 
-    public void reloadUserMe(final int index, final FlowResultCollector flowResultCollector){
+    public void reloadUserMe(final int index, final FlowResultCollector flowResultCollector) {
         FlowApiRequests.getUser(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -43,12 +50,15 @@ public class FlowDatabaseLoader {
                     protected Void doInBackground(JSONObject... jsonObjects) {
                         try {
                             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
-                            User user = JsonToDbUtil.getUserMe(jsonObjects[0]);
-                            if (user.getProfilePicUrls().getLarge() != null){
-                                flowImageLoader.preloadImage(user.getProfilePicUrls().getLarge());
-                            }
-                            if (user != null)
+                            final User user = JsonToDbUtil.getUserMe(jsonObjects[0]);
+                            if (user != null && user.getProfilePicUrls() != null)
+                            flowImageLoader.preloadImage(user.getProfilePicUrls().getLarge());
+                            if (user != null) {
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString(Constants.PROFILE_ID_KEY, user.getId());
+                                editor.commit();
                                 userDao.createOrUpdate(user);
+                            }
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -69,8 +79,34 @@ public class FlowDatabaseLoader {
         });
     }
 
-    // TODO(david): This function should be consolidated with the above (DRY)
-    public void reloadProfileFriends(final int index, final FlowResultCollector flowResultCollector){
+    public void updateOrCreateUserScheduleImage(ScheduleImage scheduleImage) {
+        if (scheduleImage == null || scheduleImage.getImage() == null) {
+            return;
+        }
+        if (scheduleImage.getId() == null) {
+            String id = sp.getString(Constants.PROFILE_ID_KEY, null);
+            if (id == null)
+                return;
+            else
+                scheduleImage.setId(id);
+        }
+        new AsyncTask<ScheduleImage, Void, Void>() {
+            @Override
+            protected Void doInBackground(ScheduleImage... scheduleImages) {
+                try {
+                    Dao<ScheduleImage, String> userSchduleImageDao = flowDatabaseHelper.getUserSchduleImageDao();
+
+                    userSchduleImageDao.createOrUpdate(scheduleImages[0]);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute(scheduleImage);
+    }
+
+
+    public void reloadProfileFriends(final int index, final FlowResultCollector flowResultCollector) {
         FlowApiRequests.getUserFriends(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -103,7 +139,7 @@ public class FlowDatabaseLoader {
         });
     }
 
-    public void reloadProfileSchedule(final int index, final FlowResultCollector flowResultCollector){
+    public void reloadProfileSchedule(final int index, final FlowResultCollector flowResultCollector) {
         FlowApiRequests.getUserSchedule(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -137,7 +173,7 @@ public class FlowDatabaseLoader {
         });
     }
 
-    public void reloadProfileExams(final int index, final FlowResultCollector flowResultCollector){
+    public void reloadProfileExams(final int index, final FlowResultCollector flowResultCollector) {
         FlowApiRequests.getUserExams(new FlowApiRequestCallbackAdapter() {
 
             @Override
@@ -171,7 +207,7 @@ public class FlowDatabaseLoader {
         });
     }
 
-    public void reloadProfileCourses(final int index, final FlowResultCollector flowResultCollector){
+    public void reloadProfileCourses(final int index, final FlowResultCollector flowResultCollector) {
         FlowApiRequests.getUserCourses(new FlowApiRequestCallbackAdapter() {
             @Override
             public void onSuccess(JSONObject response) {
@@ -210,8 +246,28 @@ public class FlowDatabaseLoader {
         });
     }
 
-    protected void handleCallback(int index, FlowResultCollector flowResultCollector){
-        if (flowResultCollector != null){
+
+    public ScheduleImage queryUserScheduleImage(String id) {
+        try {
+            if (id == null) {
+                id = sp.getString(Constants.PROFILE_ID_KEY, null);
+                if (id == null) return null;
+            }
+            Dao<ScheduleImage, String> scheduleImageStringDao = flowDatabaseHelper.getUserSchduleImageDao();
+            QueryBuilder<ScheduleImage, String> queryBuilder = scheduleImageStringDao.queryBuilder();
+            queryBuilder.where().eq("id", id);
+            List<ScheduleImage> images = scheduleImageStringDao.query(queryBuilder.prepare());
+            if (!images.isEmpty())
+                return images.get(0);
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
+
+    protected void handleCallback(int index, FlowResultCollector flowResultCollector) {
+        if (flowResultCollector != null) {
             flowResultCollector.setState(index, true);
         }
     }

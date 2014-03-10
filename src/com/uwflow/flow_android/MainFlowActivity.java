@@ -187,4 +187,12 @@ public class MainFlowActivity extends FlowActivity {
             mDrawerLayout.closeDrawer(mDrawerContainer);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0){
+             super.onBackPressed();
+        }
+    }
 }

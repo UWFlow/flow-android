@@ -8,6 +8,10 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * NOTE IF YOU CHANGE ANYTHING IN ANY OF THE DATABASE TABLE FILES, YOU MUST RE-RUN THE MAIN METHOD IN
+ * DatabaseConfigUtil class in the util folder
+ */
 @DatabaseTable(tableName = "course")
 public class Course implements Serializable {
     private static final long serialVersionUID = 1L;

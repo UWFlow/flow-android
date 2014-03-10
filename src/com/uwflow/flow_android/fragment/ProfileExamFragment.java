@@ -60,20 +60,20 @@ public class ProfileExamFragment extends Fragment {
     }
 
     protected void populateData() {
-        final Fragment fragment = getParentFragment();
-        if (fragment != null && fragment instanceof ProfileFragment) {
-            Exams userExams = ((ProfileFragment) getParentFragment()).getUserExams();
-            if (userExams != null) {
-                // TODO(david): Ensure we get back last updated timestamp via database as well
-                Timestamp lastUpdatedTimestamp = userExams.getLastUpdatedTimestamp();
-                if (lastUpdatedTimestamp != null) {
-                    String lastUpdatedString = new SimpleDateFormat("MMM d").format(lastUpdatedTimestamp);
-                    mLastUpdatedText.setText("Last updated " + lastUpdatedString);
-                }
-
-                profileExamAdapter = new ProfileExamAdapter(userExams.getExams(), getActivity());
-                mExamsList.setAdapter(profileExamAdapter);
+        final ProfileFragment profileFragment = ProfileFragment.convertFragment(getParentFragment());
+        if (profileFragment == null)
+            return;
+        Exams userExams = profileFragment.getUserExams();
+        if (userExams != null) {
+            // TODO(david): Ensure we get back last updated timestamp via database as well
+            Timestamp lastUpdatedTimestamp = userExams.getLastUpdatedTimestamp();
+            if (lastUpdatedTimestamp != null) {
+                String lastUpdatedString = new SimpleDateFormat("MMM d").format(lastUpdatedTimestamp);
+                mLastUpdatedText.setText("Last updated " + lastUpdatedString);
             }
+
+            profileExamAdapter = new ProfileExamAdapter(userExams.getExams(), getActivity());
+            mExamsList.setAdapter(profileExamAdapter);
         }
     }
 

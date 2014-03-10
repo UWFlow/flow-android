@@ -38,13 +38,11 @@
                 <TextView android:id="@+id/user_name"
                           style="@style/Flow.WhiteTextOnPhoto"
                           android:layout_width="fill_parent" android:layout_height="wrap_content"
-                          android:text="JASPER FUNG"
                           android:textSize="20dp"
                           android:textStyle="bold" />
                 <TextView android:id="@+id/user_program"
                           style="@style/Flow.WhiteTextOnPhoto"
                           android:layout_width="fill_parent" android:layout_height="wrap_content"
-                          android:text="Mechatronics Engineering"
                           android:textSize="16dp" />
             </LinearLayout>
         </LinearLayout>

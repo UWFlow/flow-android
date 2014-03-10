@@ -38,7 +38,7 @@ public class FriendListAdapter extends BaseAdapter {
     }
 
     public long getItemId(int position) {
-        return mList.get(position).getUser().getFbid();
+        return position;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {

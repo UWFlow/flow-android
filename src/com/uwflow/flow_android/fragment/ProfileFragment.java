@@ -13,8 +13,6 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
-import com.facebook.*;
-import com.facebook.model.GraphObject;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
@@ -26,19 +24,17 @@ import com.uwflow.flow_android.network.FlowApiRequests;
 import com.uwflow.flow_android.network.FlowImageLoader;
 import com.uwflow.flow_android.network.FlowImageLoaderCallback;
 import com.uwflow.flow_android.util.FacebookUtilities;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class ProfileFragment extends Fragment {
     private String mProfileID;
-    private ProfilePagerAdapter mProfilePagerAdapter;
+    private ProfilePagerAdapter profilePagerAdapter;
 
-    protected ImageView userImage;
+    protected ImageView userPhotoImageView;
+    private ImageView coverPhotoImageView;
     protected TextView userName;
     protected TextView userProgram;
     protected ViewPager viewPager;
     protected PagerSlidingTabStrip tabs;
-    private ImageView mCoverPhoto;
     protected User user;
     protected UserFriends userFriends;
     protected Exams userExams;
@@ -46,8 +42,13 @@ public class ProfileFragment extends Fragment {
     protected ScheduleCourses userSchedule;
     protected ProfileReceiver profileReceiver;
     protected Bitmap userCover;
-    protected FlowImageLoaderCallback coverImageCallback;
+    protected Bitmap userProfileImage;
     protected FlowImageLoader flowImageLoader;
+
+    // for having hard reference to callbacks so they dont get garbage recycled
+    protected FlowImageLoaderCallback userCoverCallback;
+    protected FlowImageLoaderCallback userProfileCallback;
+
 
     // only fetch data once
     protected boolean fetchCompleted = false;
@@ -97,20 +98,20 @@ public class ProfileFragment extends Fragment {
 
         flowImageLoader = new FlowImageLoader(getActivity().getApplicationContext());
 
-        userImage = (ImageView) rootView.findViewById(R.id.user_image);
+        userPhotoImageView = (ImageView) rootView.findViewById(R.id.user_image);
         userName = (TextView) rootView.findViewById(R.id.user_name);
         userProgram = (TextView) rootView.findViewById(R.id.user_program);
-        mCoverPhoto = (ImageView) rootView.findViewById(R.id.cover_photo);
+        coverPhotoImageView = (ImageView) rootView.findViewById(R.id.cover_photo);
         viewPager = (ViewPager) rootView.findViewById(R.id.pager);
         // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
         viewPager.setOffscreenPageLimit(3);
 
         if (mProfileID == null)
-            mProfilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), true);
+            profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), true);
         else
-            mProfilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), false);
+            profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), false);
 
-        viewPager.setAdapter(mProfilePagerAdapter);
+        viewPager.setAdapter(profilePagerAdapter);
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
         tabs.setViewPager(viewPager);
         // Set default tab to Schedule
@@ -119,7 +120,7 @@ public class ProfileFragment extends Fragment {
 
 
         profileReceiver = new ProfileReceiver();
-
+        initCallback();
         populateData();
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(profileReceiver,
                 new IntentFilter(Constants.BroadcastActionId.UPDATE_PROFILE_USER));
@@ -150,7 +151,7 @@ public class ProfileFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_view_on_fb:
                 // FIXME(david): Convert FBID to string
-                if (user != null && user.getFbid() != 0) {
+                if (user != null && user.getFbid() != null) {
                     FacebookUtilities.viewUserOnFacebook(getActivity(), user.getFbid());
                     return true;
                 }
@@ -165,46 +166,7 @@ public class ProfileFragment extends Fragment {
             // Load logged-in users profile if an ID is unspecified.
             initLoaders();
         } else {
-            // fetch user profile data from network
             initLoadFromNetwork(mProfileID);
-        }
-    }
-
-    private void fetchCoverPhoto(long fbid) {
-        if (userCover != null) {
-            mCoverPhoto.setImageBitmap(userCover);
-        } else {
-            Bundle params = new Bundle();
-            params.putString("fields", "cover");
-            new Request(
-                    Session.getActiveSession(),
-                    "/" + fbid,
-                    params,
-                    HttpMethod.GET,
-                    new Request.Callback() {
-                        public void onCompleted(Response response) {
-                            GraphObject graphObject = response.getGraphObject();
-                            FacebookRequestError error = response.getError();
-                            if (graphObject != null) {
-                                if (graphObject.getProperty("cover") != null) {
-                                    try {
-                                        JSONObject json = graphObject.getInnerJSONObject();
-                                        JSONObject coverObject =
-
-                                                new JSONObject((String) json.getString("cover"));
-                                        String url = coverObject.getString("source");
-
-                                        flowImageLoader.loadImageInto(url, mCoverPhoto);
-                                    } catch (JSONException e) {
-                                    }
-
-
-                                } else if (error != null) {
-                                }
-                            }
-                        }
-                    }
-            ).executeAsync();
         }
     }
 
@@ -224,6 +186,7 @@ public class ProfileFragment extends Fragment {
     protected void initLoadFromNetwork(final String uid) {
         if (uid == null)
             return;
+
         // we might have the cached user data already
         if (user == null) {
             FlowApiRequests.getUser(
@@ -235,6 +198,16 @@ public class ProfileFragment extends Fragment {
                         }
                     });
         }
+
+        // Get user data
+        FlowApiRequests.getUser(
+                uid,
+                new FlowApiRequestCallbackAdapter() {
+                    @Override
+                    public void getUserCallback(User user) {
+                        setUser(user);
+                    }
+                });
 
         FlowApiRequests.getUserSchedule(
                 uid,
@@ -262,13 +235,47 @@ public class ProfileFragment extends Fragment {
                 });
     }
 
+    protected void initCallback(){
+        userCoverCallback = new FlowImageLoaderCallback() {
+            @Override
+            public void onImageLoaded(Bitmap bitmap) {
+                userCover = bitmap;
+                coverPhotoImageView.setImageBitmap(userCover);
+            }
+        };
+
+        userProfileCallback = new FlowImageLoaderCallback() {
+            @Override
+            public void onImageLoaded(Bitmap bitmap) {
+                userProfileImage = bitmap;
+                userPhotoImageView.setImageBitmap(userProfileImage);
+            }
+        };
+    }
+
     protected void populateData() {
-        if (user == null) {
-            return;
+        if (userProfileImage != null) {
+            userPhotoImageView.setImageBitmap(userProfileImage);
         }
 
-        fetchCoverPhoto(user.getFbid());
-        flowImageLoader.loadImageInto(user.getProfilePicUrls().getLarge(), userImage);
+        if (userCover != null) {
+            coverPhotoImageView.setImageBitmap(userCover);
+        }
+
+        if (user == null)
+            return;
+
+        if (userCover == null) {
+            if (user.getFbid() != null)
+                FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), "" + user.getFbid(),
+                        userCoverCallback);
+        }
+
+        if (userProfileImage == null && user.getProfilePicUrls() != null) {
+            flowImageLoader.loadImage(user.getProfilePicUrls().getLarge(), userProfileCallback);
+
+        }
+
         userName.setText(user.getName());
         userProgram.setText(user.getProgramName());
     }
@@ -359,5 +366,21 @@ public class ProfileFragment extends Fragment {
     protected void fireUserCoursesBroadcast() {
         Intent intent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_USER_COURSES);
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).sendBroadcast(intent);
+    }
+
+    public String getProfileID() {
+        return mProfileID;
+    }
+
+    public void setProfileID(String profileId) {
+        this.mProfileID = profileId;
+    }
+
+    public static ProfileFragment convertFragment(Fragment fragment) {
+        try {
+            return (ProfileFragment) fragment;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

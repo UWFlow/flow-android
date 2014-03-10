@@ -7,6 +7,10 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 
+/**
+ * NOTE IF YOU CHANGE ANYTHING IN ANY OF THE DATABASE TABLE FILES, YOU MUST RE-RUN THE MAIN METHOD IN
+ * DatabaseConfigUtil class in the util folder
+ */
 @DatabaseTable(tableName = "user_course")
 public class UserCourse implements Serializable {
 

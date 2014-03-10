@@ -45,19 +45,20 @@ public class ProfileCourseFragment extends Fragment {
     }
 
     protected void populateData() {
-        final Fragment fragment = getParentFragment();
-        if (fragment != null && fragment instanceof ProfileFragment) {
-            UserCourseDetail userCourseDetail = ((ProfileFragment) getParentFragment()).getUserCourses();
-            if (userCourseDetail != null) {
-                profileListAdapter = new ProfileCoursesAdapter(
-                        userCourseDetail,
-                        getActivity(),
-                        getActivity().getSupportFragmentManager());
-                mCoursesListView.setAdapter(profileListAdapter);
-                profileListAdapter.notifyDataSetChanged();
-                expandAllGroups(mCoursesListView);
-            }
+        final ProfileFragment profileFragment = ProfileFragment.convertFragment(getParentFragment());
+        if (profileFragment == null)
+            return;
+        UserCourseDetail userCourseDetail = profileFragment.getUserCourses();
+        if (userCourseDetail != null) {
+            profileListAdapter = new ProfileCoursesAdapter(
+                    userCourseDetail,
+                    getActivity(),
+                    getActivity().getSupportFragmentManager());
+            mCoursesListView.setAdapter(profileListAdapter);
+            profileListAdapter.notifyDataSetChanged();
+            expandAllGroups(mCoursesListView);
         }
+
     }
 
     protected class ProfileCourseReceiver extends BroadcastReceiver {

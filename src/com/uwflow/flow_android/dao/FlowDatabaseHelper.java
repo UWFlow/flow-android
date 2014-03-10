@@ -24,7 +24,13 @@ public class FlowDatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<ScheduleCourse, String> userScheduleCourseDao;
     private Dao<Exam, Integer> userExamDao;
     private Dao<UserCourse, String> userCourseExtraDao;
+    private Dao<ScheduleImage, String> userSchduleImageDao;
 
+    /**
+     * NOTE IF YOU CHANGE ANYTHING IN ANY OF THE DATABASE FILES OR ADD NEW DATABASE FILES
+     * YOU MUST RE-RUN THE MAIN METHOD IN DatabaseConfigUtil class in the util folder
+     * @param context
+     */
     public FlowDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
     }
@@ -37,6 +43,7 @@ public class FlowDatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, ScheduleCourse.class);
             TableUtils.createTable(connectionSource, Exam.class);
             TableUtils.createTable(connectionSource, UserCourse.class);
+            TableUtils.createTable(connectionSource, ScheduleImage.class);
         } catch (SQLException e) {
             Log.e(User.class.getName(), "Unable to create databases", e);
         }
@@ -50,6 +57,7 @@ public class FlowDatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, ScheduleCourse.class, true);
             TableUtils.dropTable(connectionSource, Exam.class, true);
             TableUtils.dropTable(connectionSource, UserCourse.class, true);
+            TableUtils.dropTable(connectionSource, ScheduleImage.class, true);
             onCreate(sqLiteDatabase, connectionSource);
         } catch (SQLException e) {
             Log.e(User.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "
@@ -90,5 +98,12 @@ public class FlowDatabaseHelper extends OrmLiteSqliteOpenHelper {
             userCourseExtraDao = getDao(UserCourse.class);
         }
         return userCourseExtraDao;
+    }
+
+    public Dao<ScheduleImage, String> getUserSchduleImageDao() throws SQLException {
+        if (userSchduleImageDao == null){
+            userSchduleImageDao = getDao(ScheduleImage.class);
+        }
+        return userSchduleImageDao;
     }
 }

@@ -45,14 +45,14 @@ public class ProfileFriendFragment extends Fragment {
     }
 
     protected void populateData() {
-        final Fragment fragment = getParentFragment();
-        if (fragment != null && fragment instanceof ProfileFragment) {
-            UserFriends friends = ((ProfileFragment) getParentFragment()).getUserFriends();
-            if (friends != null) {
-                mProfileFriendAdapter = new ProfileFriendAdapter(friends.getFriends(),
-                        getActivity(), getActivity().getSupportFragmentManager());
-                mProfileFriendList.setAdapter(mProfileFriendAdapter);
-            }
+        final ProfileFragment profileFragment = ProfileFragment.convertFragment(getParentFragment());
+        if (profileFragment == null)
+            return;
+        UserFriends friends = profileFragment.getUserFriends();
+        if (friends != null) {
+            mProfileFriendAdapter = new ProfileFriendAdapter(friends.getFriends(),
+                    getActivity(), getActivity().getSupportFragmentManager());
+            mProfileFriendList.setAdapter(mProfileFriendAdapter);
         }
     }
 

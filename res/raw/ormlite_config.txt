@@ -1,5 +1,5 @@
 #
-# generated on 2014/03/06 01:10:38
+# generated on 2014/03/10 04:29:57
 #
 # --table-start--
 dataClass=com.uwflow.flow_android.db_object.Course
@@ -116,6 +116,21 @@ fieldName=scheduleUrl
 # --table-end--
 #################################
 # --table-start--
+dataClass=com.uwflow.flow_android.db_object.ScheduleImage
+tableName=ScheduleImage
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=image
+dataPersister=BYTE_ARRAY
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
 dataClass=com.uwflow.flow_android.db_object.User
 tableName=user
 # --table-fields-start--
@@ -149,11 +164,9 @@ canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=numInvites
-canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=fbid
-canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=isMe

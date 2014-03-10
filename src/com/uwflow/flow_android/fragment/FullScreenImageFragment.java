@@ -17,6 +17,7 @@ import com.uwflow.flow_android.R;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
 import android.support.v4.app.Fragment;
 
 public class FullScreenImageFragment extends Fragment {
@@ -29,10 +30,11 @@ public class FullScreenImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.full_screen_image_layout, container, false);
-        mImageShow = (ImageView)rootView.findViewById(R.id.image_full_screen);
+        mImageShow = (ImageView) rootView.findViewById(R.id.image_full_screen);
 
         bitmapImage = getArguments().getParcelable("ScheduleImage");
-        mImageShow.setImageBitmap(bitmapImage);
+        if (bitmapImage != null)
+            mImageShow.setImageBitmap(bitmapImage);
         mImageShow.setScaleType(ImageView.ScaleType.FIT_XY);
         return rootView;
     }
@@ -48,7 +50,7 @@ public class FullScreenImageFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
 

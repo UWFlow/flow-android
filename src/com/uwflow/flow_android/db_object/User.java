@@ -1,12 +1,17 @@
 package com.uwflow.flow_android.db_object;
 
+import android.graphics.Bitmap;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.uwflow.flow_android.util.HelperUtil;
 
 import java.io.Serializable;
-
+/**
+ * NOTE IF YOU CHANGE ANYTHING IN ANY OF THE DATABASE TABLE FILES, YOU MUST RE-RUN THE MAIN METHOD IN
+ * DatabaseConfigUtil class in the util folder
+ */
 @DatabaseTable(tableName = "user")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -22,7 +27,6 @@ public class User implements Serializable {
     @SerializedName("num_points")
     @DatabaseField(canBeNull = false)
     private int point;
-
 
     @SerializedName("profile_pic_urls")
     @DatabaseField(dataType = DataType.SERIALIZABLE)
@@ -40,11 +44,11 @@ public class User implements Serializable {
     private String lastName;
 
     @SerializedName("num_invites")
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     private int numInvites;
 
-    @DatabaseField(canBeNull = false)
-    private long fbid;
+    @DatabaseField
+    private String fbid;
 
     @DatabaseField(canBeNull = false, columnName = "is_me")
     private boolean isMe;
@@ -116,11 +120,11 @@ public class User implements Serializable {
         this.numInvites = numInvites;
     }
 
-    public long getFbid() {
+    public String getFbid() {
         return fbid;
     }
 
-    public void setFbid(long fbid) {
+    public void setFbid(String fbid) {
         this.fbid = fbid;
     }
 
@@ -132,13 +136,14 @@ public class User implements Serializable {
         this.isMe = isMe;
     }
 
-    public static class ProfilePicUrls implements Serializable{
+    public static class ProfilePicUrls implements Serializable {
         @SerializedName("default")
         protected String defaultPic;
         protected String large;
         protected String square;
 
-        public ProfilePicUrls(){}
+        public ProfilePicUrls() {
+        }
 
         public String getDefaultPic() {
             return defaultPic;
@@ -163,5 +168,6 @@ public class User implements Serializable {
         public void setSquare(String square) {
             this.square = square;
         }
+
     }
 }

@@ -1,6 +1,7 @@
 package com.uwflow.flow_android.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,8 +53,6 @@ public class ProfileFriendAdapter extends BaseAdapter {
 
         first.setText(mFriends.get(position).getName());
         second.setText(mFriends.get(position).getProgramName());
-
-
         flowImageLoader.loadImageInto(mFriends.get(position).getProfilePicUrls().getLarge(), image);
         final User user = mFriends.get(position);
 
@@ -76,8 +75,9 @@ public class ProfileFriendAdapter extends BaseAdapter {
         return mFriends.get(arg0);
     }
 
-    public long getItemId(int position) {
-        return mFriends.get(position).getFbid();
+    @Override
+    public long getItemId(int i) {
+        return i;
     }
 }
 

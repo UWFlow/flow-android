@@ -23,7 +23,7 @@ public class FacebookUtilities {
      * @param fbid The user's Facebook ID.
      * @return
      */
-    public static Intent getOpenFBProfileIntent(Context context, long fbid) {
+    public static Intent getOpenFBProfileIntent(Context context, String fbid) {
         try {
             context.getPackageManager()
                     .getPackageInfo("com.facebook.katana", 0);
@@ -50,9 +50,10 @@ public class FacebookUtilities {
         return null;
     }
 
-    public static void viewUserOnFacebook(Context context, long facebookId) {
+    public static void viewUserOnFacebook(Context context, String facebookId) {
         Intent profileIntent = FacebookUtilities.getOpenFBProfileIntent(context, facebookId);
         context.startActivity(profileIntent);
+
     }
 
     public static String getFirstWord(String string) {
