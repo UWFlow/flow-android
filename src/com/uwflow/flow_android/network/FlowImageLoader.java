@@ -20,6 +20,30 @@ public class FlowImageLoader {
         ImageLoader.getInstance().loadImageSync(url);
     }
 
+    public void loadImage(String url, final ImageView imageView, final FlowImageLoaderCallback callback){
+        ImageLoader.getInstance().displayImage(url, imageView, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                callback.onImageLoaded(bitmap);
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+
+            }
+        });
+    }
+
     public void loadImage(String url, final FlowImageLoaderCallback callback) {
         ImageLoader.getInstance().loadImage(url, new ImageLoadingListener() {
             @Override

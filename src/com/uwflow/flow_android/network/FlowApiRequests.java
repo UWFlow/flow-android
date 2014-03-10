@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Response;
@@ -144,7 +145,7 @@ public class FlowApiRequests {
         getDetails(Constants.API_REQUEST_CALL_ID.API_COURSE_USERS, uri, callback);
     }
 
-    public static void getUserCoverImage(final Context context, final String fbid, final FlowImageLoaderCallback callback){
+    public static void getUserCoverImage(final Context context, final String fbid, final ImageView imageView, final FlowImageLoaderCallback callback){
         Bundle params = new Bundle();
         params.putString("fields", "cover");
         new Request(
@@ -161,7 +162,7 @@ public class FlowApiRequests {
                                     JSONObject json = graphObject.getInnerJSONObject();
                                     String url = json.getJSONObject("cover").getString("source");
                                     FlowImageLoader loader = new FlowImageLoader(context);
-                                    loader.loadImage(url,callback);
+                                    loader.loadImage(url, imageView, callback);
                                 } catch (Exception e) {
                                 }
                             }

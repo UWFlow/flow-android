@@ -240,7 +240,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onImageLoaded(Bitmap bitmap) {
                 userCover = bitmap;
-                coverPhotoImageView.setImageBitmap(userCover);
             }
         };
 
@@ -248,7 +247,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onImageLoaded(Bitmap bitmap) {
                 userProfileImage = bitmap;
-                userPhotoImageView.setImageBitmap(userProfileImage);
             }
         };
     }
@@ -267,12 +265,12 @@ public class ProfileFragment extends Fragment {
 
         if (userCover == null) {
             if (user.getFbid() != null)
-                FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), "" + user.getFbid(),
+                FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), user.getFbid(), coverPhotoImageView,
                         userCoverCallback);
         }
 
         if (userProfileImage == null && user.getProfilePicUrls() != null) {
-            flowImageLoader.loadImage(user.getProfilePicUrls().getLarge(), userProfileCallback);
+            flowImageLoader.loadImage(user.getProfilePicUrls().getLarge(), userPhotoImageView, userProfileCallback);
 
         }
 

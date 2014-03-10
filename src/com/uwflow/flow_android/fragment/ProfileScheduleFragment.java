@@ -150,7 +150,6 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
                 scheduleImageCallback = new FlowImageLoaderCallback() {
                     @Override
                     public void onImageLoaded(Bitmap bitmap) {
-                        mImageSchedule.setImageBitmap(bitmap);
                         //add to database
                         scheduleImage = new ScheduleImage();
                         scheduleImage.setImage(bitmap);
@@ -158,7 +157,7 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
                         flowDatabaseLoader.updateOrCreateUserScheduleImage(scheduleImage);
                     }
                 };
-                flowImageLoader.loadImage(mScheduleImageURL, scheduleImageCallback);
+                flowImageLoader.loadImage(mScheduleImageURL, mImageSchedule, scheduleImageCallback);
                 mBtnShare.setEnabled(true);
             }
         }
