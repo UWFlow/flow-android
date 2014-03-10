@@ -64,9 +64,10 @@ public class Constants {
     public static final String UW_FLOW = "uwflow";
 
     // Keys used in bundles
-    public static final String COURSE_ID_KEY = "course_id";
-    public static final String PROFILE_ID_KEY = "profile_id";
-    public static final String TAB_ID = "tab_id";
+    public static final String PROFILE_ID_KEY = "profileId";
+    public static final String COURSE_ID_KEY = "courseId";
+    public static final String USER = "userId";
+    public static final String TAB_ID = "tabId";
 
     public static final int COURSE_SCHEDULE_PAGE_INDEX = 0;
     public static final int COURSE_ABOUT_PAGE_INDEX = 1;

@@ -8,26 +8,25 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.entities.CourseFriend;
 import com.uwflow.flow_android.fragment.ProfileFragment;
+import com.uwflow.flow_android.network.FlowImageLoader;
 
 import java.util.ArrayList;
 
-/**
- * Created by jasperfung on 2/23/14.
- */
 public class FriendListAdapter extends BaseAdapter {
     private ArrayList<CourseFriend> mList;
     private Context mContext;
     private FragmentManager mFragmentManager;
+    private FlowImageLoader flowImageLoader;
 
     public FriendListAdapter(ArrayList<CourseFriend> list, Context context, FragmentManager fragmentManager) {
         mList = list;
         mContext = context;
 	    mFragmentManager = fragmentManager;
+        flowImageLoader = new FlowImageLoader(context);
     }
 
     public int getCount() {
@@ -64,9 +63,8 @@ public class FriendListAdapter extends BaseAdapter {
         first.setText(user.getName());
         second.setText(mList.get(position).getTermName());
 
-        Picasso.with(mContext).load(user.getProfilePicUrls().getLarge()).placeholder(R.drawable.kitty).into(image);
+        flowImageLoader.loadImageInto(user.getProfilePicUrls().getLarge(), image);
 
-        // Make this View clickable to go to view that user's profile in our app
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {

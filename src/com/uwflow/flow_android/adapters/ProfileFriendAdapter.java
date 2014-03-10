@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.fragment.ProfileFragment;
+import com.uwflow.flow_android.network.FlowImageLoader;
+import com.uwflow.flow_android.util.FacebookUtilities;
 
 import java.util.List;
 
@@ -19,11 +20,13 @@ public class ProfileFriendAdapter extends BaseAdapter {
     private List<User> mFriends;
     private Context mContext;
     private FragmentManager mFragmentManager;
+    private FlowImageLoader flowImageLoader;
 
     public ProfileFriendAdapter(List<User> friends, Context context, FragmentManager fragmentManager) {
         mFriends = friends;
         mContext = context;
 	    mFragmentManager = fragmentManager;
+        flowImageLoader = new FlowImageLoader(context);
     }
 
     public int getCount() {
@@ -50,8 +53,8 @@ public class ProfileFriendAdapter extends BaseAdapter {
         first.setText(mFriends.get(position).getName());
         second.setText(mFriends.get(position).getProgramName());
 
-        Picasso.with(mContext).load(mFriends.get(position).getProfilePicUrls().getLarge()).placeholder(R.drawable.kitty).into(image);
 
+        flowImageLoader.loadImageInto(mFriends.get(position).getProfilePicUrls().getLarge(), image);
         final User user = mFriends.get(position);
 
         // Make this View clickable to go to view that user's profile in our app
@@ -59,7 +62,7 @@ public class ProfileFriendAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 		        mFragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, ProfileFragment.newInstance(user.getId()))
+                        .replace(R.id.content_frame, ProfileFragment.newInstance(user))
                         .addToBackStack(null)
                         .commit();
             }
