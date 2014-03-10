@@ -54,6 +54,7 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radio_group_view);
         mImageSchedule = (ImageView) rootView.findViewById(R.id.image_schedule);
         mImageSchedule.setOnClickListener(this);
+        mImageSchedule.setScaleType(ImageView.ScaleType.FIT_XY);
         mBtnExportCal = (Button) rootView.findViewById(R.id.btn_export_calendar);
         mBtnShare = (Button) rootView.findViewById(R.id.btn_share);
         mScheduleListLayout = (LinearLayout) rootView.findViewById(R.id.list_layout);
@@ -107,7 +108,8 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
                 Bitmap catImage = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(),
                         R.drawable.kitty);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("ScheduleImage", scheduleImage.getImage());
+                if (scheduleImage != null)
+                    bundle.putParcelable("ScheduleImage", scheduleImage.getImage());
                 fullScreenImageFragment.setArguments(bundle);
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -148,9 +150,10 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
                 scheduleImageCallback = new FlowImageLoaderCallback() {
                     @Override
                     public void onImageLoaded(Bitmap bitmap) {
+                        mImageSchedule.setImageBitmap(bitmap);
+                        //add to database
                         scheduleImage = new ScheduleImage();
                         scheduleImage.setImage(bitmap);
-                        mImageSchedule.setImageBitmap(bitmap);
                         scheduleImage.setId(profileFragment.getProfileID());
                         flowDatabaseLoader.updateOrCreateUserScheduleImage(scheduleImage);
                     }
