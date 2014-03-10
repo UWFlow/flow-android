@@ -18,7 +18,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="15dip"
             android:contentDescription="photo"
-            android:src="@drawable/kitty"
+            android:src="@drawable/ic_drawer_profile_white"
             android:scaleType="centerCrop"
             app:is_oval="true" />
 

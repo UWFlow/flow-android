@@ -8,7 +8,7 @@
     <FrameLayout android:layout_width="fill_parent"
                  android:layout_height="110dp">
         <ImageView android:id="@+id/cover_photo"
-                   android:src="@drawable/kitty"
+                   android:background="#E1E3E1"
                    android:scaleType="centerCrop"
                    android:layout_width="match_parent"
                    android:layout_height="match_parent" />
@@ -20,7 +20,7 @@
             <com.makeramen.RoundedImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/user_image"
-                    android:src="@drawable/kitty"
+                    android:src="@drawable/ic_drawer_profile_white"
                     android:scaleType="centerCrop"
                     app:is_oval="true"
                     app:border_width="3dp"
