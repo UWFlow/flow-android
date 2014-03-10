@@ -1,8 +1,15 @@
 package com.uwflow.flow_android.network;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphObject;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.uwflow.flow_android.constant.Constants;
@@ -10,11 +17,7 @@ import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.util.JsonToDbUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.cookie.Cookie;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class FlowApiRequests {
     public static void login(String facebookId, String facebookAccessToken,
@@ -139,6 +142,33 @@ public class FlowApiRequests {
     public static void getCourseUsers(String courseId, final FlowApiRequestCallback callback) {
         final String uri = String.format(Constants.API_COURSE_USERS, courseId);
         getDetails(Constants.API_REQUEST_CALL_ID.API_COURSE_USERS, uri, callback);
+    }
+
+    public static void getUserCoverImage(final Context context, final String fbid, final FlowImageLoaderCallback callback){
+        Bundle params = new Bundle();
+        params.putString("fields", "cover");
+        new Request(
+                Session.getActiveSession(),
+                "/" + fbid,
+                params,
+                HttpMethod.GET,
+                new Request.Callback() {
+                    public void onCompleted(Response response) {
+                        GraphObject graphObject = response.getGraphObject();
+                        if (graphObject != null && graphObject.getProperty("cover") != null) {
+                            if (graphObject != null && graphObject.getProperty("cover") != null) {
+                                try {
+                                    JSONObject json = graphObject.getInnerJSONObject();
+                                    String url = json.getJSONObject("cover").getString("source");
+                                    FlowImageLoader loader = new FlowImageLoader(context);
+                                    loader.loadImage(url,callback);
+                                } catch (Exception e) {
+                                }
+                            }
+                        }
+                    }
+                }
+        ).executeAsync();
     }
 
     private static void getDetails(final int id, String uri, final FlowApiRequestCallback callback) {

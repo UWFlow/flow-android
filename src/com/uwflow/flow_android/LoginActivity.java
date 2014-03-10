@@ -72,6 +72,7 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
                 loadingDialog.dismiss();
                 Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
                 LoginActivity.this.startActivity(myIntent);
+                finish();
             }
         });
     }

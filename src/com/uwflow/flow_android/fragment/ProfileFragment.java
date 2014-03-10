@@ -13,8 +13,6 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
-import com.facebook.*;
-import com.facebook.model.GraphObject;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
@@ -26,8 +24,6 @@ import com.uwflow.flow_android.network.FlowApiRequests;
 import com.uwflow.flow_android.network.FlowImageLoader;
 import com.uwflow.flow_android.network.FlowImageLoaderCallback;
 import com.uwflow.flow_android.util.FacebookUtilities;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class ProfileFragment extends Fragment {
     private String mProfileID;
@@ -49,6 +45,7 @@ public class ProfileFragment extends Fragment {
     protected FlowImageLoaderCallback coverImageCallback;
     protected FlowImageLoader flowImageLoader;
 
+    protected Bitmap userProfileImage;
     // only fetch data once
     protected boolean fetchCompleted = false;
 
@@ -150,7 +147,7 @@ public class ProfileFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_view_on_fb:
                 // FIXME(david): Convert FBID to string
-                if (user != null && user.getFbid() != 0) {
+                if (user != null && user.getFbid() != null) {
                     FacebookUtilities.viewUserOnFacebook(getActivity(), user.getFbid());
                     return true;
                 }
@@ -165,46 +162,7 @@ public class ProfileFragment extends Fragment {
             // Load logged-in users profile if an ID is unspecified.
             initLoaders();
         } else {
-            // fetch user profile data from network
             initLoadFromNetwork(mProfileID);
-        }
-    }
-
-    private void fetchCoverPhoto(long fbid) {
-        if (userCover != null) {
-            mCoverPhoto.setImageBitmap(userCover);
-        } else {
-            Bundle params = new Bundle();
-            params.putString("fields", "cover");
-            new Request(
-                    Session.getActiveSession(),
-                    "/" + fbid,
-                    params,
-                    HttpMethod.GET,
-                    new Request.Callback() {
-                        public void onCompleted(Response response) {
-                            GraphObject graphObject = response.getGraphObject();
-                            FacebookRequestError error = response.getError();
-                            if (graphObject != null) {
-                                if (graphObject.getProperty("cover") != null) {
-                                    try {
-                                        JSONObject json = graphObject.getInnerJSONObject();
-                                        JSONObject coverObject =
-
-                                                new JSONObject((String) json.getString("cover"));
-                                        String url = coverObject.getString("source");
-
-                                        flowImageLoader.loadImageInto(url, mCoverPhoto);
-                                    } catch (JSONException e) {
-                                    }
-
-
-                                } else if (error != null) {
-                                }
-                            }
-                        }
-                    }
-            ).executeAsync();
         }
     }
 
@@ -224,6 +182,7 @@ public class ProfileFragment extends Fragment {
     protected void initLoadFromNetwork(final String uid) {
         if (uid == null)
             return;
+
         // we might have the cached user data already
         if (user == null) {
             FlowApiRequests.getUser(
@@ -235,6 +194,16 @@ public class ProfileFragment extends Fragment {
                         }
                     });
         }
+
+        // Get user data
+        FlowApiRequests.getUser(
+                uid,
+                new FlowApiRequestCallbackAdapter() {
+                    @Override
+                    public void getUserCallback(User user) {
+                        setUser(user);
+                    }
+                });
 
         FlowApiRequests.getUserSchedule(
                 uid,
@@ -263,14 +232,26 @@ public class ProfileFragment extends Fragment {
     }
 
     protected void populateData() {
-        if (user == null) {
+        if (user == null)
             return;
+
+        if (userCover != null) {
+            mCoverPhoto.setImageBitmap(userCover);
+        } else {
+            coverImageCallback = new FlowImageLoaderCallback() {
+                @Override
+                public void onImageLoaded(Bitmap bitmap) {
+                    userCover = bitmap;
+                    mCoverPhoto.setImageBitmap(userCover);
+                }
+            };
+            if (user.getFbid() != null)
+                FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), "" + user.getFbid(), coverImageCallback);
         }
 
-        fetchCoverPhoto(user.getFbid());
-        flowImageLoader.loadImageInto(user.getProfilePicUrls().getLarge(), userImage);
         userName.setText(user.getName());
         userProgram.setText(user.getProgramName());
+
     }
 
     protected class ProfileReceiver extends BroadcastReceiver {
@@ -359,5 +340,21 @@ public class ProfileFragment extends Fragment {
     protected void fireUserCoursesBroadcast() {
         Intent intent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_USER_COURSES);
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).sendBroadcast(intent);
+    }
+
+    public String getProfileID() {
+        return mProfileID;
+    }
+
+    public void setProfileID(String profileId) {
+        this.mProfileID = profileId;
+    }
+
+    public static ProfileFragment convertFragment(Fragment fragment) {
+        try {
+            return (ProfileFragment) fragment;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
