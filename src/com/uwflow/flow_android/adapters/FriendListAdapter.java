@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.entities.CourseFriend;
-import com.uwflow.flow_android.util.FacebookUtilities;
+import com.uwflow.flow_android.fragment.ProfileFragment;
 
 import java.util.ArrayList;
 
@@ -66,11 +66,14 @@ public class FriendListAdapter extends BaseAdapter {
 
         Picasso.with(mContext).load(user.getProfilePicUrls().getLarge()).placeholder(R.drawable.kitty).into(image);
 
-        // Make this View clickable to open a dialog for Facebook/Flow profile links
+        // Make this View clickable to go to view that user's profile in our app
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-		FacebookUtilities.createUserDialog(mContext, user, R.id.content_frame, mFragmentManager).show();
+                mFragmentManager.beginTransaction()
+                        .replace(R.id.content_frame, ProfileFragment.newInstance(user.getId()))
+                        .addToBackStack(null)
+                        .commit();
             }
         };
         convertView.setOnClickListener(onClickListener);

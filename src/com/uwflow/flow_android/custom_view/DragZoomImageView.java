@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+// Adapted from http://stackoverflow.com/questions/6650398/android-imageview-zoom-in-and-zoom-out
 public class DragZoomImageView extends ImageView implements View.OnTouchListener {
 
 

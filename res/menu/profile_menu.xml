@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- TODO(david): Find an icon for this and show on bar if room -->
+    <item android:id="@+id/action_view_on_fb"
+          android:title="@string/action_view_on_fb"/>
+</menu>

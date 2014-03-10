@@ -13,9 +13,8 @@ import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.Rating;
 import com.uwflow.flow_android.db_object.Review;
-import com.uwflow.flow_android.db_object.User;
+import com.uwflow.flow_android.fragment.ProfileFragment;
 import com.uwflow.flow_android.util.CalendarHelper;
-import com.uwflow.flow_android.util.FacebookUtilities;
 
 import java.util.Date;
 import java.util.List;
@@ -31,7 +30,7 @@ public class CourseReviewAdapter extends BaseAdapter {
     public CourseReviewAdapter(List<Review> reviews, Context context, FragmentManager fragmentManager) {
         mReviews = reviews;
         mContext = context;
-	mFragmentManager = fragmentManager;
+        mFragmentManager = fragmentManager;
     }
 
     public int getCount() {
@@ -90,21 +89,14 @@ public class CourseReviewAdapter extends BaseAdapter {
             // Fetch facebook image
             Picasso.with(mContext).load(review.getAuthor().getProfilePicUrl()).placeholder(R.drawable.kitty).into(image);
 
-            // Make this View clickable to open a dialog for Facebook/Flow profile links
+            // Make this View clickable to go to view that user's profile in our app
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    User user = new User();
-
-                    // The API currently doesn't provide the users fbid, so we must parse it out ourselves
-                    String[] tokens = review.getAuthor().getProfilePicUrl().split("/");
-
-                    // We expect the fbid value at index 3
-                    user.setFbid(Long.valueOf(tokens[3]).longValue());
-
-                    user.setId(review.getAuthor().getId());
-                    user.setFirstName(FacebookUtilities.getFirstWord(review.getAuthor().getName()));
-		    FacebookUtilities.createUserDialog(mContext, user, R.id.content_frame, mFragmentManager).show();
+                    mFragmentManager.beginTransaction()
+                            .replace(R.id.content_frame, ProfileFragment.newInstance(review.getAuthor().getId()))
+                            .addToBackStack(null)
+                            .commit();
                 }
             };
             image.setOnClickListener(onClickListener);

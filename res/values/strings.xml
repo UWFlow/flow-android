@@ -6,6 +6,7 @@
 
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_view_on_fb">View on Facebook</string>
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
