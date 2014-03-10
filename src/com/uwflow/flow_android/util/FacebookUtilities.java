@@ -24,16 +24,23 @@ import java.net.URL;
  * Created by jasperfung on 2/28/14.
  */
 public class FacebookUtilities {
-    public static Intent getOpenFBProfileIntent(Context context, long fbid) {
 
+    /**
+     * Creates an intent to view a user on Facebook. Attempts to use the Facebook app if installed, falling back to web.
+     * @param context
+     * @param fbid The user's Facebook ID.
+     * @return
+     */
+    public static Intent getOpenFBProfileIntent(Context context, long fbid) {
         try {
             context.getPackageManager()
                     .getPackageInfo("com.facebook.katana", 0);
             return new Intent(Intent.ACTION_VIEW,
                     Uri.parse(String.format("fb://profile/%d", fbid)));
         } catch (Exception e) {
+            e.printStackTrace();
             return new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://www.facebook.com/planyourflow"));
+                    Uri.parse(String.format("https://www.facebook.com/profile.php?id=%d", fbid)));
         }
     }
 
@@ -50,6 +57,11 @@ public class FacebookUtilities {
             }
         }
         return null;
+    }
+
+    public static void viewUserOnFacebook(Context context, long facebookId) {
+        Intent profileIntent = FacebookUtilities.getOpenFBProfileIntent(context, facebookId);
+        context.startActivity(profileIntent);
     }
 
     public static AlertDialog createUserDialog(final Context context, final User user, final int resId, final FragmentManager fragmentManager) {

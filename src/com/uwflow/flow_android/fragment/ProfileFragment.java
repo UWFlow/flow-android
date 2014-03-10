@@ -11,9 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
@@ -29,6 +27,7 @@ import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.loaders.*;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
+import com.uwflow.flow_android.util.FacebookUtilities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,6 +57,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -107,6 +107,26 @@ public class ProfileFragment extends Fragment {
         // Unregister since the activity is not visible
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(profileReceiver);
         super.onDestroyView();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.profile_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_view_on_fb:
+                // FIXME(david): Convert FBID to string
+                if (user != null && user.getFbid() != 0) {
+                    FacebookUtilities.viewUserOnFacebook(getActivity(), user.getFbid());
+                    return true;
+                }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     protected void fetchProfileInfo() {
@@ -227,32 +247,34 @@ public class ProfileFragment extends Fragment {
     }
 
     protected void populateData() {
-        if (user != null) {
-            fetchCoverPhoto(user.getFbid());
-
-            imageCallback = new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                    userImage.setImageBitmap(bitmap);
-                }
-
-                @Override
-                public void onBitmapFailed(Drawable drawable) {
-
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable drawable) {
-
-                }
-            };
-
-            // Set profile picture
-            Picasso.with(getActivity()).load(user.getProfilePicUrls().getLarge()).into(imageCallback);
-
-            userName.setText(user.getName());
-            userProgram.setText(user.getProgramName());
+        if (user == null) {
+            return;
         }
+
+        fetchCoverPhoto(user.getFbid());
+
+        imageCallback = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                userImage.setImageBitmap(bitmap);
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable drawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable drawable) {
+
+            }
+        };
+
+        // Set profile picture
+        Picasso.with(getActivity()).load(user.getProfilePicUrls().getLarge()).into(imageCallback);
+
+        userName.setText(user.getName());
+        userProgram.setText(user.getProgramName());
     }
 
     protected class ProfileReceiver extends BroadcastReceiver {
