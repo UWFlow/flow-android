@@ -54,6 +54,21 @@ public class ProfileFragment extends Fragment {
     // only fetch data once
     protected boolean fetchCompleted = false;
 
+    /**
+     * Static method to instantiate this class with arguments passed as a bundle.
+     * @param userId The ID of the user to show.
+     * @return A new instance.
+     */
+    public static ProfileFragment newInstance(String userId) {
+        ProfileFragment profileFragment = new ProfileFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.PROFILE_ID_KEY, userId);
+        profileFragment.setArguments(bundle);
+
+        return profileFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
