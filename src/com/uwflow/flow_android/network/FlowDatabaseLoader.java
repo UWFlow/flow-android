@@ -81,9 +81,6 @@ public class FlowDatabaseLoader {
                         try {
                             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
                             for (User u : userFriends.getFriends()) {
-                                if (u.getProfilePicUrls().getLarge() != null){
-                                    flowImageLoader.preloadImage(u.getProfilePicUrls().getLarge());
-                                }
                                 userDao.createOrUpdate(u);
                             }
                         } catch (SQLException e) {
@@ -114,9 +111,6 @@ public class FlowDatabaseLoader {
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
                         ScheduleCourses scheduleCourses = JsonToDbUtil.getUserSchedule(jsonObjects[0]);
-                        if (scheduleCourses.getScreenshotUrl() != null){
-                            flowImageLoader.preloadImage(scheduleCourses.getScreenshotUrl());
-                        }
                         try {
                             Dao<ScheduleCourse, String> userCourseSchedule = flowDatabaseHelper.getUserScheduleCourseDao();
                             for (ScheduleCourse sc : scheduleCourses.getScheduleCourses()) {
