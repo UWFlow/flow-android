@@ -62,7 +62,7 @@ public class ProfileFriendAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 		        mFragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, ProfileFragment.newInstance(user.getId()))
+                        .replace(R.id.content_frame, ProfileFragment.newInstance(user))
                         .addToBackStack(null)
                         .commit();
             }

@@ -16,9 +16,6 @@ import com.uwflow.flow_android.network.FlowImageLoader;
 
 import java.util.ArrayList;
 
-/**
- * Created by jasperfung on 2/23/14.
- */
 public class FriendListAdapter extends BaseAdapter {
     private ArrayList<CourseFriend> mList;
     private Context mContext;

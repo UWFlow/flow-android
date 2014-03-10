@@ -66,7 +66,7 @@ public class Constants {
     // Keys used in bundles
     public static final String PROFILE_ID_KEY = "profileId";
     public static final String COURSE_ID_KEY = "courseId";
-    public static final String USER_ID = "userId";
+    public static final String USER = "userId";
     public static final String TAB_ID = "tabId";
 
     public static final int COURSE_SCHEDULE_PAGE_INDEX = 0;

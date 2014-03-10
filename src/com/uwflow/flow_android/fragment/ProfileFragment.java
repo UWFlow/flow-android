@@ -68,6 +68,16 @@ public class ProfileFragment extends Fragment {
         return profileFragment;
     }
 
+    public static ProfileFragment newInstance(User user) {
+        ProfileFragment profileFragment = new ProfileFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.USER, user);
+        profileFragment.setArguments(bundle);
+
+        return profileFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,9 +89,12 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.profile_layout, container, false);
-        user = getArguments() != null ? (User) getArguments().getSerializable(Constants.USER_ID) : null;
+        user = getArguments() != null ? (User) getArguments().getSerializable(Constants.USER) : null;
         if (user != null)
             mProfileID = user.getId();
+        else
+            mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
+
         flowImageLoader = new FlowImageLoader(getActivity().getApplicationContext());
 
         userImage = (ImageView) rootView.findViewById(R.id.user_image);
@@ -211,6 +224,18 @@ public class ProfileFragment extends Fragment {
     protected void initLoadFromNetwork(final String uid) {
         if (uid == null)
             return;
+        // we might have the cached user data already
+        if (user == null) {
+            FlowApiRequests.getUser(
+                    uid,
+                    new FlowApiRequestCallbackAdapter() {
+                        @Override
+                        public void getUserCallback(User user) {
+                            setUser(user);
+                        }
+                    });
+        }
+
         FlowApiRequests.getUserSchedule(
                 uid,
                 new FlowApiRequestCallbackAdapter() {
