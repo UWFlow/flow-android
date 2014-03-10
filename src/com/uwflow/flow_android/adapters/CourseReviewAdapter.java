@@ -30,7 +30,7 @@ public class CourseReviewAdapter extends BaseAdapter {
     public CourseReviewAdapter(List<Review> reviews, Context context, FragmentManager fragmentManager) {
         mReviews = reviews;
         mContext = context;
-	    mFragmentManager = fragmentManager;
+        mFragmentManager = fragmentManager;
     }
 
     public int getCount() {

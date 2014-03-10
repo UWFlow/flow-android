@@ -30,7 +30,6 @@ public class FacebookUtilities {
             return new Intent(Intent.ACTION_VIEW,
                     Uri.parse(String.format("fb://profile/%d", fbid)));
         } catch (Exception e) {
-            e.printStackTrace();
             return new Intent(Intent.ACTION_VIEW,
                     Uri.parse(String.format("https://www.facebook.com/profile.php?id=%d", fbid)));
         }
