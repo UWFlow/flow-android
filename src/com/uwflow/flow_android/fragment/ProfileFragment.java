@@ -5,20 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.*;
 import com.facebook.model.GraphObject;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
@@ -27,6 +23,8 @@ import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.loaders.*;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
+import com.uwflow.flow_android.network.FlowImageLoader;
+import com.uwflow.flow_android.network.FlowImageLoaderCallback;
 import com.uwflow.flow_android.util.FacebookUtilities;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,14 +46,15 @@ public class ProfileFragment extends Fragment {
     protected ScheduleCourses userSchedule;
     protected ProfileReceiver profileReceiver;
     protected Bitmap userCover;
-    protected Target coverImageCallback;
-    protected Target imageCallback;
+    protected FlowImageLoaderCallback coverImageCallback;
+    protected FlowImageLoader flowImageLoader;
 
     // only fetch data once
     protected boolean fetchCompleted = false;
 
     /**
      * Static method to instantiate this class with arguments passed as a bundle.
+     *
      * @param userId The ID of the user to show.
      * @return A new instance.
      */
@@ -80,7 +79,10 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.profile_layout, container, false);
-        mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
+        user = getArguments() != null ? (User) getArguments().getSerializable(Constants.USER_ID) : null;
+        if (user != null)
+            mProfileID = user.getId();
+        flowImageLoader = new FlowImageLoader(getActivity().getApplicationContext());
 
         userImage = (ImageView) rootView.findViewById(R.id.user_image);
         userName = (TextView) rootView.findViewById(R.id.user_name);
@@ -178,25 +180,8 @@ public class ProfileFragment extends Fragment {
 
                                                 new JSONObject((String) json.getString("cover"));
                                         String url = coverObject.getString("source");
-                                        coverImageCallback = new Target() {
-                                            @Override
-                                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                                                Log.d("BITMAP", "LOADED COVER FROM: " + loadedFrom.toString());
-                                                userCover = bitmap;
-                                                mCoverPhoto.setImageBitmap(userCover);
-                                            }
 
-                                            @Override
-                                            public void onBitmapFailed(Drawable drawable) {
-                                                Log.d("BITMAP", "NOTLOADED");
-                                            }
-
-                                            @Override
-                                            public void onPrepareLoad(Drawable drawable) {
-
-                                            }
-                                        };
-                                        Picasso.with(getActivity().getApplicationContext()).load(url).into(coverImageCallback);
+                                        flowImageLoader.loadImageInto(url, mCoverPhoto);
                                     } catch (JSONException e) {
                                     }
 
@@ -226,15 +211,6 @@ public class ProfileFragment extends Fragment {
     protected void initLoadFromNetwork(final String uid) {
         if (uid == null)
             return;
-        // Get user data
-        FlowApiRequests.getUser(
-                uid,
-                new FlowApiRequestCallbackAdapter() {
-                    @Override
-                    public void getUserCallback(User user) {
-                        setUser(user);
-                    }
-                });
         FlowApiRequests.getUserSchedule(
                 uid,
                 new FlowApiRequestCallbackAdapter() {
@@ -267,27 +243,7 @@ public class ProfileFragment extends Fragment {
         }
 
         fetchCoverPhoto(user.getFbid());
-
-        imageCallback = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                userImage.setImageBitmap(bitmap);
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable drawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable drawable) {
-
-            }
-        };
-
-        // Set profile picture
-        Picasso.with(getActivity()).load(user.getProfilePicUrls().getLarge()).into(imageCallback);
-
+        flowImageLoader.loadImageInto(user.getProfilePicUrls().getLarge(), userImage);
         userName.setText(user.getName());
         userProgram.setText(user.getProgramName());
     }

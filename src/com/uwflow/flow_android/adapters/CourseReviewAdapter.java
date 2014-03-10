@@ -9,11 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.Rating;
 import com.uwflow.flow_android.db_object.Review;
 import com.uwflow.flow_android.fragment.ProfileFragment;
+import com.uwflow.flow_android.network.FlowImageLoader;
 import com.uwflow.flow_android.util.CalendarHelper;
 
 import java.util.Date;
@@ -26,11 +26,13 @@ public class CourseReviewAdapter extends BaseAdapter {
     private List<Review> mReviews;
     private Context mContext;
     private FragmentManager mFragmentManager;
+    private FlowImageLoader flowImageLoader;
 
     public CourseReviewAdapter(List<Review> reviews, Context context, FragmentManager fragmentManager) {
         mReviews = reviews;
         mContext = context;
         mFragmentManager = fragmentManager;
+        flowImageLoader = new FlowImageLoader(context);
     }
 
     public int getCount() {
@@ -87,7 +89,7 @@ public class CourseReviewAdapter extends BaseAdapter {
             first.setText(review.getAuthor().getName());
 
             // Fetch facebook image
-            Picasso.with(mContext).load(review.getAuthor().getProfilePicUrl()).placeholder(R.drawable.kitty).into(image);
+            flowImageLoader.loadImageInto(review.getAuthor().getProfilePicUrl(), image);
 
             // Make this View clickable to go to view that user's profile in our app
             View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -118,7 +120,7 @@ public class CourseReviewAdapter extends BaseAdapter {
             status1.setEnabled(false);
             status1.setChecked(Double.valueOf(usefulRating) == 1);
         }
-        if (easyRating== null) {
+        if (easyRating == null) {
             status2.setEnabled(true);
         } else {
             status2.setEnabled(false);

@@ -9,15 +9,9 @@ import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-import com.j256.ormlite.dao.Dao;
-import com.squareup.picasso.Picasso;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
-import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.network.*;
-import com.uwflow.flow_android.util.JsonToDbUtil;
 import org.json.JSONObject;
-
-import java.sql.SQLException;
 
 public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
     protected LoginButton loginButton;
@@ -28,7 +22,6 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
-        init();
 
         databaseLoader = new FlowDatabaseLoader(this.getApplicationContext(), getHelper());
         loginButton = (LoginButton) findViewById(R.id.login_button);
@@ -87,9 +80,5 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
-    }
-
-    public void init() {
-        FlowAsyncClient.init(this.getApplicationContext());
     }
 }
