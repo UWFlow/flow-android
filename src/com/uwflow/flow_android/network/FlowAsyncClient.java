@@ -54,4 +54,9 @@ public class FlowAsyncClient {
             return null;
         }
     }
+
+    public static void clearCookie() {
+        PersistentCookieStore myCookieStore = (PersistentCookieStore) client.getHttpContext().getAttribute(ClientContext.COOKIE_STORE);
+        myCookieStore.clear();
+    }
 }

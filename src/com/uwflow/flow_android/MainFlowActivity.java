@@ -18,6 +18,7 @@ import com.uwflow.flow_android.fragment.AboutFragment;
 import com.uwflow.flow_android.fragment.ExploreFragment;
 import com.uwflow.flow_android.fragment.ProfileFragment;
 import com.uwflow.flow_android.fragment.ShortlistFragment;
+import com.uwflow.flow_android.network.FlowAsyncClient;
 
 import java.util.ArrayList;
 
@@ -58,8 +59,11 @@ public class MainFlowActivity extends FlowActivity {
                 }
                 Session.setActiveSession(null);
 
+                // Remove flow cookies
+                FlowAsyncClient.clearCookie();
+
                 Intent intent = new Intent(MainFlowActivity.this, LoginActivity.class);
-                intent.putExtra("finish", true); // if you are checking for this in your other Activities
+                intent.putExtra("finish", true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                         Intent.FLAG_ACTIVITY_CLEAR_TASK |
                         Intent.FLAG_ACTIVITY_NEW_TASK);
