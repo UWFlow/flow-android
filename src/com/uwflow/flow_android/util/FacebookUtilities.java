@@ -28,10 +28,10 @@ public class FacebookUtilities {
             context.getPackageManager()
                     .getPackageInfo("com.facebook.katana", 0);
             return new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(String.format("fb://profile/%d", fbid)));
+                    Uri.parse(String.format("fb://profile/%s", fbid)));
         } catch (Exception e) {
             return new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(String.format("https://www.facebook.com/profile.php?id=%d", fbid)));
+                    Uri.parse(String.format("https://www.facebook.com/profile.php?id=%s", fbid)));
         }
     }
 
