@@ -84,4 +84,11 @@ public class Constants {
     public static final int NAV_DRAWER_ABOUT_INDEX = 3;
     public static final int NAV_DRAWER_LOG_OUT_INDEX = 4;
 
+    public static final String FBID_DAVID = "541400376";
+    public static final String FBID_JASPER = "505131734";
+    public static final String FBID_WENTAO = "100000580776460";
+    public static final String FBID_CHINMAY = "100002131130870";
+
+    public static final String FB_PROFILE_PIC_LARGE_URL_FORMAT = "https://graph.facebook.com/%s/picture?type=large";
+
 }
