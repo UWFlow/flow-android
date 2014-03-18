@@ -1,25 +1,42 @@
 package com.uwflow.flow_android.network;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 import com.uwflow.flow_android.constant.Constants;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.cookie.Cookie;
 
 import java.util.HashMap;
 import java.util.List;
 
+// TODO(david): This class is more suitable as a singleton (ensure initialization code is run, only one instance needed)
 public class FlowAsyncClient {
     private static final String TAG = "FlowAsyncClient";
+    private static final String CSRF_PREFERENCE_KEY = "csrf_token";
 
     protected static AsyncHttpClient client = new AsyncHttpClient();
     private static PersistentCookieStore cookieStore;
+    private static SharedPreferences preferences;
+    private static String csrfToken;
 
     public static void init(Context c) {
         cookieStore = new PersistentCookieStore(c);
         client.setCookieStore(cookieStore);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(c);
+        csrfToken = preferences.getString(CSRF_PREFERENCE_KEY, null);
+        useCsrfToken();
+    }
+
+    private static void useCsrfToken() {
+        if (StringUtils.isNotEmpty(csrfToken)) {
+            client.addHeader("X-CSRF-Token", csrfToken);
+        }
     }
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
@@ -65,6 +82,17 @@ public class FlowAsyncClient {
     public static void clearCookie() {
         if (cookieStore != null) {
             cookieStore.clear();
+        }
+    }
+
+    public static void setCsrfToken(String xsrfToken) {
+        csrfToken = xsrfToken;
+        useCsrfToken();
+
+        if (preferences != null) {
+            preferences.edit()
+                    .putString(CSRF_PREFERENCE_KEY, csrfToken)
+                    .commit();
         }
     }
 }
