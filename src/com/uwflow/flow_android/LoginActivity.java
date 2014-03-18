@@ -32,7 +32,7 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
             @Override
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
-                    if (FlowAsyncClient.getCookie() == null) {
+                    if (FlowAsyncClient.getSessionCookie() == null) {
                         FlowApiRequests.login(user.getId(), Session.getActiveSession().getAccessToken(),
                                 new FlowApiRequestCallbackAdapter() {
                                     @Override
@@ -85,7 +85,7 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
             }
         });
 
-        if (FlowAsyncClient.getCookie() != null) {
+        if (FlowAsyncClient.getSessionCookie() != null) {
             loadDataAndLogin();
         }
 

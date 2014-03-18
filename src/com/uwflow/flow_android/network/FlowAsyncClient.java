@@ -6,9 +6,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 import com.uwflow.flow_android.constant.Constants;
-import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.cookie.BasicClientCookie;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +15,11 @@ public class FlowAsyncClient {
     private static final String TAG = "FlowAsyncClient";
 
     protected static AsyncHttpClient client = new AsyncHttpClient();
+    private static PersistentCookieStore cookieStore;
 
     public static void init(Context c) {
-        PersistentCookieStore myCookieStore = new PersistentCookieStore(c);
-        client.setCookieStore(myCookieStore);
+        cookieStore = new PersistentCookieStore(c);
+        client.setCookieStore(cookieStore);
     }
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
@@ -48,24 +47,24 @@ public class FlowAsyncClient {
         return Constants.BASE_URL + relativeUrl;
     }
 
-    public static void storeCookie(String cookie) {
-        PersistentCookieStore myCookieStore = (PersistentCookieStore) client.getHttpContext().getAttribute(ClientContext.COOKIE_STORE);
-        BasicClientCookie newCookie = new BasicClientCookie(Constants.COOKIE, cookie);
-        myCookieStore.addCookie(newCookie);
-    }
-
-    public static Cookie getCookie() {
-        PersistentCookieStore myCookieStore = (PersistentCookieStore) client.getHttpContext().getAttribute(ClientContext.COOKIE_STORE);
-        List<Cookie> cookies = myCookieStore.getCookies();
-        if (!cookies.isEmpty()) {
-            return cookies.get(0);
-        } else {
+    public static Cookie getSessionCookie() {
+        if (cookieStore == null) {
             return null;
         }
+
+        List<Cookie> cookies = cookieStore.getCookies();
+        for (Cookie cookie: cookies) {
+            if (cookie.getDomain().equals(Constants.SESSION_COOKIE_DOMAIN) && cookie.getName().equals("session")) {
+                return cookie;
+            }
+        }
+
+        return null;
     }
 
     public static void clearCookie() {
-        PersistentCookieStore myCookieStore = (PersistentCookieStore) client.getHttpContext().getAttribute(ClientContext.COOKIE_STORE);
-        myCookieStore.clear();
+        if (cookieStore != null) {
+            cookieStore.clear();
+        }
     }
 }
