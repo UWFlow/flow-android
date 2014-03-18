@@ -1,7 +1,10 @@
 package com.uwflow.flow_android.network;
 
 import android.content.Context;
-import com.loopj.android.http.*;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.PersistentCookieStore;
+import com.loopj.android.http.RequestParams;
 import com.uwflow.flow_android.constant.Constants;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
@@ -11,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FlowAsyncClient {
+    private static final String TAG = "FlowAsyncClient";
+
     protected static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void init(Context c) {
@@ -24,6 +29,10 @@ public class FlowAsyncClient {
 
     public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.post(getAbsoluteUrl(url), params, responseHandler);
+    }
+
+    public static void put(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.put(getAbsoluteUrl(url), params, responseHandler);
     }
 
     public static void get(HashMap<String, String> headers, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {

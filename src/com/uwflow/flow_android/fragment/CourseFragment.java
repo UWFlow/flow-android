@@ -16,8 +16,10 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.CourseDetail;
+import com.uwflow.flow_android.network.FlowApiRequestCallback;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
+import org.json.JSONObject;
 
 /**
  * Created by jasperfung on 2/21/14.
@@ -96,16 +98,26 @@ public class CourseFragment extends Fragment {
         mViewPager.setCurrentItem(Constants.COURSE_ABOUT_PAGE_INDEX);
 
         Button shortlistButton = (Button)rootView.findViewById(R.id.shortlist_btn);
-        shortlistButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: Add code to shortlist a course
-            }
-        });
-
-
         final Button shareButton = (Button)rootView.findViewById(R.id.share_btn);
+
         if (mCourseID != null) {
+            shortlistButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FlowApiRequests.addCourseToShortlist(mCourseID, new FlowApiRequestCallback() {
+                        @Override
+                        public void onSuccess(JSONObject response) {
+                            // TODO: Display a toaster prompt indicating successfully added, and change button state
+                        }
+
+                        @Override
+                        public void onFailure(String error) {
+                            // TODO: Display prompt indicating failure
+                        }
+                    });
+                }
+            });
+
             shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -119,6 +131,7 @@ public class CourseFragment extends Fragment {
             });
         } else {
             shareButton.setEnabled(false);
+            shortlistButton.setEnabled(false);
         }
 
 	    return rootView;

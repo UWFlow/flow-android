@@ -18,9 +18,12 @@ import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.util.JsonToDbUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class FlowApiRequests {
+    private static final String TAG = "FlowApiRequests";
+
     public static void login(String facebookId, String facebookAccessToken,
                              final FlowApiRequestCallback callback) {
         RequestParams params = new RequestParams();
@@ -31,14 +34,45 @@ public class FlowApiRequests {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 // Successfully got a response
-                Log.d(Constants.UW_FLOW, "Login Success");
+                Log.d(TAG, "Login success");
                 callback.onSuccess(null);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.d(Constants.UW_FLOW, "Failed");
+                Log.d(TAG, "Login failed");
                 callback.onFailure(null);
+            }
+        });
+    }
+
+    public static void addCourseToShortlist(final String courseId, final FlowApiRequestCallback callback) {
+        String url = String.format(Constants.API_USER_SHORTLIST_COURSE, courseId);
+        FlowAsyncClient.put(url, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                Log.d(TAG, "Add course " + courseId +  " to shortlist success.");
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.d(TAG, "Add course " + courseId +  " to shortlist failed.");
+                callback.onFailure(new String(responseBody));
+            }
+
+            @Override
+            public void onFailure(Throwable e, JSONObject errorResponse) {
+                Log.d(TAG, "Add course " + courseId +  " to shortlist failed.");
+
+                String errorMessage = "";
+                try {
+                    errorMessage = errorResponse.getString("error");
+                } catch (JSONException e1) {
+                    // Ignore could not parse error message
+                }
+
+                callback.onFailure(errorMessage);
             }
         });
     }
