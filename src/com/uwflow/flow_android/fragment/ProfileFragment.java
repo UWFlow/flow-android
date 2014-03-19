@@ -150,7 +150,6 @@ public class ProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_view_on_fb:
-                // FIXME(david): Convert FBID to string
                 if (user != null && user.getFbid() != null) {
                     FacebookUtilities.viewUserOnFacebook(getActivity(), user.getFbid());
                     return true;

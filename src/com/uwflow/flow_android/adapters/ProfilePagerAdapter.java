@@ -16,12 +16,11 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
     private static final int USER_PROFILE_TAB_NUMBER = 4;
     private static final int USER_FRIEND_PROFILE_TAB_NUMBER = 3;
 
-
     private static final String[] TITLES = new String[]{
             "Friends",
             "Schedule",
+            "Courses",
             "Exams",
-            "Courses"
     };
 
     public ProfilePagerAdapter(FragmentManager fm, Bundle bundle, boolean showUserFriendList) {
@@ -56,16 +55,18 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        if (showUserFriendList)
+        if (showUserFriendList) {
             return USER_PROFILE_TAB_NUMBER;
-        else
+        } else {
             return USER_FRIEND_PROFILE_TAB_NUMBER;
+        }
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if (!showUserFriendList)
+        if (!showUserFriendList) {
             position++;
+        }
         return TITLES[position];
     }
 }
