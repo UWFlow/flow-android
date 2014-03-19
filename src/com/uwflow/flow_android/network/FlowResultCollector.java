@@ -34,7 +34,7 @@ public class FlowResultCollector {
         return false;
     }
 
-    public boolean isAllProcessCompeted(){
+    public synchronized boolean isAllProcessCompeted(){
         for (boolean b : processCompleteState){
             if (b == false)
                 return false;
