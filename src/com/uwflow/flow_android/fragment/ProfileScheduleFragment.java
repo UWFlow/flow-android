@@ -14,10 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
+import android.widget.*;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
@@ -37,6 +34,8 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
     private LinearLayout mScheduleWeekLayout;
     private View rootView;
     private ProfileScheduleReceiver profileScheduleReceiver;
+    private TextView mEmptyScheduleView;
+    private LinearLayout mScheduleContainer;
     protected FlowImageLoaderCallback scheduleImageCallback;
     protected FlowImageLoader flowImageLoader;
     protected FlowDatabaseLoader flowDatabaseLoader;
@@ -59,6 +58,9 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         mBtnShare = (Button) rootView.findViewById(R.id.btn_share);
         mScheduleListLayout = (LinearLayout) rootView.findViewById(R.id.list_layout);
         mScheduleWeekLayout = (LinearLayout) rootView.findViewById(R.id.week_layout);
+        mEmptyScheduleView = (TextView)rootView.findViewById(R.id.empty_profile_schedule);
+        mScheduleContainer = (LinearLayout)rootView.findViewById(R.id.profile_schedule);
+
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -132,6 +134,15 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         super.onDestroyView();
     }
 
+    private void toggleShowSchedule(boolean shouldShow) {
+        if (shouldShow) {
+            mScheduleContainer.setVisibility(View.VISIBLE);
+            mEmptyScheduleView.setVisibility(View.GONE);
+        } else {
+            mScheduleContainer.setVisibility(View.GONE);
+            mEmptyScheduleView.setVisibility(View.VISIBLE);
+        }
+    }
 
     protected void populateData() {
         final ProfileFragment profileFragment = ProfileFragment.convertFragment(getParentFragment());
@@ -141,25 +152,27 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         scheduleImage = flowDatabaseLoader.queryUserScheduleImage(profileFragment.getProfileID());
         if (scheduleImage != null) {
             mImageSchedule.setImageBitmap(scheduleImage.getImage());
-            mBtnShare.setEnabled(true);
-        } else {
-            if (scheduleCourses != null && scheduleCourses.getScreenshotUrl() != null) {
-                // assume the URL is valid and an image will be returned
-                // TODO: change this conditional to 'if the image is successfully fetched'
-                mScheduleImageURL = scheduleCourses.getScreenshotUrl();
-                scheduleImageCallback = new FlowImageLoaderCallback() {
-                    @Override
-                    public void onImageLoaded(Bitmap bitmap) {
-                        //add to database
-                        scheduleImage = new ScheduleImage();
-                        scheduleImage.setImage(bitmap);
-                        scheduleImage.setId(profileFragment.getProfileID());
-                        flowDatabaseLoader.updateOrCreateUserScheduleImage(scheduleImage);
-                    }
-                };
-                flowImageLoader.loadImage(mScheduleImageURL, mImageSchedule, scheduleImageCallback);
-                mBtnShare.setEnabled(true);
-            }
+            toggleShowSchedule(true);
+        } else if (scheduleCourses != null && scheduleCourses.getScreenshotUrl() != null) {
+            // assume the URL is valid and an image will be returned
+            // TODO: change this conditional to 'if the image is successfully fetched'
+            mScheduleImageURL = scheduleCourses.getScreenshotUrl();
+            scheduleImageCallback = new FlowImageLoaderCallback() {
+                @Override
+                public void onImageLoaded(Bitmap bitmap) {
+                    //add to database
+                    scheduleImage = new ScheduleImage();
+                    scheduleImage.setImage(bitmap);
+                    scheduleImage.setId(profileFragment.getProfileID());
+                    flowDatabaseLoader.updateOrCreateUserScheduleImage(scheduleImage);
+                    toggleShowSchedule(true);
+                }
+            };
+            flowImageLoader.loadImage(mScheduleImageURL, mImageSchedule, scheduleImageCallback);
+        } else if (scheduleCourses == null) {
+            // No schedule, load an empty state
+            // TODO(david): Don't show this if the schedule is still loading from network
+            toggleShowSchedule(false);
         }
     }
 
