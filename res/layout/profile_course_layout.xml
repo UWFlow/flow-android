@@ -4,11 +4,14 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-<!--
-    <ListView android:id="@+id/course_list"
+    <TextView android:id="@+id/empty_profile_courses"
               android:layout_width="match_parent"
-              android:layout_height="fill_parent"/>
--->
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:textColor="#999999"
+              android:text="No courses uploaded :("
+              android:textSize="18dp"
+              android:visibility="gone"/>
     <ExpandableListView
             android:id="@+id/course_list"
             android:layout_width="match_parent"

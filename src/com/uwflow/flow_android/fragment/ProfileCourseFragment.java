@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfileCoursesAdapter;
 import com.uwflow.flow_android.constant.Constants;
@@ -18,6 +19,7 @@ import com.uwflow.flow_android.db_object.UserCourseDetail;
 
 public class ProfileCourseFragment extends Fragment {
     protected ExpandableListView mCoursesListView;
+    private TextView mEmptyCoursesView;
     protected View rootView;
     protected ProfileCoursesAdapter profileListAdapter;
     protected ProfileCourseReceiver profileCourseReceiver;
@@ -27,6 +29,7 @@ public class ProfileCourseFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.profile_course_layout, container, false);
         mCoursesListView = (ExpandableListView) rootView.findViewById(R.id.course_list);
+        mEmptyCoursesView = (TextView) rootView.findViewById(R.id.empty_profile_courses);
 
         // call this before setting up receiver
         populateData();
@@ -49,7 +52,8 @@ public class ProfileCourseFragment extends Fragment {
         if (profileFragment == null)
             return;
         UserCourseDetail userCourseDetail = profileFragment.getUserCourses();
-        if (userCourseDetail != null) {
+        if (userCourseDetail != null && !userCourseDetail.getUserCourses().isEmpty()) {
+            toggleShowCourses(true);
             profileListAdapter = new ProfileCoursesAdapter(
                     userCourseDetail,
                     getActivity(),
@@ -57,8 +61,19 @@ public class ProfileCourseFragment extends Fragment {
             mCoursesListView.setAdapter(profileListAdapter);
             profileListAdapter.notifyDataSetChanged();
             expandAllGroups(mCoursesListView);
+        } else {
+            toggleShowCourses(false);
         }
+    }
 
+    private void toggleShowCourses(boolean shouldShow) {
+        if (shouldShow) {
+            mCoursesListView.setVisibility(View.VISIBLE);
+            mEmptyCoursesView.setVisibility(View.GONE);
+        } else {
+            mCoursesListView.setVisibility(View.GONE);
+            mEmptyCoursesView.setVisibility(View.VISIBLE);
+        }
     }
 
     protected class ProfileCourseReceiver extends BroadcastReceiver {
