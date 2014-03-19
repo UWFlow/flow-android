@@ -29,7 +29,7 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                       android:id="@+id/button_panel"
                       android:orientation="vertical"
-                      android:layout_width="100dp"
+                      android:layout_width="125dp"
                       android:layout_height="wrap_content" >
             <Button android:id="@+id/shortlist_btn"
                     android:layout_width="match_parent"

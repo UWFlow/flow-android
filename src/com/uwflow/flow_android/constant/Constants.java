@@ -1,12 +1,10 @@
 package com.uwflow.flow_android.constant;
 
 public class Constants {
+    public static final String SESSION_COOKIE_DOMAIN = "uwflow.com";
     public static final String BASE_URL = "https://uwflow.com/";
-    public static final String COOKIE = "flowCookie";
     public static final String FBID = "fbid";
     public static final String FACEBOOK_ACCESS_TOKEN = "fb_access_token";
-    public static final String SET_COOKIE = "set-cookie";
-    public static final String HEADER_COOKIE = "Cookie";
 
     public static final String API_LOGIN = "api/v1/login/facebook";
     public static final String API_COURSE = "api/v1/courses/%s";
@@ -24,6 +22,7 @@ public class Constants {
     public static final String API_USERS_COURSES = "api/v1/users/%s/courses";
     public static final String API_USER_FRIENDS = "api/v1/user/friends";
     public static final String API_USERS_FRIENDS = "api/v1/users/%s/friends";
+    public static final String API_USER_SHORTLIST_COURSE = "api/v1/user/shortlist/%s";
     public static final String API_SEARCH_COURSES = "api/v1/search/courses?%s";
 
     public static class DatabaseColumnName{
@@ -37,6 +36,7 @@ public class Constants {
         public static final int PROFILE_EXAMS_LOADER_ID = 3;
         public static final int PROFILE_COURSES_LOADER_ID = 4;
         public static final int PROFILE_LOADER_ID = 5;
+        public static final int COURSE_USER_COURSES_LOADER_ID = 6;
     }
 
     public static class API_REQUEST_CALL_ID {
@@ -90,5 +90,7 @@ public class Constants {
     public static final String FBID_CHINMAY = "100002131130870";
 
     public static final String FB_PROFILE_PIC_LARGE_URL_FORMAT = "https://graph.facebook.com/%s/picture?type=large";
+
+    public static final String SHORTLIST_TERM_ID = "9999_99";
 
 }

@@ -7,6 +7,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.UserCourseDetail;
+import com.uwflow.flow_android.fragment.CourseFragment;
 import com.uwflow.flow_android.fragment.ProfileFragment;
 
 public class UserCoursesLoaderCallback implements LoaderManager.LoaderCallbacks<UserCourseDetail>{
@@ -31,6 +32,10 @@ public class UserCoursesLoaderCallback implements LoaderManager.LoaderCallbacks<
         if (parentFragment instanceof ProfileFragment){
             final ProfileFragment profileFragment= (ProfileFragment) parentFragment;
             profileFragment.setUserCourses(userCourseDetail);
+        }
+        if (parentFragment instanceof CourseFragment) {
+            final CourseFragment courseFragment = (CourseFragment) parentFragment;
+            courseFragment.setUserCourseDetail(userCourseDetail);
         }
     }
 
