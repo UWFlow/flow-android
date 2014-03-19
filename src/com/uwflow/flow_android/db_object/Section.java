@@ -2,6 +2,7 @@ package com.uwflow.flow_android.db_object;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Section {
@@ -12,7 +13,7 @@ public class Section {
     protected Double units;
 
     @SerializedName("last_updated")
-    protected long lastUpdated;
+    protected Timestamp lastUpdated;
 
     @SerializedName("class_num")
     protected String classNum;
@@ -66,11 +67,11 @@ public class Section {
         this.units = units;
     }
 
-    public long getLastUpdated() {
+    public Timestamp getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(long lastUpdated) {
+    public void setLastUpdated(Timestamp lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 

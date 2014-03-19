@@ -1,7 +1,5 @@
 package com.uwflow.flow_android.fragment;
 
-//import android.app.Fragment;
-
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +17,8 @@ import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
 import com.uwflow.flow_android.util.CalendarHelper;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -32,6 +32,7 @@ public class CourseScheduleFragment extends Fragment {
     private TableLayout mClassListContainer;
     private TextView mEmptyScheduleView;
     private BaseAdapter mCourseClassListAdapter;
+    private TextView mLastUpdatedTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +49,7 @@ public class CourseScheduleFragment extends Fragment {
         mScheduleContainer = (LinearLayout)rootView.findViewById(R.id.schedule);
         mClassListContainer = (TableLayout)rootView.findViewById(R.id.class_list);
         mEmptyScheduleView = (TextView)rootView.findViewById(R.id.empty_schedule);
+        mLastUpdatedTextView = (TextView)rootView.findViewById(R.id.sections_last_updated);
 
         return rootView;
     }
@@ -96,6 +98,12 @@ public class CourseScheduleFragment extends Fragment {
 
                                 mClassListContainer.addView(createScheduleDivider(1));
                             }
+
+                            // Set last updated date
+                            Section firstSection = sectionList.get(0);
+                            Timestamp lastUpdated =  firstSection.getLastUpdated();
+                            String lastUpdatedString = new SimpleDateFormat("MMM d 'at' h:mm a").format(lastUpdated);
+                            mLastUpdatedTextView.setText("Last updated " + lastUpdatedString);
                         } else {
                             // No classes to show. Hide the schedule table.
                             mEmptyScheduleView.setVisibility(View.VISIBLE);
