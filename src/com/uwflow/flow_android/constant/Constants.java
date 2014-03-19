@@ -36,6 +36,7 @@ public class Constants {
         public static final int PROFILE_EXAMS_LOADER_ID = 3;
         public static final int PROFILE_COURSES_LOADER_ID = 4;
         public static final int PROFILE_LOADER_ID = 5;
+        public static final int COURSE_USER_COURSES_LOADER_ID = 6;
     }
 
     public static class API_REQUEST_CALL_ID {
@@ -89,5 +90,7 @@ public class Constants {
     public static final String FBID_CHINMAY = "100002131130870";
 
     public static final String FB_PROFILE_PIC_LARGE_URL_FORMAT = "https://graph.facebook.com/%s/picture?type=large";
+
+    public static final String SHORTLIST_TERM_ID = "9999_99";
 
 }

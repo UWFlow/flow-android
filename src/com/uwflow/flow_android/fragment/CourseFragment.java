@@ -1,6 +1,7 @@
 package com.uwflow.flow_android.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,13 +13,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
+import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.CourseDetail;
+import com.uwflow.flow_android.db_object.UserCourse;
+import com.uwflow.flow_android.db_object.UserCourseDetail;
+import com.uwflow.flow_android.loaders.UserCoursesLoaderCallback;
 import com.uwflow.flow_android.network.FlowApiRequestCallback;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
+import com.uwflow.flow_android.util.CourseUtil;
 import org.json.JSONObject;
 
 /**
@@ -35,10 +42,13 @@ public class CourseFragment extends Fragment {
     private PagerSlidingTabStrip mTabs;
     private TextView mCourseCodeTextView;
     private TextView mCourseNameTextView;
+    private Button mShortlistButton;
 
     private CourseScheduleFragment mCourseScheduleFragment;
     private CourseAboutFragment mCourseAboutFragment;
     private CourseReviewsFragment mCourseReviewsFragment;
+
+    private UserCourseDetail userCourseDetail;
 
     /**
      * Static method to instantiate this class with arguments passed as a bundle.
@@ -97,22 +107,27 @@ public class CourseFragment extends Fragment {
         // Set default tab to About
         mViewPager.setCurrentItem(Constants.COURSE_ABOUT_PAGE_INDEX);
 
-        Button shortlistButton = (Button)rootView.findViewById(R.id.shortlist_btn);
+        mShortlistButton = (Button)rootView.findViewById(R.id.shortlist_btn);
         final Button shareButton = (Button)rootView.findViewById(R.id.share_btn);
 
         if (mCourseID != null) {
-            shortlistButton.setOnClickListener(new View.OnClickListener() {
+            final String humanizedCourseId = CourseUtil.humanizeCourseId(mCourseID);
+            mShortlistButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     FlowApiRequests.addCourseToShortlist(mCourseID, new FlowApiRequestCallback() {
                         @Override
                         public void onSuccess(JSONObject response) {
-                            // TODO: Display a toaster prompt indicating successfully added, and change button state
+                            String message = String.format("%s added to shortlist.", humanizedCourseId);
+                            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            disableShortlistButton("Shortlisted");
+                            // TODO(david): Also update the DB to reflect the change
                         }
 
                         @Override
                         public void onFailure(String error) {
-                            // TODO: Display prompt indicating failure
+                            String message = String.format("Failed to add %s to shortlist. :(", humanizedCourseId);
+                            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -124,15 +139,21 @@ public class CourseFragment extends Fragment {
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
                     shareIntent.putExtra(Intent.EXTRA_TEXT,
-                            String.format("http://www.uwflow.com/course/%s", mCourseID));
+                            String.format("https://www.uwflow.com/course/%s", mCourseID));
                     shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out this course!");
                     startActivity(Intent.createChooser(shareIntent, "Share course"));
                 }
             });
         } else {
             shareButton.setEnabled(false);
-            shortlistButton.setEnabled(false);
+            mShortlistButton.setEnabled(false);
         }
+
+        // Load user course info asynchronously
+        final UserCoursesLoaderCallback userCoursesLoaderCallback = new UserCoursesLoaderCallback(
+                getActivity().getApplicationContext(), this, ((MainFlowActivity) getActivity()).getHelper());
+        getLoaderManager().initLoader(Constants.LoaderManagerId.COURSE_USER_COURSES_LOADER_ID , null,
+                userCoursesLoaderCallback);
 
 	    return rootView;
     }
@@ -163,6 +184,34 @@ public class CourseFragment extends Fragment {
 
                     }
                 });
+    }
+
+    public void setUserCourseDetail(UserCourseDetail userCourseDetail) {
+        this.userCourseDetail = userCourseDetail;
+
+        // Change the shortlist button if the user has already taken/will take this course.
+        for (UserCourse userCourse: userCourseDetail.getUserCourses()) {
+            if (userCourse.getCourseId().equals(mCourseID)) {
+                if (userCourse.getTermId().equals(Constants.SHORTLIST_TERM_ID)) {
+                    disableShortlistButton("Shortlisted");
+                } else {
+                    disableShortlistButton(userCourse.getTermName());
+                }
+                break;
+            }
+        }
+    }
+
+    private void disableShortlistButton(String buttonText) {
+        mShortlistButton.setText(buttonText);
+
+        // Change to checked icon
+        int iconId = R.drawable.ic_course_taken;
+        Drawable icon = getActivity().getApplicationContext().getResources().getDrawable(iconId);
+        icon.setBounds(0, 0, 28, 28);  // TODO(david): Figure out a way to not hardcode this number
+        mShortlistButton.setCompoundDrawables(icon, null, null, null);
+
+        mShortlistButton.setEnabled(false);
     }
 
     private static class CoursePagerAdapter extends FragmentStatePagerAdapter {
@@ -204,6 +253,4 @@ public class CourseFragment extends Fragment {
             return TITLES[position];
         }
     }
-
-
 }
