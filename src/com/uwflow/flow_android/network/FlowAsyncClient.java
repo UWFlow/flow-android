@@ -95,4 +95,8 @@ public class FlowAsyncClient {
                     .commit();
         }
     }
+
+    public static String getCsrfToken() {
+        return csrfToken;
+    }
 }

@@ -32,16 +32,15 @@ public class FlowApiRequests {
 
         FlowAsyncClient.post(Constants.API_LOGIN, params, new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                // Successfully got a response
+            public void onSuccess(JSONObject response) {
                 Log.d(TAG, "Login success");
-                callback.onSuccess(null);
+                callback.onSuccess(response);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Log.d(TAG, "Login failed");
-                callback.onFailure(null);
+                callback.onFailure(new String(responseBody));
             }
         });
     }

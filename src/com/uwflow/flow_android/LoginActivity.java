@@ -14,6 +14,7 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.network.*;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,7 +36,10 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
             @Override
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
-                    if (FlowAsyncClient.getSessionCookie() == null) {
+                    if (FlowAsyncClient.getSessionCookie() == null ||
+                            StringUtils.isEmpty(FlowAsyncClient.getCsrfToken())) {
+                        // Clear existing cookies to force a login, in case we're missing a CSRF token
+                        FlowAsyncClient.clearCookie();
                         FlowApiRequests.login(user.getId(), Session.getActiveSession().getAccessToken(),
                                 new FlowApiRequestCallbackAdapter() {
                                     @Override
