@@ -142,6 +142,7 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
             mScheduleContainer.setVisibility(View.GONE);
             mEmptyScheduleView.setVisibility(View.VISIBLE);
         }
+        mBtnShare.setEnabled(shouldShow);
     }
 
     protected void populateData() {
