@@ -77,13 +77,8 @@ public class CourseFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.course_layout, container, false);
-        mCourseCodeTextView = (TextView) rootView.findViewById(R.id.course_code);
-        mCourseNameTextView = (TextView) rootView.findViewById(R.id.course_name);
-        mTabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
-
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (mCourseScheduleFragment == null) {
             mCourseScheduleFragment = new CourseScheduleFragment();
             mCourseScheduleFragment.setArguments(getArguments());
@@ -97,6 +92,15 @@ public class CourseFragment extends Fragment {
             mCourseReviewsFragment.setArguments(getArguments());
         }
         updateReceiver = new UpdateReceiver();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.course_layout, container, false);
+        mCourseCodeTextView = (TextView) rootView.findViewById(R.id.course_code);
+        mCourseNameTextView = (TextView) rootView.findViewById(R.id.course_name);
+        mTabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
 
         mCoursePagerAdapter = new CoursePagerAdapter(getChildFragmentManager(),
                 mCourseScheduleFragment,
