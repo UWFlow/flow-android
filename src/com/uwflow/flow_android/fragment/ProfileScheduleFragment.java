@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
+import com.uwflow.flow_android.activities.FullScreenImageActivity;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.ScheduleCourses;
 import com.uwflow.flow_android.db_object.ScheduleImage;
@@ -48,7 +49,6 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         scheduleImage = new ScheduleImage();
         mImageSchedule = (ImageView) rootView.findViewById(R.id.image_schedule);
         mImageSchedule.setOnClickListener(this);
-        mImageSchedule.setScaleType(ImageView.ScaleType.FIT_XY);
         mBtnShare = (Button) rootView.findViewById(R.id.btn_share);
         mEmptyScheduleView = (TextView)rootView.findViewById(R.id.empty_profile_schedule);
         mScheduleContainer = (LinearLayout)rootView.findViewById(R.id.profile_schedule);
@@ -75,21 +75,11 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
                 startActivity(Intent.createChooser(shareIntent, "Share schedule"));
                 break;
             case R.id.image_schedule:
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                Fragment fullScreenImageFragment = new FullScreenImageFragment();
-
-                //TODO:Replace this with original bitmap once the scheduleBitmap is being loaded properly from URL
-                Bitmap catImage = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(),
-                        R.drawable.kitty);
-                Bundle bundle = new Bundle();
-                if (scheduleImage != null)
-                    bundle.putParcelable("ScheduleImage", scheduleImage.getImage());
-                fullScreenImageFragment.setArguments(bundle);
-
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.content_frame, fullScreenImageFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                if (scheduleImage != null && scheduleImage.getImage() != null) {
+                    Intent fullscreenImageIntent = new Intent(getActivity(), FullScreenImageActivity.class);
+                    fullscreenImageIntent.putExtra("id", scheduleImage.getId());
+                    getActivity().startActivity(fullscreenImageIntent);
+                }
                 break;
         }
     }

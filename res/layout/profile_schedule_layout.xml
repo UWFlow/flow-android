@@ -26,6 +26,7 @@
                     android:id="@+id/image_schedule"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scaleType="centerInside"
                     android:background="#E1E3E1"/>
         </FrameLayout>
         <Button style="@style/Flow.StyledButton"
