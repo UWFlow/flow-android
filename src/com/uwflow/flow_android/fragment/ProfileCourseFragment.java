@@ -18,11 +18,14 @@ import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.UserCourseDetail;
 
 public class ProfileCourseFragment extends Fragment {
-    protected ExpandableListView mCoursesListView;
+    private boolean mIsUserMe;
+
+    private ExpandableListView mCoursesListView;
     private TextView mEmptyCoursesView;
-    protected View rootView;
-    protected ProfileCoursesAdapter profileListAdapter;
-    protected ProfileCourseReceiver profileCourseReceiver;
+    private View rootView;
+
+    private ProfileCoursesAdapter profileListAdapter;
+    private ProfileCourseReceiver profileCourseReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,6 +33,8 @@ public class ProfileCourseFragment extends Fragment {
         rootView = inflater.inflate(R.layout.profile_course_layout, container, false);
         mCoursesListView = (ExpandableListView) rootView.findViewById(R.id.course_list);
         mEmptyCoursesView = (TextView) rootView.findViewById(R.id.empty_profile_courses);
+
+        mIsUserMe = getArguments().getBoolean("isUserMe", false);
 
         // call this before setting up receiver
         populateData();
@@ -55,6 +60,7 @@ public class ProfileCourseFragment extends Fragment {
         if (userCourseDetail != null && !userCourseDetail.getUserCourses().isEmpty()) {
             toggleShowCourses(true);
             profileListAdapter = new ProfileCoursesAdapter(
+                    mIsUserMe,
                     userCourseDetail,
                     getActivity(),
                     getActivity().getSupportFragmentManager());

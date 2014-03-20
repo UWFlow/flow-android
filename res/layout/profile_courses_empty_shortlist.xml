@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/empty_shortlist_instructions"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:paddingTop="6dp"
+              android:paddingBottom="6dp"
+              android:paddingLeft="15dp"
+              android:paddingRight="15dp"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_dark"
+            android:text="Your shortlist is empty..."
+            android:textSize="15sp" />
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/grey_dark"
+            android:text="Visit some courses and click on the shortlist button to save them here!"
+            android:textSize="15sp" />
+
+
+</LinearLayout>

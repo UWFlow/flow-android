@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import com.uwflow.flow_android.R;
+import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.Course;
 import com.uwflow.flow_android.db_object.UserCourse;
 import com.uwflow.flow_android.db_object.UserCourseDetail;
@@ -21,12 +23,17 @@ import java.util.*;
 
 public class ProfileCoursesAdapter extends BaseExpandableListAdapter {
 
+    private boolean mIsUserMe;
     private Map<String,List<Course>> mConsolidatedMap;
     private List<String> mTermList;
     private Context mContext;
     private FragmentManager mFragmentManager;
 
-    public ProfileCoursesAdapter(UserCourseDetail userCourseDetail, Context context, FragmentManager fragmentManager) {
+    public ProfileCoursesAdapter(boolean isUserMe,
+                                 UserCourseDetail userCourseDetail,
+                                 Context context,
+                                 FragmentManager fragmentManager) {
+        mIsUserMe = isUserMe;
         mConsolidatedMap = createConsolidatedMap(userCourseDetail);
         mContext = context;
         mFragmentManager = fragmentManager;
@@ -50,6 +57,12 @@ public class ProfileCoursesAdapter extends BaseExpandableListAdapter {
 
         // Iterate through sorted list of UserCourses and add the respective Courses (with course names)
         // to the consolidatedMap, bucketed by term ID
+        // Forcibly insert an empty Shortlist term if there isn't one
+        if (mIsUserMe && !userCourseList.get(0).getTermName().equalsIgnoreCase("shortlist")) {
+            ArrayList<Course> bogusArrayList = new ArrayList<Course>();
+            bogusArrayList.add(new Course());
+            consolidatedMap.put("Shortlist", bogusArrayList);
+        }
         for (UserCourse userCourse : userCourseList) {
             String termName = userCourse.getTermName();
             if (!consolidatedMap.containsKey(termName)) {
@@ -79,10 +92,16 @@ public class ProfileCoursesAdapter extends BaseExpandableListAdapter {
 
     public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-
         final Course course = (Course) getChild(groupPosition, childPosition);
 
-        if (convertView == null) {
+        if (groupPosition == 0 && course.getCode() == null) {
+            // Empty shortlist found. Insert shortlisting instructions.
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.profile_courses_empty_shortlist, parent, false);
+            return convertView;
+        }
+
+        if (convertView == null || convertView.getId() == R.id.empty_shortlist_instructions) {
             // inflate a new view
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.profile_courses_row_item, parent, false);

@@ -12,7 +12,7 @@ import com.uwflow.flow_android.fragment.ProfileScheduleFragment;
 
 public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
     private Bundle mBundle;
-    protected Boolean showUserFriendList;
+    protected Boolean mIsUserMe;
     private static final int USER_PROFILE_TAB_NUMBER = 4;
     private static final int USER_FRIEND_PROFILE_TAB_NUMBER = 3;
 
@@ -23,15 +23,19 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
             "Exams",
     };
 
-    public ProfilePagerAdapter(FragmentManager fm, Bundle bundle, boolean showUserFriendList) {
+    public ProfilePagerAdapter(FragmentManager fm, Bundle bundle, boolean isUserMe) {
         super(fm);
         mBundle = bundle;
-        this.showUserFriendList = showUserFriendList;
+        if (mBundle == null) {
+            mBundle = new Bundle();
+        }
+        mBundle.putBoolean("isUserMe", isUserMe);
+        this.mIsUserMe = isUserMe;
     }
 
     @Override
     public Fragment getItem(int position) {
-        if (!showUserFriendList) {
+        if (!mIsUserMe) {
             position++;
         }
         Fragment fragment = null;
@@ -55,7 +59,7 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        if (showUserFriendList) {
+        if (mIsUserMe) {
             return USER_PROFILE_TAB_NUMBER;
         } else {
             return USER_FRIEND_PROFILE_TAB_NUMBER;
@@ -64,7 +68,7 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if (!showUserFriendList) {
+        if (!mIsUserMe) {
             position++;
         }
         return TITLES[position];

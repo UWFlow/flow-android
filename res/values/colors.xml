@@ -5,6 +5,7 @@
     <color name="flow_lighter_blue">#C2E9F7</color>
     <color name="flow_dark_blue">#ff20a3d9</color>
     <color name="divider">#DADADA</color>
+    <color name="grey_dark">#777777</color>
     <color name="grey_light">#CCCCCC</color>
     <color name="grey_lighter">#E5E5E5</color>
     <color name="grey_lightest">#EEEEEE</color>

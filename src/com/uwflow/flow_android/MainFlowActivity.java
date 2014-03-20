@@ -171,10 +171,7 @@ public class MainFlowActivity extends FlowActivity {
             case(Constants.NAV_DRAWER_SHORTLIST_INDEX) :
                 // TODO: implement ShortlistFragment
 //                fragment = new ShortlistFragment();
-                fragment = new ProfileFragment();
-                Bundle bundle = new Bundle();
-                bundle.putInt(Constants.TAB_ID, Constants.PROFILE_COURSES_PAGE_INDEX);
-                fragment.setArguments(bundle);
+                fragment = ProfileFragment.newInstance(null, Constants.PROFILE_COURSES_PAGE_INDEX);
                 break;
             case(Constants.NAV_DRAWER_ABOUT_INDEX) :
                 fragment = new AboutFragment();

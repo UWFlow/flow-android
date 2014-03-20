@@ -28,6 +28,7 @@ import com.uwflow.flow_android.util.FacebookUtilities;
 public class ProfileFragment extends Fragment {
     private String mProfileID;
     private ProfilePagerAdapter profilePagerAdapter;
+    private boolean mIsUserMe;
 
     protected ImageView userPhotoImageView;
     private ImageView coverPhotoImageView;
@@ -56,27 +57,31 @@ public class ProfileFragment extends Fragment {
     /**
      * Static method to instantiate this class with arguments passed as a bundle.
      *
-     * @param userId The ID of the user to show.
+     * @param userID The ID of the user to show.
+     * @param tabID The ID of the initial tab to show
      * @return A new instance.
      */
-    public static ProfileFragment newInstance(String userId) {
+    public static ProfileFragment newInstance(String userID, Integer tabID) {
         ProfileFragment profileFragment = new ProfileFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.PROFILE_ID_KEY, userId);
+        if (tabID != null) {
+            bundle.putInt(Constants.TAB_ID, tabID);
+        }
+        if (userID != null) {
+            bundle.putString(Constants.PROFILE_ID_KEY, userID);
+        }
         profileFragment.setArguments(bundle);
 
         return profileFragment;
     }
 
+    public static ProfileFragment newInstance(String userId) {
+        return newInstance(userId, null);
+    }
+
     public static ProfileFragment newInstance(User user) {
-        ProfileFragment profileFragment = new ProfileFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.USER, user);
-        profileFragment.setArguments(bundle);
-
-        return profileFragment;
+        return newInstance(user.getId());
     }
 
     @Override
@@ -90,11 +95,7 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.profile_layout, container, false);
-        user = getArguments() != null ? (User) getArguments().getSerializable(Constants.USER) : null;
-        if (user != null)
-            mProfileID = user.getId();
-        else
-            mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
+        mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
 
         flowImageLoader = new FlowImageLoader(getActivity().getApplicationContext());
 
@@ -106,17 +107,21 @@ public class ProfileFragment extends Fragment {
         // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
         viewPager.setOffscreenPageLimit(3);
 
-        if (mProfileID == null)
-            profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), true);
-        else
-            profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), false);
+        mIsUserMe = mProfileID == null;
+
+        profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), mIsUserMe);
 
         viewPager.setAdapter(profilePagerAdapter);
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
         tabs.setViewPager(viewPager);
-        // Set default tab to Schedule
-        if (mProfileID == null)
+
+        Integer tabID = getArguments() != null? getArguments().getInt(Constants.TAB_ID) : null;
+        if (tabID == null) {
+            // Set default tab to Schedule
             viewPager.setCurrentItem(Constants.PROFILE_SCHEDULE_PAGE_INDEX);
+        } else {
+            viewPager.setCurrentItem(tabID);
+        }
 
 
         profileReceiver = new ProfileReceiver();
@@ -162,6 +167,7 @@ public class ProfileFragment extends Fragment {
     protected void fetchProfileInfo() {
         fetchCompleted = true;
         if (mProfileID == null) {
+            mIsUserMe = true;
             // Load logged-in users profile if an ID is unspecified.
             initLoaders();
         } else {
