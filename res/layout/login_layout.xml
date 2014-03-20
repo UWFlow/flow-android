@@ -14,19 +14,11 @@
                 android:src="@drawable/flow_logo"
                 android:layout_width="fill_parent"
                 android:layout_height="80dp"
-                android:layout_marginBottom="120dp"
-                />
-
+                android:layout_marginBottom="120dp" />
         <com.facebook.widget.LoginButton
                 android:id="@+id/login_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                facebook:fetch_user_info="true"/>
-        <Button style="@style/Flow.StyledButton"
-                android:id="@+id/temp_skip_login"
-                android:layout_width="212dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Skip Login" />
+                facebook:fetch_user_info="true" />
     </LinearLayout>
 </LinearLayout>

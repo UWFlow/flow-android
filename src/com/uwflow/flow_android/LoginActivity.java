@@ -66,16 +66,6 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
         if (FlowAsyncClient.getSessionCookie() != null) {
             loadDataAndLogin(null);
         }
-
-        // TEMPORARY while the login isn't working:
-        Button skipLoginButton = (Button) findViewById(R.id.temp_skip_login);
-        skipLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
-                LoginActivity.this.startActivity(myIntent);
-            }
-        });
     }
 
     protected void loadDataAndLogin(JSONObject response) {
