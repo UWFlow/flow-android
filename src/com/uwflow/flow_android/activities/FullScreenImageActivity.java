@@ -32,7 +32,7 @@ public class FullScreenImageActivity extends FlowActivity {
         if (scheduleImage != null) {
             Bitmap bitmap = scheduleImage.getImage();
             if (bitmap != null) {
-                mImageView.setImageBitmap(HelperUtil.rotateBitmap(bitmap, 90));
+                mImageView.setImageBitmap(bitmap);
             }
         }
     }
