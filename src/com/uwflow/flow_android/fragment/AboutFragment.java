@@ -1,7 +1,12 @@
 package com.uwflow.flow_android.fragment;
 
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +32,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     private ImageView profilePic2;
     private ImageView profilePic3;
     private ImageView profilePic4;
+    private Button UWFlowButton;
+    private TextView versionNameTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +46,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         profilePic2 = (ImageView)rootView.findViewById(R.id.user_image_2);
         profilePic3 = (ImageView)rootView.findViewById(R.id.user_image_3);
         profilePic4 = (ImageView)rootView.findViewById(R.id.user_image_4);
+        UWFlowButton = (Button)rootView.findViewById(R.id.uwflow_button);
+        versionNameTextView = (TextView)rootView.findViewById(R.id.version_name);
 
         flowImageLoader = new FlowImageLoader(getActivity().getApplicationContext());
 
@@ -53,10 +62,22 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         flowImageLoader.loadImageInto(String.format(Constants.FB_PROFILE_PIC_LARGE_URL_FORMAT, Constants.FBID_WENTAO), profilePic3);
         flowImageLoader.loadImageInto(String.format(Constants.FB_PROFILE_PIC_LARGE_URL_FORMAT, Constants.FBID_CHINMAY), profilePic4);
 
+        // Make profile pictures clickable
         profilePic1.setOnClickListener(this);
         profilePic2.setOnClickListener(this);
         profilePic3.setOnClickListener(this);
         profilePic4.setOnClickListener(this);
+
+        // Make uwflow.com button clickable
+        UWFlowButton.setOnClickListener(this);
+
+        // Fetch and load current version number into TextView
+        try {
+            versionNameTextView.setText(String.format("Version: %s",
+                    getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(Constants.UW_FLOW, "Couldn't resolve version name: " + e);
+        }
     }
 
     @Override
@@ -75,6 +96,9 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
             case R.id.user_image_4:
                 fbid = Constants.FBID_CHINMAY;
                 break;
+            case R.id.uwflow_button:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://uwflow.com")));
+                return;
         }
         FacebookUtilities.viewUserOnFacebook(getActivity(), fbid);
     }

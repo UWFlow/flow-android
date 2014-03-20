@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Flow</string>
     <string name="app_id">219309734863464</string>
-
+    <string name="app_version_name">1.0</string>
 
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
@@ -11,6 +11,6 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <string name="explore_sort_prompt">Sort by...</string>
+    <string name="explore_sort_prompt">Sort by…</string>
 
 </resources>
