@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.MenuItem;
@@ -198,15 +199,19 @@ public class MainFlowActivity extends FlowActivity {
         }
         // Handle action buttons
         switch(item.getItemId()) {
+            case R.id.action_refresh:
+                Intent intent = new Intent(Constants.BroadcastActionId.UPDATE_CURRENT_FRAGMENT);
+                LocalBroadcastManager.getInstance(this.getApplicationContext()).sendBroadcast(intent);
+                break;
             case R.id.action_search:
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, new ExploreFragment())
                         .addToBackStack(null)
                         .commit();
+                break;
                 // TODO: mark the Explore page as checked in the nav drawer
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

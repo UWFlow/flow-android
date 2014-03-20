@@ -1,5 +1,6 @@
 package com.uwflow.flow_android.fragment;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,10 +21,7 @@ import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.loaders.*;
-import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
-import com.uwflow.flow_android.network.FlowApiRequests;
-import com.uwflow.flow_android.network.FlowImageLoader;
-import com.uwflow.flow_android.network.FlowImageLoaderCallback;
+import com.uwflow.flow_android.network.*;
 import com.uwflow.flow_android.util.FacebookUtilities;
 
 public class ProfileFragment extends Fragment {
@@ -31,7 +30,7 @@ public class ProfileFragment extends Fragment {
     private boolean mIsUserMe;
 
     protected ImageView userPhotoImageView;
-    private ImageView coverPhotoImageView;
+    protected ImageView coverPhotoImageView;
     protected TextView userName;
     protected TextView userProgram;
     protected ViewPager viewPager;
@@ -42,14 +41,16 @@ public class ProfileFragment extends Fragment {
     protected UserCourseDetail userCourses;
     protected ScheduleCourses userSchedule;
     protected ProfileReceiver profileReceiver;
+    protected UpdateReceiver updateReceiver;
     protected Bitmap userCover;
     protected Bitmap userProfileImage;
     protected FlowImageLoader flowImageLoader;
-
+    protected FlowDatabaseLoader flowDatabaseLoader;
+    protected ProgressDialog loadingDialog;
     // for having hard reference to callbacks so they dont get garbage recycled
     protected FlowImageLoaderCallback userCoverCallback;
     protected FlowImageLoaderCallback userProfileCallback;
-
+    protected FlowResultCollector collector;
 
     // only fetch data once
     protected boolean fetchCompleted = false;
@@ -95,17 +96,12 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.profile_layout, container, false);
-        mProfileID = getArguments() != null ? getArguments().getString(Constants.PROFILE_ID_KEY) : null;
-
-        flowImageLoader = new FlowImageLoader(getActivity().getApplicationContext());
 
         userPhotoImageView = (ImageView) rootView.findViewById(R.id.user_image);
         userName = (TextView) rootView.findViewById(R.id.user_name);
         userProgram = (TextView) rootView.findViewById(R.id.user_program);
         coverPhotoImageView = (ImageView) rootView.findViewById(R.id.cover_photo);
         viewPager = (ViewPager) rootView.findViewById(R.id.pager);
-        // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
-        viewPager.setOffscreenPageLimit(3);
 
         mIsUserMe = mProfileID == null;
 
@@ -123,12 +119,28 @@ public class ProfileFragment extends Fragment {
             viewPager.setCurrentItem(tabID);
         }
 
+        init();
+        if (getArguments() != null) {
+            final Bundle args = getArguments();
+            setUser((User) args.getSerializable(Constants.USER));
+            if (user != null)
+                mProfileID = user.getId();
+            else
+                mProfileID = getArguments() != null ? args.getString(Constants.PROFILE_ID_KEY) : null;
+        }
 
-        profileReceiver = new ProfileReceiver();
-        initCallback();
-        populateData();
-        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(profileReceiver,
-                new IntentFilter(Constants.BroadcastActionId.UPDATE_PROFILE_USER));
+        if (mProfileID == null) {
+            viewPager.setCurrentItem(Constants.PROFILE_SCHEDULE_PAGE_INDEX);
+            profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), true);
+        } else {
+            profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), false);
+        }
+        // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setAdapter(profilePagerAdapter);
+        tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
+        tabs.setViewPager(viewPager);
+
         if (!fetchCompleted) fetchProfileInfo();
         return rootView;
     }
@@ -171,8 +183,21 @@ public class ProfileFragment extends Fragment {
             // Load logged-in users profile if an ID is unspecified.
             initLoaders();
         } else {
-            initLoadFromNetwork(mProfileID);
+            initLoadFromNetwork(mProfileID, false);
         }
+    }
+
+    @Override
+    public void onResume() {
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(updateReceiver,
+                new IntentFilter(Constants.BroadcastActionId.UPDATE_CURRENT_FRAGMENT));
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(updateReceiver);
+        super.onPause();
     }
 
     protected void initLoaders() {
@@ -188,38 +213,53 @@ public class ProfileFragment extends Fragment {
         getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_COURSES_LOADER_ID, null, userCoursesLoaderCallback);
     }
 
-    protected void initLoadFromNetwork(final String uid) {
-        if (uid == null)
-            return;
+    protected void initLoadFromNetwork(final String uid, boolean sync) {
+        // Triggered by the refresh button, need to wait for async results
+        if (sync) {
+            loadingDialog = new ProgressDialog(ProfileFragment.this.getActivity());
+            loadingDialog.setTitle("Refreshing...");
+            loadingDialog.setMessage("Loading ...");
+            loadingDialog.show();
+            userCover = null;
+            collector = new FlowResultCollector(4, new ResultCollectorCallback() {
+                @Override
+                public void loadOrReloadCompleted() {
+                    loadingDialog.dismiss();
+                    collector = null;
+                }
+            });
+            collector.startTimer();
+        }
 
-        // we might have the cached user data already
-        if (user == null) {
+        if (user == null || collector != null) {
             FlowApiRequests.getUser(
                     uid,
                     new FlowApiRequestCallbackAdapter() {
                         @Override
                         public void getUserCallback(User user) {
+                            if (collector != null) collector.setState(0, true);
                             setUser(user);
+                        }
+
+                        @Override
+                        public void onFailure(String error) {
+                            if (collector != null) collector.setState(0, true);
                         }
                     });
         }
-
-        // Get user data
-        FlowApiRequests.getUser(
-                uid,
-                new FlowApiRequestCallbackAdapter() {
-                    @Override
-                    public void getUserCallback(User user) {
-                        setUser(user);
-                    }
-                });
 
         FlowApiRequests.getUserSchedule(
                 uid,
                 new FlowApiRequestCallbackAdapter() {
                     @Override
                     public void getUserScheduleCallback(ScheduleCourses scheduleCourses) {
+                        if (collector != null) collector.setState(1, true);
                         setUserSchedule(scheduleCourses);
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        if (collector != null) collector.setState(1, true);
                     }
                 });
         FlowApiRequests.getUserExams(
@@ -227,7 +267,13 @@ public class ProfileFragment extends Fragment {
                 new FlowApiRequestCallbackAdapter() {
                     @Override
                     public void getUserExamsCallback(Exams exams) {
+                        if (collector != null) collector.setState(2, true);
                         setUserExams(exams);
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        if (collector != null) collector.setState(2, true);
                     }
                 });
         FlowApiRequests.getUserCourses(
@@ -235,25 +281,36 @@ public class ProfileFragment extends Fragment {
                 new FlowApiRequestCallbackAdapter() {
                     @Override
                     public void getUserCoursesCallback(UserCourseDetail userCourseDetail) {
+                        if (collector != null) collector.setState(3, true);
                         setUserCourses(userCourseDetail);
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        if (collector != null) collector.setState(3, true);
                     }
                 });
     }
 
-    protected void initCallback(){
+    protected void init() {
+        flowImageLoader = new FlowImageLoader(getActivity().getApplicationContext());
+        flowDatabaseLoader = new FlowDatabaseLoader(getActivity().getApplicationContext(), ((MainFlowActivity) getActivity()).getHelper());
+        profileReceiver = new ProfileReceiver();
+        updateReceiver = new UpdateReceiver();
         userCoverCallback = new FlowImageLoaderCallback() {
             @Override
             public void onImageLoaded(Bitmap bitmap) {
                 userCover = bitmap;
             }
         };
-
         userProfileCallback = new FlowImageLoaderCallback() {
             @Override
             public void onImageLoaded(Bitmap bitmap) {
                 userProfileImage = bitmap;
             }
         };
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(profileReceiver,
+                new IntentFilter(Constants.BroadcastActionId.UPDATE_PROFILE_USER));
     }
 
     protected void populateData() {
@@ -268,12 +325,6 @@ public class ProfileFragment extends Fragment {
         if (user == null)
             return;
 
-        if (userCover == null) {
-            if (user.getFbid() != null)
-                FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), user.getFbid(), coverPhotoImageView,
-                        userCoverCallback);
-        }
-
         if (userProfileImage == null && user.getProfilePicUrls() != null) {
             flowImageLoader.loadImage(user.getProfilePicUrls().getLarge(), userPhotoImageView, userProfileCallback);
 
@@ -283,23 +334,21 @@ public class ProfileFragment extends Fragment {
         userProgram.setText(user.getProgramName());
     }
 
-    protected class ProfileReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            populateData();
-        }
-    }
-
     // Getters and Setters for child fragment to pull data
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
-        if (this.user == null) {
-            this.user = user;
-            fireUserBroadcast();
+        if (user == null)
+            return;
+        this.user = user;
+        if (userCover == null && user.getFbid() != null) {
+            FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), user.getFbid(), coverPhotoImageView,
+                    userCoverCallback);
         }
+        fireUserBroadcast();
+
     }
 
     public UserFriends getUserFriends() {
@@ -307,10 +356,9 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setUserFriends(UserFriends userFriends) {
-        if (this.userFriends == null) {
-            this.userFriends = userFriends;
-            fireUserFriendBroadcast();
-        }
+        this.userFriends = userFriends;
+        fireUserFriendBroadcast();
+
     }
 
     public Exams getUserExams() {
@@ -318,10 +366,9 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setUserExams(Exams userExams) {
-        if (this.userExams == null) {
-            this.userExams = userExams;
-            fireUserExamBroadcast();
-        }
+        this.userExams = userExams;
+        fireUserExamBroadcast();
+
     }
 
     public UserCourseDetail getUserCourses() {
@@ -329,10 +376,9 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setUserCourses(UserCourseDetail userCourses) {
-        if (this.userCourses == null) {
-            this.userCourses = userCourses;
-            fireUserCoursesBroadcast();
-        }
+        this.userCourses = userCourses;
+        fireUserCoursesBroadcast();
+
     }
 
     public ScheduleCourses getUserSchedule() {
@@ -340,10 +386,9 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setUserSchedule(ScheduleCourses userSchedule) {
-        if (this.userSchedule == null) {
-            this.userSchedule = userSchedule;
-            fireUserScheduleBroadcast();
-        }
+        this.userSchedule = userSchedule;
+        fireUserScheduleBroadcast();
+
     }
 
     protected void fireUserBroadcast() {
@@ -384,6 +429,38 @@ public class ProfileFragment extends Fragment {
             return (ProfileFragment) fragment;
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    protected class ProfileReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            populateData();
+        }
+    }
+
+    protected class UpdateReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mProfileID == null) {
+                loadingDialog = new ProgressDialog(ProfileFragment.this.getActivity());
+                loadingDialog.setTitle("Refreshing...");
+                loadingDialog.setMessage("Loading ...");
+                loadingDialog.show();
+                userProfileImage = null;
+                userCover = null;
+                flowImageLoader.clearImageCache();
+                flowDatabaseLoader.loadOrReloadProfileData(new ResultCollectorCallback() {
+                    @Override
+                    public void loadOrReloadCompleted() {
+                        loadingDialog.dismiss();
+                        Intent intent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_FROM_DATABASE);
+                        LocalBroadcastManager.getInstance(ProfileFragment.this.getActivity().getApplicationContext()).sendBroadcast(intent);
+                    }
+                });
+            } else {
+                initLoadFromNetwork(mProfileID, true);
+            }
         }
     }
 }

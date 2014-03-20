@@ -14,13 +14,17 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.activities.FullScreenImageActivity;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.ScheduleCourses;
 import com.uwflow.flow_android.db_object.ScheduleImage;
+import com.uwflow.flow_android.network.FlowDatabaseImageCallback;
 import com.uwflow.flow_android.network.FlowDatabaseLoader;
 import com.uwflow.flow_android.network.FlowImageLoader;
 import com.uwflow.flow_android.network.FlowImageLoaderCallback;
@@ -37,6 +41,12 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
     protected FlowImageLoader flowImageLoader;
     protected FlowDatabaseLoader flowDatabaseLoader;
     protected ScheduleImage scheduleImage;
+    protected ProfileRefreshReceiver updateReceiver;
+    protected ScheduleCourses scheduleCourses;
+    protected ProfileFragment profileFragment;
+
+    // variable used to track if the refresh button is pressed
+    protected boolean forceReloadScheduleImage = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,8 +60,8 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         mImageSchedule = (ImageView) rootView.findViewById(R.id.image_schedule);
         mImageSchedule.setOnClickListener(this);
         mBtnShare = (Button) rootView.findViewById(R.id.btn_share);
-        mEmptyScheduleView = (TextView)rootView.findViewById(R.id.empty_profile_schedule);
-        mScheduleContainer = (LinearLayout)rootView.findViewById(R.id.profile_schedule);
+        mEmptyScheduleView = (TextView) rootView.findViewById(R.id.empty_profile_schedule);
+        mScheduleContainer = (LinearLayout) rootView.findViewById(R.id.profile_schedule);
 
         mBtnShare.setEnabled(false);
         mBtnShare.setOnClickListener(this);
@@ -59,6 +69,7 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         // call this before setting up the receiver
         populateData();
         profileScheduleReceiver = new ProfileScheduleReceiver();
+        updateReceiver = new ProfileRefreshReceiver();
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(profileScheduleReceiver,
                 new IntentFilter(Constants.BroadcastActionId.UPDATE_PROFILE_USER_SCHEDULE));
         return rootView;
@@ -108,17 +119,34 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
     }
 
     protected void populateData() {
-        final ProfileFragment profileFragment = ProfileFragment.convertFragment(getParentFragment());
+        profileFragment = ProfileFragment.convertFragment(getParentFragment());
         if (profileFragment == null)
             return;
-        ScheduleCourses scheduleCourses = profileFragment.getUserSchedule();
-        scheduleImage = flowDatabaseLoader.queryUserScheduleImage(profileFragment.getProfileID());
-        if (scheduleImage != null) {
-            mImageSchedule.setImageBitmap(scheduleImage.getImage());
-            toggleShowSchedule(true);
-        } else if (scheduleCourses != null && scheduleCourses.getScreenshotUrl() != null) {
-            // assume the URL is valid and an image will be returned
-            // TODO: change this conditional to 'if the image is successfully fetched'
+        scheduleCourses = profileFragment.getUserSchedule();
+        flowDatabaseLoader.queryUserScheduleImage(profileFragment.getProfileID(),
+                new FlowDatabaseImageCallback() {
+                    @Override
+                    public void onScheduleImageLoaded(ScheduleImage image) {
+                        scheduleImage = image;
+                        if (scheduleImage != null && forceReloadScheduleImage == false) {
+                            mImageSchedule.setImageBitmap(scheduleImage.getImage());
+                            toggleShowSchedule(true);
+                        } else if (scheduleCourses != null && scheduleCourses.getScreenshotUrl() != null) {
+                            // assume the URL is valid and an image will be returned
+                            // TODO: change this conditional to 'if the image is successfully fetched'
+                            loadScheduleImage();
+                        } else if (scheduleCourses == null) {
+                            // No schedule, load an empty state
+                            // TODO(david): Don't show this if the schedule is still loading from network
+                            toggleShowSchedule(false);
+                        }
+                        forceReloadScheduleImage = false;
+                    }
+                });
+    }
+
+    protected void loadScheduleImage() {
+        if (scheduleCourses != null && scheduleCourses.getScreenshotUrl() != null) {
             mScheduleImageURL = scheduleCourses.getScreenshotUrl();
             scheduleImageCallback = new FlowImageLoaderCallback() {
                 @Override
@@ -132,17 +160,35 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
                 }
             };
             flowImageLoader.loadImage(mScheduleImageURL, mImageSchedule, scheduleImageCallback);
-        } else if (scheduleCourses == null) {
-            // No schedule, load an empty state
-            // TODO(david): Don't show this if the schedule is still loading from network
-            toggleShowSchedule(false);
         }
+    }
+
+    @Override
+    public void onResume() {
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(updateReceiver,
+                new IntentFilter(Constants.BroadcastActionId.UPDATE_CURRENT_FRAGMENT));
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(updateReceiver);
+        super.onPause();
+
     }
 
     protected class ProfileScheduleReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             populateData();
+        }
+    }
+
+    protected class ProfileRefreshReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // will reload new schedule image from network
+            forceReloadScheduleImage = true;
         }
     }
 }

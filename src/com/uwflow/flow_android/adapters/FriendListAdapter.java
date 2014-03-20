@@ -63,7 +63,7 @@ public class FriendListAdapter extends BaseAdapter {
         first.setText(user.getName());
         second.setText(mList.get(position).getTermName());
 
-        flowImageLoader.loadImageInto(user.getProfilePicUrls().getLarge(), image);
+        flowImageLoader.loadImageListView(user.getProfilePicUrls().getLarge(), image);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override

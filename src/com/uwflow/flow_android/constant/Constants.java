@@ -59,6 +59,8 @@ public class Constants {
         public static final String UPDATE_PROFILE_USER_SCHEDULE = "UpdateProfileUserSchedule";
         public static final String UPDATE_PROFILE_USER_EXAMS = "UpdateProfileUserExams";
         public static final String UPDATE_PROFILE_USER_COURSES = "UpdateProfileUserCourses";
+        public static final String UPDATE_CURRENT_FRAGMENT = "updateCurrentFragment";
+        public static final String UPDATE_PROFILE_FROM_DATABASE = "updateProfileFromDatabase";
     }
 
     public static final String UW_FLOW = "uwflow";
