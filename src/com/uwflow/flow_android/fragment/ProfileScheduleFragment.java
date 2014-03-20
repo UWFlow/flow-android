@@ -26,12 +26,8 @@ import com.uwflow.flow_android.network.FlowImageLoaderCallback;
 
 public class ProfileScheduleFragment extends Fragment implements View.OnClickListener {
     private String mScheduleImageURL;
-    private RadioGroup mRadioGroup;
     private ImageView mImageSchedule;
-    private Button mBtnExportCal;
     private Button mBtnShare;
-    private LinearLayout mScheduleListLayout;
-    private LinearLayout mScheduleWeekLayout;
     private View rootView;
     private ProfileScheduleReceiver profileScheduleReceiver;
     private TextView mEmptyScheduleView;
@@ -50,37 +46,16 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
         flowDatabaseLoader = new FlowDatabaseLoader(getActivity().getApplicationContext(),
                 ((MainFlowActivity) getActivity()).getHelper());
         scheduleImage = new ScheduleImage();
-        mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radio_group_view);
         mImageSchedule = (ImageView) rootView.findViewById(R.id.image_schedule);
         mImageSchedule.setOnClickListener(this);
         mImageSchedule.setScaleType(ImageView.ScaleType.FIT_XY);
-        mBtnExportCal = (Button) rootView.findViewById(R.id.btn_export_calendar);
         mBtnShare = (Button) rootView.findViewById(R.id.btn_share);
-        mScheduleListLayout = (LinearLayout) rootView.findViewById(R.id.list_layout);
-        mScheduleWeekLayout = (LinearLayout) rootView.findViewById(R.id.week_layout);
         mEmptyScheduleView = (TextView)rootView.findViewById(R.id.empty_profile_schedule);
         mScheduleContainer = (LinearLayout)rootView.findViewById(R.id.profile_schedule);
 
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.radio_list_view:
-                        // List layout selected
-                        mScheduleListLayout.setVisibility(View.VISIBLE);
-                        mScheduleWeekLayout.setVisibility(View.GONE);
-                        break;
-                    case R.id.radio_week_view:
-                        // Week layout selected
-                        mScheduleListLayout.setVisibility(View.GONE);
-                        mScheduleWeekLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
         mBtnShare.setEnabled(false);
         mBtnShare.setOnClickListener(this);
-        mBtnExportCal.setOnClickListener(this);
+
         // call this before setting up the receiver
         populateData();
         profileScheduleReceiver = new ProfileScheduleReceiver();
@@ -92,9 +67,6 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_export_calendar:
-                // TODO: handle calendar export
-                break;
             case R.id.btn_share:
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
