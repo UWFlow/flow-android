@@ -13,4 +13,6 @@
 
     <string name="explore_sort_prompt">Sort by…</string>
 
+    <string name="skip_login_text"><u>Explore courses »</u></string>
+
 </resources>

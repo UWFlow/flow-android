@@ -63,6 +63,7 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
             }
         });
 
+        // TODO(david): Also ensure session cookie hasn't expired
         if (FlowAsyncClient.getSessionCookie() != null) {
             loadDataAndLogin(null);
         }
