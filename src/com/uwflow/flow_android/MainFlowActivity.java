@@ -30,6 +30,7 @@ public class MainFlowActivity extends FlowActivity {
     private LinearLayout mLogOutLayout;
     private NavDrawerAdapter mNavDrawerAdapter;
     private ArrayList<NavDrawerItem> mDrawerItems;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +62,8 @@ public class MainFlowActivity extends FlowActivity {
 
                 // Remove flow cookies
                 FlowAsyncClient.clearCookie();
+
+                ((FlowApplication)getApplication()).setUserLoggedIn(false);
 
                 Intent intent = new Intent(MainFlowActivity.this, LoginActivity.class);
                 intent.putExtra("finish", true);
@@ -95,11 +98,16 @@ public class MainFlowActivity extends FlowActivity {
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        Fragment profileFrag = new ProfileFragment();
+        Fragment initialFragment;
+        if (((FlowApplication)getApplication()).isUserLoggedIn()) {
+            initialFragment = new ProfileFragment();
+        } else {
+            initialFragment = new ExploreFragment();
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.content_frame, profileFrag)
+                .add(R.id.content_frame, initialFragment)
                 .commit();
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
