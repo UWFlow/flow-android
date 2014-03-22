@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import com.uwflow.flow_android.FlowApplication;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.SearchResultAdapter;
 import com.uwflow.flow_android.db_object.Course;
@@ -74,9 +75,18 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mResultsListView.setAdapter(mSearchResultAdapter);
         mResultsListView.setOnItemClickListener(this);
 
+        Set<String> sortModes = new LinkedHashSet<String>(mSortModesMap.keySet());
+
+        // Hide various controls for logged out users
+        boolean isUserLoggedIn = ((FlowApplication)getActivity().getApplication()).isUserLoggedIn();
+        if (!isUserLoggedIn) {
+            sortModes.remove("Friends taken");
+            mExcludeTakenCheckBox.setVisibility(View.GONE);
+        }
+
         // Populate the sort spinner
         mSortModesAdapter = new ArrayAdapter <CharSequence>(getActivity(), android.R.layout.simple_spinner_item,
-                mSortModesMap.keySet().toArray(new CharSequence[0]));
+                sortModes.toArray(new CharSequence[0]));
         mSortModesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSortSpinner.setAdapter(mSortModesAdapter);
 
