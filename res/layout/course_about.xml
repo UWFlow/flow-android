@@ -42,7 +42,19 @@
                   android:textSize="20dp"
                   android:gravity="center_horizontal"
                   android:padding="7dp"
-                  android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"/>
+        <Button
+                android:id="@+id/course_about_login_btn"
+                android:text="Log in to see who took this"
+                style="@style/Flow.StyledButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"
+                />
         <LinearLayout android:id="@+id/friend_list"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"

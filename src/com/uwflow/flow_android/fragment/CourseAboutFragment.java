@@ -2,6 +2,7 @@ package com.uwflow.flow_android.fragment;
 
 //import android.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -10,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.uwflow.flow_android.FlowApplication;
+import com.uwflow.flow_android.LoginActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.FriendListAdapter;
 import com.uwflow.flow_android.constant.Constants;
@@ -43,22 +46,22 @@ public class CourseAboutFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			     Bundle savedInstanceState) {
-	Bundle args = getArguments();
-	if (args != null) {
-	    mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
-	} else {
-	    Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
-	}
+                             Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        if (args != null) {
+            mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
+        } else {
+            Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
+        }
 
-	// Inflate the layout for this fragment
-	View rootView = inflater.inflate(R.layout.course_about, container, false);
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.course_about, container, false);
 
         mFriendListContainer = (LinearLayout)rootView.findViewById(R.id.friend_list);
-	mFriendListTextView = (TextView)rootView.findViewById(R.id.friend_list_title);
+        mFriendListTextView = (TextView)rootView.findViewById(R.id.friend_list_title);
         mParentViewPager = (ViewPager)getActivity().findViewById(R.id.pager);
-	mDescTextView = (TextView)rootView.findViewById(R.id.course_desc);
-	mRatingOverviewLayout = (LinearLayout) rootView.findViewById(R.id.rating_overview);
+        mDescTextView = (TextView)rootView.findViewById(R.id.course_desc);
+        mRatingOverviewLayout = (LinearLayout) rootView.findViewById(R.id.rating_overview);
 
         // Configure "See individual reviews" button to point to the course reviews tab
         Button individualReviewsButton = (Button)rootView.findViewById(R.id.see_reviews_btn);
@@ -69,7 +72,21 @@ public class CourseAboutFragment extends Fragment {
             }
         });
 
-	return rootView;
+        // Show log in button if user's logged out
+        if (!((FlowApplication) getActivity().getApplication()).isUserLoggedIn()) {
+            Button loginButton = (Button) rootView.findViewById(R.id.course_about_login_btn);
+            loginButton.setVisibility(View.VISIBLE);
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
+            rootView.findViewById(R.id.friend_list_title).setVisibility(View.GONE);
+        }
+
+        return rootView;
     }
 
     @Override
