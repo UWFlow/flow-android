@@ -2,6 +2,7 @@
 
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/image_full_screen_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
     <com.uwflow.flow_android.custom_view.TouchImageView

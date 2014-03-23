@@ -2,13 +2,14 @@ package com.uwflow.flow_android.activities;
 
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.widget.ImageView;
 import com.uwflow.flow_android.FlowActivity;
 import com.uwflow.flow_android.R;
+import com.uwflow.flow_android.custom_view.TouchImageView;
 import com.uwflow.flow_android.db_object.ScheduleImage;
 import com.uwflow.flow_android.network.FlowDatabaseLoader;
-import com.uwflow.flow_android.util.HelperUtil;
 
 public class FullScreenImageActivity extends FlowActivity {
     private ImageView mImageView;
@@ -32,6 +33,18 @@ public class FullScreenImageActivity extends FlowActivity {
         if (scheduleImage != null) {
             Bitmap bitmap = scheduleImage.getImage();
             if (bitmap != null) {
+                // When entering fullscreen mode, ensure schedule is full height
+                int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+                int statusBarHeight = resourceId > 0 ? getResources().getDimensionPixelSize(resourceId) : 50;
+                Point displaySize = new Point();
+                getWindowManager().getDefaultDisplay().getSize(displaySize);
+                int screenWidth = displaySize.x;
+                int screenHeight = displaySize.y - statusBarHeight;
+                double scaledHeight = bitmap.getHeight() * ((double) screenWidth / bitmap.getWidth());
+                double zoomFactor = (double) screenHeight / scaledHeight;
+                ((TouchImageView) mImageView).setZoom((float) zoomFactor, 0, 0);
+
+                // TODO(david): Figure out why some schedules get downscaled on Mack's phone
                 mImageView.setImageBitmap(bitmap);
             }
         }
