@@ -70,7 +70,6 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
                 ((FlowApplication)getApplication()).setUserLoggedIn(false);
                 Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
                 LoginActivity.this.startActivity(myIntent);
-                finish();
             }
         });
 

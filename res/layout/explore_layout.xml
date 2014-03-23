@@ -8,56 +8,58 @@
         >
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:orientation="horizontal"
+                  android:orientation="vertical"
                   android:gravity="center"
-                  android:background="@color/flow_blue"
-                  android:paddingTop="10dp"
-                  android:paddingBottom="10dp"
+                  android:paddingTop="5dp"
+                  android:paddingBottom="5dp"
                   android:paddingLeft="15dp"
                   android:paddingRight="15dp"
-            >
-        <ImageView android:layout_width="35dp"
-                   android:layout_height="35dp"
-                   android:src="@drawable/ic_drawer_search_white"
-                   android:paddingRight="10dp" />
-        <EditText android:id="@+id/search_box"
-                  android:imeOptions="actionSearch"
-                  android:inputType="text"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_weight="1"
-                  android:textSize="22dp"
-                  android:singleLine="true"
-                  android:textColor="@color/white"
-                  android:textColorHint="@color/flow_lighter_blue"
-                  android:hint="eg. econ101, cs"/>
-    </LinearLayout>
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="horizontal"
-                  android:gravity="center"
-                  android:paddingLeft="15dp"
-                  android:paddingRight="15dp"
-                  android:background="@color/grey_lighter">
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Sort by: "/>
+                  android:background="@color/flow_blue">
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:gravity="center"
+                      android:background="@color/flow_blue">
+            <ImageView android:layout_width="35dp"
+                       android:layout_height="35dp"
+                       android:src="@drawable/ic_drawer_search_white"
+                       android:paddingRight="10dp" />
+            <EditText android:id="@+id/search_box"
+                      android:imeOptions="actionSearch"
+                      android:inputType="text"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:textSize="22dp"
+                      android:singleLine="true"
+                      android:textColor="@color/white"
+                      android:textColorHint="@color/flow_lighter_blue"
+                      android:hint="eg. econ101, cs"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:gravity="center"
+                      android:paddingLeft="15dp"
+                      android:paddingRight="15dp"
+                      android:background="@color/flow_blue">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textColor="@color/grey_lightest"
+                      android:text="Sort by: "/>
 
-        <Spinner android:id="@+id/sort_spinner"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:prompt="@string/explore_sort_prompt"
-                />
-    </LinearLayout>
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="horizontal"
-                  android:gravity="center"
-                  android:background="@color/grey_lighter">
+            <Spinner android:id="@+id/sort_spinner"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:textColor="@color/white"
+                     android:prompt="@string/explore_sort_prompt"
+                    />
+        </LinearLayout>
         <CheckBox android:id="@+id/checkbox_exclude_taken"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="Exclude courses I've taken"
+                  android:textColor="@color/white"
                   android:checked="false"/>
     </LinearLayout>
     <ListView android:id="@+id/results_list"

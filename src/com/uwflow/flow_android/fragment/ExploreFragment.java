@@ -102,6 +102,8 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.white));
+
                 // Android stupidly fires this listener on create of the spinner. This is used to ignore that.
                 if (!mSortSpinnerFired) {
                     mSortSpinnerFired = true;
