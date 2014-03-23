@@ -13,6 +13,6 @@
 
     <string name="explore_sort_prompt">Sort by…</string>
 
-    <string name="skip_login_text"><u>Skip login »</u></string>
+    <string name="skip_login_text"><u>Or skip login</u></string>
 
 </resources>
