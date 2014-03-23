@@ -93,6 +93,7 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
         loadingDialog = new ProgressDialog(this);
         loadingDialog.setTitle("Logging In");
         loadingDialog.setMessage("Loading ...");
+        loadingDialog.setCanceledOnTouchOutside(false);
         loadingDialog.show();
 
         databaseLoader.loadOrReloadProfileData(new ResultCollectorCallback() {
