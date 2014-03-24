@@ -128,6 +128,7 @@ public class ProfileFragment extends Fragment {
         tabs.setViewPager(viewPager);
 
         if (!fetchCompleted) fetchProfileInfo();
+        populateData();
         return rootView;
     }
 

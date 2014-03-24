@@ -53,6 +53,7 @@ public class ProfileFriendFragment extends Fragment {
             mProfileFriendAdapter = new ProfileFriendAdapter(friends.getFriends(),
                     getActivity(), getActivity().getSupportFragmentManager());
             mProfileFriendList.setAdapter(mProfileFriendAdapter);
+            mProfileFriendList.invalidate();
         }
     }
 
