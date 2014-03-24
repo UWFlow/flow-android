@@ -2,13 +2,16 @@ package com.uwflow.flow_android.loaders;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.LocalBroadcastManager;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 
 public abstract class FlowAbstractDataLoader<T extends Object> extends AsyncTaskLoader<T> {
     protected T mLastData = null;
 
     protected abstract T loadDelegate();
+
     protected FlowDatabaseHelper flowDatabaseHelper;
+    protected LoaderUpdateReceiver loaderUpdateReceiver;
 
     public FlowAbstractDataLoader(Context context, FlowDatabaseHelper flowDatabaseHelper) {
         super(context);
@@ -57,6 +60,12 @@ public abstract class FlowAbstractDataLoader<T extends Object> extends AsyncTask
         if (mLastData != null) {
             deliverResult(mLastData);
         }
+
+        // Start watching for changes in the app data.
+        if (loaderUpdateReceiver == null) {
+            loaderUpdateReceiver = new LoaderUpdateReceiver(this);
+        }
+
         if (takeContentChanged() || mLastData == null) {
             forceLoad();
         }
@@ -91,5 +100,11 @@ public abstract class FlowAbstractDataLoader<T extends Object> extends AsyncTask
         // Ensure the loader is stopped
         onStopLoading();
         mLastData = null;
+
+        if (loaderUpdateReceiver != null) {
+            LocalBroadcastManager.getInstance(this.getContext().getApplicationContext()).unregisterReceiver(loaderUpdateReceiver);
+            loaderUpdateReceiver = null;
+        }
+
     }
 }

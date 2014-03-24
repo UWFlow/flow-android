@@ -1,11 +1,15 @@
 package com.uwflow.flow_android.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,9 +54,11 @@ public class CourseFragment extends Fragment {
     private CourseReviewsFragment mCourseReviewsFragment;
 
     private UserCourseDetail userCourseDetail;
+    private CourseUpdateReceiver courseUpdateReceiver;
 
     /**
      * Static method to instantiate this class with arguments passed as a bundle.
+     *
      * @param courseId The ID of the course to show.
      * @return A new instance.
      */
@@ -71,6 +77,24 @@ public class CourseFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (mCourseScheduleFragment == null) {
+            mCourseScheduleFragment = new CourseScheduleFragment();
+            mCourseScheduleFragment.setArguments(getArguments());
+        }
+        if (mCourseAboutFragment == null) {
+            mCourseAboutFragment = new CourseAboutFragment();
+            mCourseAboutFragment.setArguments(getArguments());
+        }
+        if (mCourseReviewsFragment == null) {
+            mCourseReviewsFragment = new CourseReviewsFragment();
+            mCourseReviewsFragment.setArguments(getArguments());
+        }
+        courseUpdateReceiver = new CourseUpdateReceiver();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.course_layout, container, false);
@@ -78,26 +102,19 @@ public class CourseFragment extends Fragment {
         mCourseNameTextView = (TextView) rootView.findViewById(R.id.course_name);
         mTabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
 
-        mCourseScheduleFragment = new CourseScheduleFragment();
-	mCourseScheduleFragment.setArguments(getArguments());
-        mCourseAboutFragment = new CourseAboutFragment();
-	mCourseAboutFragment.setArguments(getArguments());
-        mCourseReviewsFragment = new CourseReviewsFragment();
-	mCourseReviewsFragment.setArguments(getArguments());
+        mCoursePagerAdapter = new CoursePagerAdapter(getChildFragmentManager(),
+                mCourseScheduleFragment,
+                mCourseAboutFragment,
+                mCourseReviewsFragment);
 
-	mCoursePagerAdapter = new CoursePagerAdapter(getChildFragmentManager(),
-		mCourseScheduleFragment,
-		mCourseAboutFragment,
-		mCourseReviewsFragment);
-
-	// TODO(david): Should show a spinner here while course info is loading
-	Bundle args = getArguments();
-	if (args != null) {
-	    mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
-	    fetchCourseInfo(mCourseID);
-	} else {
-	    Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
-	}
+        // TODO(david): Should show a spinner here while course info is loading
+        Bundle args = getArguments();
+        if (args != null) {
+            mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
+            fetchCourseInfo(mCourseID);
+        } else {
+            Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
+        }
 
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
         // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
@@ -108,8 +125,8 @@ public class CourseFragment extends Fragment {
         // Set default tab to About
         mViewPager.setCurrentItem(Constants.COURSE_ABOUT_PAGE_INDEX);
 
-        mShortlistButton = (Button)rootView.findViewById(R.id.shortlist_btn);
-        final Button shareButton = (Button)rootView.findViewById(R.id.share_btn);
+        mShortlistButton = (Button) rootView.findViewById(R.id.shortlist_btn);
+        final Button shareButton = (Button) rootView.findViewById(R.id.share_btn);
 
         if (!((FlowApplication)getActivity().getApplication()).isUserLoggedIn()) {
             mShortlistButton.setVisibility(View.GONE);
@@ -158,26 +175,40 @@ public class CourseFragment extends Fragment {
         // Load user course info asynchronously
         final UserCoursesLoaderCallback userCoursesLoaderCallback = new UserCoursesLoaderCallback(
                 getActivity().getApplicationContext(), this, ((MainFlowActivity) getActivity()).getHelper());
-        getLoaderManager().initLoader(Constants.LoaderManagerId.COURSE_USER_COURSES_LOADER_ID , null,
+        getLoaderManager().initLoader(Constants.LoaderManagerId.COURSE_USER_COURSES_LOADER_ID, null,
                 userCoursesLoaderCallback);
 
-	    return rootView;
+        return rootView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-	super.onViewCreated(view, savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
     }
 
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-	super.onActivityCreated(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
-    private void fetchCourseInfo(String course){
 
-	FlowApiRequests.getCourse(
+    @Override
+    public void onResume() {
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(courseUpdateReceiver,
+                new IntentFilter(Constants.BroadcastActionId.UPDATE_CURRENT_FRAGMENT));
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(courseUpdateReceiver);
+        super.onPause();
+    }
+
+    private void fetchCourseInfo(String course) {
+
+        FlowApiRequests.getCourse(
                 course,
                 new FlowApiRequestCallbackAdapter() {
                     @Override
@@ -196,7 +227,7 @@ public class CourseFragment extends Fragment {
         this.userCourseDetail = userCourseDetail;
 
         // Change the shortlist button if the user has already taken/will take this course.
-        for (UserCourse userCourse: userCourseDetail.getUserCourses()) {
+        for (UserCourse userCourse : userCourseDetail.getUserCourses()) {
             if (userCourse.getCourseId().equals(mCourseID)) {
                 if (userCourse.getTermId().equals(Constants.SHORTLIST_TERM_ID)) {
                     disableShortlistButton("Shortlisted");
@@ -222,7 +253,7 @@ public class CourseFragment extends Fragment {
 
     private static class CoursePagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment1, fragment2, fragment3;
-        private static final String[] TITLES = new String[] {
+        private static final String[] TITLES = new String[]{
                 "Schedule",
                 "About",
                 "Reviews"
@@ -237,15 +268,19 @@ public class CourseFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            switch (position){
-                case Constants.COURSE_SCHEDULE_PAGE_INDEX : return fragment1;
+            switch (position) {
+                case Constants.COURSE_SCHEDULE_PAGE_INDEX:
+                    return fragment1;
 //                    if (mCourseScheduleFragment == null) {
 //                        courseScheduleFragment = new CourseScheduleFragment();
 //                    };
 //                    return courseScheduleFragment;
-                case Constants.COURSE_ABOUT_PAGE_INDEX: return fragment2;
-                case Constants.COURSE_REVIEWS_PAGE_INDEX: return fragment3;
-                default: return fragment2;
+                case Constants.COURSE_ABOUT_PAGE_INDEX:
+                    return fragment2;
+                case Constants.COURSE_REVIEWS_PAGE_INDEX:
+                    return fragment3;
+                default:
+                    return fragment2;
             }
         }
 
@@ -257,6 +292,15 @@ public class CourseFragment extends Fragment {
         @Override
         public CharSequence getPageTitle(int position) {
             return TITLES[position];
+        }
+    }
+
+    protected class CourseUpdateReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mCourseID != null)
+                fetchCourseInfo(mCourseID);
         }
     }
 }

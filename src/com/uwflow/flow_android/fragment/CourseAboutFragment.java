@@ -64,7 +64,7 @@ public class CourseAboutFragment extends Fragment {
         mRatingOverviewLayout = (LinearLayout) rootView.findViewById(R.id.rating_overview);
 
         // Configure "See individual reviews" button to point to the course reviews tab
-        Button individualReviewsButton = (Button)rootView.findViewById(R.id.see_reviews_btn);
+        Button individualReviewsButton = (Button) rootView.findViewById(R.id.see_reviews_btn);
         individualReviewsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,104 +85,104 @@ public class CourseAboutFragment extends Fragment {
             });
             rootView.findViewById(R.id.friend_list_title).setVisibility(View.GONE);
         }
-
         return rootView;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-	super.onActivityCreated(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-	fetchCourseFriends(mCourseID);
+        fetchCourseFriends(mCourseID);
     }
 
     public void loadCourseInfo(CourseDetail courseDetail) {
-	// TODO: null checking?
-	mCourseDetail = courseDetail;
+        // TODO: null checking?
+        mCourseDetail = courseDetail;
 
-	mDescTextView.setText(mCourseDetail.getDescription());
+        mDescTextView.setText(mCourseDetail.getDescription());
 
-	reloadRatingOverview();
+        reloadRatingOverview();
     }
 
     private void reloadRatingOverview() {
-	TextView overallRating = (TextView)mRatingOverviewLayout.findViewById(R.id.overall_rating);
-	TextView overallCount = (TextView)mRatingOverviewLayout.findViewById(R.id.overall_count);
-	ProgressBar usefulRating = (ProgressBar)mRatingOverviewLayout.findViewById(R.id.useful_bar);
-	TextView usefulCount = (TextView)mRatingOverviewLayout.findViewById(R.id.useful_count);
-	ProgressBar easyRating = (ProgressBar)mRatingOverviewLayout.findViewById(R.id.easy_bar);
-	TextView easyCount = (TextView)mRatingOverviewLayout.findViewById(R.id.easy_count);
+        TextView overallRating = (TextView) mRatingOverviewLayout.findViewById(R.id.overall_rating);
+        TextView overallCount = (TextView) mRatingOverviewLayout.findViewById(R.id.overall_count);
+        ProgressBar usefulRating = (ProgressBar) mRatingOverviewLayout.findViewById(R.id.useful_bar);
+        TextView usefulCount = (TextView) mRatingOverviewLayout.findViewById(R.id.useful_count);
+        ProgressBar easyRating = (ProgressBar) mRatingOverviewLayout.findViewById(R.id.easy_bar);
+        TextView easyCount = (TextView) mRatingOverviewLayout.findViewById(R.id.easy_count);
 
-	overallRating.setText(String.format("%d%%", (int)(mCourseDetail.getOverall().getRating() * 100)));
-	overallCount.setText(String.format("%d ratings", (int) mCourseDetail.getOverall().getCount()));
-	usefulRating.setProgress((int) (Double.valueOf(mCourseDetail.getRatings().get(Rating.USEFULNESS).getRating()) * 100));
-	usefulCount.setText(String.format("%d ratings", mCourseDetail.getRatings().get(Rating.USEFULNESS).getCount()));
-	easyRating.setProgress((int) (Double.valueOf(mCourseDetail.getRatings().get(Rating.EASINESS).getRating()) * 100));
-	easyCount.setText(String.format("%d ratings", mCourseDetail.getRatings().get(Rating.EASINESS).getCount()));
+        overallRating.setText(String.format("%d%%", (int) (mCourseDetail.getOverall().getRating() * 100)));
+        overallCount.setText(String.format("%d ratings", (int) mCourseDetail.getOverall().getCount()));
+        usefulRating.setProgress((int) (Double.valueOf(mCourseDetail.getRatings().get(Rating.USEFULNESS).getRating()) * 100));
+        usefulCount.setText(String.format("%d ratings", mCourseDetail.getRatings().get(Rating.USEFULNESS).getCount()));
+        easyRating.setProgress((int) (Double.valueOf(mCourseDetail.getRatings().get(Rating.EASINESS).getRating()) * 100));
+        easyCount.setText(String.format("%d ratings", mCourseDetail.getRatings().get(Rating.EASINESS).getCount()));
     }
 
 
-    private void fetchCourseFriends(String course){
-	FlowApiRequests.getCourseUsers(
-		course,
-		new FlowApiRequestCallbackAdapter() {
-		    @Override
-		    public void getCourseUsersCallback(CourseUserDetail courseUserDetail) {
-			ArrayList<CourseFriend> courseFriends = getConsolidatedCourseFriendList(courseUserDetail);
+    private void fetchCourseFriends(String course) {
+        FlowApiRequests.getCourseUsers(
+                course,
+                new FlowApiRequestCallbackAdapter() {
+                    @Override
+                    public void getCourseUsersCallback(CourseUserDetail courseUserDetail) {
+                        ArrayList<CourseFriend> courseFriends = getConsolidatedCourseFriendList(courseUserDetail);
 
-			mFriendListAdapter = new FriendListAdapter(
-                    courseFriends,
-                    getActivity(),
-                    getActivity().getSupportFragmentManager());
+                        mFriendListAdapter = new FriendListAdapter(
+                                courseFriends,
+                                getActivity(),
+                                getActivity().getSupportFragmentManager());
 
-			// Reload the TextView indicating the number of course friends
-			mFriendListTextView.setText(String.format("%d friends took this", mFriendListAdapter.getCount()));
+                        // Reload the TextView indicating the number of course friends
+                        mFriendListTextView.setText(String.format("%d friends took this", mFriendListAdapter.getCount()));
 
-			// Re-populate UI with new data
-			mFriendListContainer.removeAllViews();
-			for (int i = 0; i < mFriendListAdapter.getCount(); i++) {
-			    View item = mFriendListAdapter.getView(i, null, null);
+                        // Re-populate UI with new data
+                        mFriendListContainer.removeAllViews();
+                        for (int i = 0; i < mFriendListAdapter.getCount(); i++) {
+                            View item = mFriendListAdapter.getView(i, null, null);
 
-			    mFriendListContainer.addView(item);
-			}
+                            mFriendListContainer.addView(item);
+                        }
                     }
-		});
+                });
     }
 
     private ArrayList<CourseFriend> getConsolidatedCourseFriendList(CourseUserDetail courseUserDetail) {
-	HashMap<String, User> friendMap = new HashMap<String, User>();
+        HashMap<String, User> friendMap = new HashMap<String, User>();
 
-	// Insert all Users into a HashMap for fetching later
-	for (User user : courseUserDetail.getUsers()) {
-	    friendMap.put(user.getId(), user);
+        // Insert all Users into a HashMap for fetching later
+        for (User user : courseUserDetail.getUsers()) {
+            friendMap.put(user.getId(), user);
         }
 
-	// Sort list of terms in reverse order (most recent first)
-	ArrayList<TermUser> termUsers = courseUserDetail.getTermUsers();
-	Collections.sort(termUsers, new CourseUserTermComparator());
+        // Sort list of terms in reverse order (most recent first)
+        ArrayList<TermUser> termUsers = courseUserDetail.getTermUsers();
+        Collections.sort(termUsers, new CourseUserTermComparator());
 
-	// Create a list of course friends based on the sorted order above
-	ArrayList<CourseFriend> courseFriends = new ArrayList<CourseFriend>();
-	for (TermUser termUser : termUsers) {
-	    for (String userId : termUser.getUserIds()) {
-		courseFriends.add(new CourseFriend(termUser.getTermName(), friendMap.get(userId)));
-	    }
+        // Create a list of course friends based on the sorted order above
+        ArrayList<CourseFriend> courseFriends = new ArrayList<CourseFriend>();
+        for (TermUser termUser : termUsers) {
+            for (String userId : termUser.getUserIds()) {
+                courseFriends.add(new CourseFriend(termUser.getTermName(), friendMap.get(userId)));
+            }
         }
 
-	return courseFriends;
+        return courseFriends;
     }
 
     class CourseUserTermComparator implements Comparator<TermUser> {
 
-	public CourseUserTermComparator() {}
+        public CourseUserTermComparator() {
+        }
 
-	public int compare(TermUser a, TermUser b) {
-	    if (a.getTermId().compareTo(b.getTermId()) > 0) {
-		return -1;
-	    } else {
-		return 1;
-	    }
-	}
+        public int compare(TermUser a, TermUser b) {
+            if (a.getTermId().compareTo(b.getTermId()) > 0) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
     }
 
 }

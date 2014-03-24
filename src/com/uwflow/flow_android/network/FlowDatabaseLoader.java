@@ -38,6 +38,7 @@ public class FlowDatabaseLoader {
         reloadProfileExams(2, resultCollector);
         reloadProfileFriends(3, resultCollector);
         reloadProfileSchedule(4, resultCollector);
+        resultCollector.startTimer();
     }
 
     public void reloadUserMe(final int index, final FlowResultCollector flowResultCollector) {
@@ -52,7 +53,7 @@ public class FlowDatabaseLoader {
                             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
                             final User user = JsonToDbUtil.getUserMe(jsonObjects[0]);
                             if (user != null && user.getProfilePicUrls() != null)
-                            flowImageLoader.preloadImage(user.getProfilePicUrls().getLarge());
+                                flowImageLoader.preloadImage(user.getProfilePicUrls().getLarge());
                             if (user != null) {
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putString(Constants.PROFILE_ID_KEY, user.getId());
@@ -247,22 +248,33 @@ public class FlowDatabaseLoader {
     }
 
 
-    public ScheduleImage queryUserScheduleImage(String id) {
-        try {
-            if (id == null) {
-                id = sp.getString(Constants.PROFILE_ID_KEY, null);
-                if (id == null) return null;
-            }
-            Dao<ScheduleImage, String> scheduleImageStringDao = flowDatabaseHelper.getUserSchduleImageDao();
-            QueryBuilder<ScheduleImage, String> queryBuilder = scheduleImageStringDao.queryBuilder();
-            queryBuilder.where().eq("id", id);
-            List<ScheduleImage> images = scheduleImageStringDao.query(queryBuilder.prepare());
-            if (!images.isEmpty())
-                return images.get(0);
-        } catch (Exception e) {
+    public void queryUserScheduleImage(String id, final FlowDatabaseImageCallback callback) {
+        new AsyncTask<String, Void, ScheduleImage>() {
 
-        }
-        return null;
+            @Override
+            protected ScheduleImage doInBackground(String... strings) {
+                try {
+                    String arg = strings[0];
+                    if (arg == null) {
+                        arg = sp.getString(Constants.PROFILE_ID_KEY, null);
+                        if (arg == null) return null;
+                    }
+                    Dao<ScheduleImage, String> scheduleImageStringDao = flowDatabaseHelper.getUserSchduleImageDao();
+                    QueryBuilder<ScheduleImage, String> queryBuilder = scheduleImageStringDao.queryBuilder();
+                    queryBuilder.where().eq("id", arg);
+                    List<ScheduleImage> images = scheduleImageStringDao.query(queryBuilder.prepare());
+                    if (!images.isEmpty())
+                        return images.get(0);
+                } catch (Exception e) {
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(ScheduleImage result) {
+                callback.onScheduleImageLoaded(result);
+            }
+        }.execute(id);
     }
 
 
