@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
@@ -25,9 +26,11 @@ import org.json.JSONObject;
 public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
     private static final String TAG = "LoginActivity";
 
-    protected LoginButton loginButton;
     protected FlowDatabaseLoader databaseLoader;
-    protected ProgressDialog loadingDialog;
+
+    private LoginButton mLoginButton;
+    private ProgressBar mLoginProgressBar;
+    private Button mSkipLoginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,8 +38,12 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
         setContentView(R.layout.login_layout);
 
         databaseLoader = new FlowDatabaseLoader(this.getApplicationContext(), getHelper());
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
+
+        mLoginProgressBar = (ProgressBar) findViewById(R.id.login_progress_bar);
+        mLoginButton = (LoginButton) findViewById(R.id.login_button);
+        mSkipLoginButton = (Button) findViewById(R.id.skip_login_button);
+
+        mLoginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
@@ -132,18 +139,14 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
             }
         }
 
-        // TODO(david): According to Android UI guidelines, should avoid using a progress dialog. See
-        //     http://developer.android.com/design/building-blocks/progress.html for alternatives
-        loadingDialog = new ProgressDialog(this);
-        loadingDialog.setTitle("Logging In");
-        loadingDialog.setMessage("Loading ...");
-        loadingDialog.setCanceledOnTouchOutside(false);
-        loadingDialog.show();
+        // Indicate loading state and hide other actions
+        mLoginProgressBar.setVisibility(View.VISIBLE);
+        mLoginButton.setVisibility(View.GONE);
+        mSkipLoginButton.setVisibility(View.GONE);
 
         databaseLoader.loadOrReloadProfileData(new ResultCollectorCallback() {
             @Override
             public void loadOrReloadCompleted() {
-                loadingDialog.dismiss();
                 ((FlowApplication)getApplication()).setUserLoggedIn(true);
                 Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
                 LoginActivity.this.startActivity(myIntent);
