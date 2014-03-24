@@ -1,11 +1,15 @@
 package com.uwflow.flow_android;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
@@ -18,12 +22,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
     private static final String TAG = "LoginActivity";
 
-    protected LoginButton loginButton;
     protected FlowDatabaseLoader databaseLoader;
-    protected ProgressDialog loadingDialog;
+
+    private LoginButton mLoginButton;
+    private ProgressBar mLoginProgressBar;
+    private Button mSkipLoginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,8 +38,12 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
         setContentView(R.layout.login_layout);
 
         databaseLoader = new FlowDatabaseLoader(this.getApplicationContext(), getHelper());
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
+
+        mLoginProgressBar = (ProgressBar) findViewById(R.id.login_progress_bar);
+        mLoginButton = (LoginButton) findViewById(R.id.login_button);
+        mSkipLoginButton = (Button) findViewById(R.id.skip_login_button);
+
+        mLoginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
@@ -49,13 +60,27 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
 
                                     @Override
                                     public void onFailure(String error) {
-                                        // Toast with error text
-                                        Toast.makeText(
-                                                getApplicationContext(),
-                                                "Oops! Couldn't sign into Flow.",
-                                                Toast.LENGTH_LONG)
-                                                .show();
-                                        Log.e(Constants.UW_FLOW, "Error signing in: " + error);
+                                        // Clear Facebook session
+                                        if (Session.getActiveSession() != null) {
+                                            Session.getActiveSession().closeAndClearTokenInformation();
+                                        }
+                                        Session.setActiveSession(null);
+
+                                        // Remove any cookies
+                                        FlowAsyncClient.clearCookie();
+
+                                        if (error.toLowerCase().contains("create an account")) {
+                                            // Prompt the user to create an account on uwflow.com or skip login
+                                            promptCreateAccount();
+                                        } else {
+                                            // Toast with error text
+                                            Toast.makeText(
+                                                    getApplicationContext(),
+                                                    "Oops! Couldn't log into Flow. " + error,
+                                                    Toast.LENGTH_LONG)
+                                                    .show();
+                                            Log.e(Constants.UW_FLOW, "Error logging in: " + error);
+                                        }
                                     }
                                 });
                     }
@@ -67,9 +92,7 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
         skipLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((FlowApplication)getApplication()).setUserLoggedIn(false);
-                Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
-                LoginActivity.this.startActivity(myIntent);
+                skipLogin();
             }
         });
 
@@ -77,6 +100,32 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
         if (FlowAsyncClient.getSessionCookie() != null) {
             loadDataAndLogin(null);
         }
+    }
+
+    private void skipLogin() {
+        ((FlowApplication)getApplication()).setUserLoggedIn(false);
+        Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
+        LoginActivity.this.startActivity(myIntent);
+    }
+
+    private void promptCreateAccount() {
+        new AlertDialog.Builder(LoginActivity.this)
+                .setMessage("Oops, looks like you'll have to create an account on uwflow.com first.")
+                .setPositiveButton("Go to uwflow.com", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://uwflow.com")));
+                    }
+                })
+                .setNegativeButton("Skip login", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        skipLogin();
+                    }
+                })
+                .create()
+                .show();
     }
 
     protected void loadDataAndLogin(JSONObject response) {
@@ -90,16 +139,14 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
             }
         }
 
-        loadingDialog = new ProgressDialog(this);
-        loadingDialog.setTitle("Logging In");
-        loadingDialog.setMessage("Loading ...");
-        loadingDialog.setCanceledOnTouchOutside(false);
-        loadingDialog.show();
+        // Indicate loading state and hide other actions
+        mLoginProgressBar.setVisibility(View.VISIBLE);
+        mLoginButton.setVisibility(View.GONE);
+        mSkipLoginButton.setVisibility(View.GONE);
 
         databaseLoader.loadOrReloadProfileData(new ResultCollectorCallback() {
             @Override
             public void loadOrReloadCompleted() {
-                loadingDialog.dismiss();
                 ((FlowApplication)getApplication()).setUserLoggedIn(true);
                 Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
                 LoginActivity.this.startActivity(myIntent);
