@@ -8,6 +8,8 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.uwflow.flow_android.network.FlowAsyncClient;
 
 public class FlowApplication extends Application {
+    private boolean isUserLoggedIn = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -22,5 +24,13 @@ public class FlowApplication extends Application {
                 .defaultDisplayImageOptions(defaultOptions)
                 .build();
         ImageLoader.getInstance().init(config);
+    }
+
+    public boolean isUserLoggedIn() {
+        return isUserLoggedIn;
+    }
+
+    public void setUserLoggedIn(boolean isUserLoggedIn) {
+        this.isUserLoggedIn = isUserLoggedIn;
     }
 }

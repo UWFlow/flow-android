@@ -23,7 +23,7 @@
                   android:choiceMode="singleChoice"
                   android:divider="@android:color/transparent"
                   android:dividerHeight="0dp"/>
-        <include android:id="@+id/log_out_item" layout="@layout/nav_drawer_item"/>
+        <include android:id="@+id/drawer_bottom_item" layout="@layout/nav_drawer_item"/>
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
 

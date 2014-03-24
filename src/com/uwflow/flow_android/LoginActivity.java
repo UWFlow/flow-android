@@ -63,6 +63,17 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
             }
         });
 
+        Button skipLoginButton = (Button) findViewById(R.id.skip_login_button);
+        skipLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((FlowApplication)getApplication()).setUserLoggedIn(false);
+                Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
+                LoginActivity.this.startActivity(myIntent);
+            }
+        });
+
+        // TODO(david): Also ensure session cookie hasn't expired
         if (FlowAsyncClient.getSessionCookie() != null) {
             loadDataAndLogin(null);
         }
@@ -82,12 +93,14 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
         loadingDialog = new ProgressDialog(this);
         loadingDialog.setTitle("Logging In");
         loadingDialog.setMessage("Loading ...");
+        loadingDialog.setCanceledOnTouchOutside(false);
         loadingDialog.show();
 
         databaseLoader.loadOrReloadProfileData(new ResultCollectorCallback() {
             @Override
             public void loadOrReloadCompleted() {
                 loadingDialog.dismiss();
+                ((FlowApplication)getApplication()).setUserLoggedIn(true);
                 Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
                 LoginActivity.this.startActivity(myIntent);
                 finish();

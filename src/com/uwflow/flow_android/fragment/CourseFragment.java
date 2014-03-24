@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
+import com.uwflow.flow_android.FlowApplication;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
@@ -109,6 +110,11 @@ public class CourseFragment extends Fragment {
 
         mShortlistButton = (Button)rootView.findViewById(R.id.shortlist_btn);
         final Button shareButton = (Button)rootView.findViewById(R.id.share_btn);
+
+        if (!((FlowApplication)getActivity().getApplication()).isUserLoggedIn()) {
+            mShortlistButton.setVisibility(View.GONE);
+
+        }
 
         if (mCourseID != null) {
             final String humanizedCourseId = CourseUtil.humanizeCourseId(mCourseID);
