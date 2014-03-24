@@ -8,9 +8,9 @@
                 android:background="@drawable/log_in_background">
     <ImageView
             android:id="@+id/flow_logo_login"
-            android:src="@drawable/flow_logo_white"
+            android:src="@drawable/flow_logo_white_160"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             />
     <Button
@@ -20,7 +20,6 @@
             android:text="@string/skip_login_text"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/white"
-            android:textAllCaps="true"
             android:layout_marginBottom="20dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
