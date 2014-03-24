@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,11 +40,11 @@ public class ProfileFragment extends Fragment {
     protected UserCourseDetail userCourses;
     protected ScheduleCourses userSchedule;
     protected ProfileReceiver profileReceiver;
-    protected UpdateReceiver updateReceiver;
+    protected ProfileRefreshReceiver profileRefreshReceiver;
     protected Bitmap userCover;
     protected Bitmap userProfileImage;
-    protected FlowImageLoader flowImageLoader;
-    protected FlowDatabaseLoader flowDatabaseLoader;
+    protected FlowImageLoader mFlowImageLoader;
+    protected FlowDatabaseLoader mFlowDatabaseLoader;
     protected ProgressDialog loadingDialog;
     // for having hard reference to callbacks so they dont get garbage recycled
     protected FlowImageLoaderCallback userCoverCallback;
@@ -102,14 +101,10 @@ public class ProfileFragment extends Fragment {
         userProgram = (TextView) rootView.findViewById(R.id.user_program);
         coverPhotoImageView = (ImageView) rootView.findViewById(R.id.cover_photo);
         viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
+        viewPager.setOffscreenPageLimit(3);
 
         mIsUserMe = mProfileID == null;
-
-        profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), mIsUserMe);
-
-        viewPager.setAdapter(profilePagerAdapter);
-        tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
-        tabs.setViewPager(viewPager);
 
         Integer tabID = getArguments() != null? getArguments().getInt(Constants.TAB_ID) : null;
         if (tabID == null) {
@@ -129,14 +124,8 @@ public class ProfileFragment extends Fragment {
                 mProfileID = getArguments() != null ? args.getString(Constants.PROFILE_ID_KEY) : null;
         }
 
-        if (mProfileID == null) {
-            viewPager.setCurrentItem(Constants.PROFILE_SCHEDULE_PAGE_INDEX);
-            profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), true);
-        } else {
-            profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), false);
-        }
-        // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
-        viewPager.setOffscreenPageLimit(3);
+        profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), mIsUserMe);
+
         viewPager.setAdapter(profilePagerAdapter);
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
         tabs.setViewPager(viewPager);
@@ -189,14 +178,14 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onResume() {
-        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(updateReceiver,
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(profileRefreshReceiver,
                 new IntentFilter(Constants.BroadcastActionId.UPDATE_CURRENT_FRAGMENT));
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(updateReceiver);
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(profileRefreshReceiver);
         super.onPause();
     }
 
@@ -293,10 +282,10 @@ public class ProfileFragment extends Fragment {
     }
 
     protected void init() {
-        flowImageLoader = new FlowImageLoader(getActivity().getApplicationContext());
-        flowDatabaseLoader = new FlowDatabaseLoader(getActivity().getApplicationContext(), ((MainFlowActivity) getActivity()).getHelper());
+        mFlowImageLoader = new FlowImageLoader(getActivity().getApplicationContext());
+        mFlowDatabaseLoader = new FlowDatabaseLoader(getActivity().getApplicationContext(), ((MainFlowActivity) getActivity()).getHelper());
         profileReceiver = new ProfileReceiver();
-        updateReceiver = new UpdateReceiver();
+        profileRefreshReceiver = new ProfileRefreshReceiver();
         userCoverCallback = new FlowImageLoaderCallback() {
             @Override
             public void onImageLoaded(Bitmap bitmap) {
@@ -326,7 +315,7 @@ public class ProfileFragment extends Fragment {
             return;
 
         if (userProfileImage == null && user.getProfilePicUrls() != null) {
-            flowImageLoader.loadImage(user.getProfilePicUrls().getLarge(), userPhotoImageView, userProfileCallback);
+            mFlowImageLoader.loadImage(user.getProfilePicUrls().getLarge(), userPhotoImageView, userProfileCallback);
 
         }
 
@@ -432,6 +421,10 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    /**
+     * This class is to listen for the event when the current user is loaded (from database or network)
+     * and populate data.
+     */
     protected class ProfileReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -439,7 +432,11 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    protected class UpdateReceiver extends BroadcastReceiver {
+
+    /**
+     * This class is to listen for the refresh button and reloads all the data
+     */
+    protected class ProfileRefreshReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (mProfileID == null) {
@@ -449,8 +446,8 @@ public class ProfileFragment extends Fragment {
                 loadingDialog.show();
                 userProfileImage = null;
                 userCover = null;
-                flowImageLoader.clearImageCache();
-                flowDatabaseLoader.loadOrReloadProfileData(new ResultCollectorCallback() {
+                mFlowImageLoader.clearImageCache();
+                mFlowDatabaseLoader.loadOrReloadProfileData(new ResultCollectorCallback() {
                     @Override
                     public void loadOrReloadCompleted() {
                         loadingDialog.dismiss();

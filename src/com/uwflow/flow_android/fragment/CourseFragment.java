@@ -54,7 +54,7 @@ public class CourseFragment extends Fragment {
     private CourseReviewsFragment mCourseReviewsFragment;
 
     private UserCourseDetail userCourseDetail;
-    private UpdateReceiver updateReceiver;
+    private CourseUpdateReceiver courseUpdateReceiver;
 
     /**
      * Static method to instantiate this class with arguments passed as a bundle.
@@ -91,7 +91,7 @@ public class CourseFragment extends Fragment {
             mCourseReviewsFragment = new CourseReviewsFragment();
             mCourseReviewsFragment.setArguments(getArguments());
         }
-        updateReceiver = new UpdateReceiver();
+        courseUpdateReceiver = new CourseUpdateReceiver();
     }
 
     @Override
@@ -195,14 +195,14 @@ public class CourseFragment extends Fragment {
 
     @Override
     public void onResume() {
-        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(updateReceiver,
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(courseUpdateReceiver,
                 new IntentFilter(Constants.BroadcastActionId.UPDATE_CURRENT_FRAGMENT));
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(updateReceiver);
+        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(courseUpdateReceiver);
         super.onPause();
     }
 
@@ -295,7 +295,7 @@ public class CourseFragment extends Fragment {
         }
     }
 
-    protected class UpdateReceiver extends BroadcastReceiver {
+    protected class CourseUpdateReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

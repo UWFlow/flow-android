@@ -44,7 +44,11 @@ public class FlowResultCollector {
         return true;
     }
 
-    // Timeout in 8 seconds
+    /**
+     * Call this method if you require a timer for the callback. This means that
+     * the callback will be called after 8 seconds regardless if the async calls are
+     * successful or not. 
+     */
     public void startTimer() {
         new AsyncTask<Void, Void, Void>() {
             @Override

@@ -52,7 +52,7 @@ public class FlowImageLoader {
         });
     }
 
-    public void loadImageListView (String url, final ImageView imageView){
+    public void loadImageForList(String url, final ImageView imageView){
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
