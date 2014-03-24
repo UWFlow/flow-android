@@ -26,7 +26,6 @@ import com.uwflow.flow_android.util.FacebookUtilities;
 public class ProfileFragment extends Fragment {
     private String mProfileID;
     private ProfilePagerAdapter profilePagerAdapter;
-    private boolean mIsUserMe;
 
     protected ImageView userPhotoImageView;
     protected ImageView coverPhotoImageView;
@@ -104,8 +103,6 @@ public class ProfileFragment extends Fragment {
         // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
         viewPager.setOffscreenPageLimit(3);
 
-        mIsUserMe = mProfileID == null;
-
         Integer tabID = getArguments() != null? getArguments().getInt(Constants.TAB_ID) : null;
         if (tabID == null) {
             // Set default tab to Schedule
@@ -124,7 +121,7 @@ public class ProfileFragment extends Fragment {
                 mProfileID = getArguments() != null ? args.getString(Constants.PROFILE_ID_KEY) : null;
         }
 
-        profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), mIsUserMe);
+        profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), mProfileID == null);
 
         viewPager.setAdapter(profilePagerAdapter);
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
@@ -168,7 +165,6 @@ public class ProfileFragment extends Fragment {
     protected void fetchProfileInfo() {
         fetchCompleted = true;
         if (mProfileID == null) {
-            mIsUserMe = true;
             // Load logged-in users profile if an ID is unspecified.
             initLoaders();
         } else {
