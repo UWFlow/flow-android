@@ -23,7 +23,7 @@ import com.uwflow.flow_android.loaders.*;
 import com.uwflow.flow_android.network.*;
 import com.uwflow.flow_android.util.FacebookUtilities;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends TrackedFragment {
     private String mProfileID;
     private ProfilePagerAdapter profilePagerAdapter;
 

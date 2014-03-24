@@ -1,7 +1,6 @@
 package com.uwflow.flow_android.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import com.uwflow.flow_android.db_object.Rating;
 /**
  * Created by jasperfung on 2/22/14.
  */
-public class CourseReviewsFragment extends Fragment{
+public class CourseReviewsFragment extends TrackedFragment {
     private LinearLayout mCourseReviewListContainer;
     private TextView mEmptyReviewListContainerView;
     private LinearLayout mRatingOverviewLayout;

@@ -2,7 +2,6 @@ package com.uwflow.flow_android.fragment;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,7 @@ import java.util.List;
 /**
  * Created by jasperfung on 2/21/14.
  */
-public class CourseScheduleFragment extends Fragment {
+public class CourseScheduleFragment extends TrackedFragment {
     private static final String TAG = "CourseScheduleFragment";
     private String mCourseID;
 

@@ -5,11 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +25,7 @@ import com.uwflow.flow_android.network.FlowDatabaseLoader;
 import com.uwflow.flow_android.network.FlowImageLoader;
 import com.uwflow.flow_android.network.FlowImageLoaderCallback;
 
-public class ProfileScheduleFragment extends Fragment implements View.OnClickListener {
+public class ProfileScheduleFragment extends TrackedFragment implements View.OnClickListener {
     private String mScheduleImageURL;
     private ImageView mImageSchedule;
     private Button mBtnShare;

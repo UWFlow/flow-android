@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
@@ -102,6 +103,22 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
         if (FlowAsyncClient.getSessionCookie() != null) {
             loadDataAndLogin(null);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Google Analytics tracking
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Google Analytics tracking
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     private void skipLogin() {

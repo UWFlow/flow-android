@@ -1,9 +1,7 @@
 package com.uwflow.flow_android;
 
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -19,7 +17,6 @@ public class FlowActivity extends FragmentActivity {
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setDisplayShowTitleEnabled(false);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

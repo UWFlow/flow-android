@@ -36,7 +36,7 @@ import org.json.JSONObject;
 /**
  * Created by jasperfung on 2/21/14.
  */
-public class CourseFragment extends Fragment {
+public class CourseFragment extends TrackedFragment {
     private static final String TAG = "CourseFragment";
 
     private String mCourseID;

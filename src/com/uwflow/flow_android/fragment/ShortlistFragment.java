@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.uwflow.flow_android.R;
 
+// TODO(david): Delete this (not used)
 public class ShortlistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Google Analytics tracking ID -->
+    <string name="ga_trackingId">UA-35073503-3</string>
+
+    <!-- Disable automatic activity tracking: we use fragments -->
+    <bool name="ga_autoActivityTracking">false</bool>
+
+    <!-- Disable automatic exception tracking: we'll use Crashlytics or ACRA instead -->
+    <bool name="ga_reportUncaughtExceptions">false</bool>
+
+</resources>

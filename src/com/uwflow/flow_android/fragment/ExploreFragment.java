@@ -2,7 +2,6 @@ package com.uwflow.flow_android.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,7 +24,7 @@ import java.util.*;
 /**
  * Created by wentaoji on 2014-02-18.
  */
-public class ExploreFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class ExploreFragment extends TrackedFragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "ExploreFragment";
     private static final int ITEMS_PER_PAGE = 20;
 
