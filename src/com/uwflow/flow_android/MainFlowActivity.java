@@ -123,17 +123,19 @@ public class MainFlowActivity extends FlowActivity {
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        Fragment initialFragment;
-        if (isUserLoggedIn) {
-            initialFragment = new ProfileFragment();
-        } else {
-            initialFragment = new ExploreFragment();
-        }
+        if (savedInstanceState == null) {
+            Fragment initialFragment;
+            if (isUserLoggedIn) {
+                initialFragment = new ProfileFragment();
+            } else {
+                initialFragment = new ExploreFragment();
+            }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.content_frame, initialFragment)
-                .commit();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, initialFragment)
+                    .commit();
+        }
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerList.setItemChecked(0, true);
