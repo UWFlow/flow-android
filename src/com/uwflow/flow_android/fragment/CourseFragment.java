@@ -72,10 +72,6 @@ public class CourseFragment extends Fragment {
         return courseFragment;
     }
 
-    // Only allow instantiation via the static method.
-    private CourseFragment() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
