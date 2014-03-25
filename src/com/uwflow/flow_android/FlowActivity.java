@@ -29,10 +29,13 @@ public class FlowActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         if (flowDatabaseHelper != null) {
             OpenHelperManager.releaseHelper();
             flowDatabaseHelper = null;
         }
+
+        ((FlowApplication) getApplication()).getMixpanel().flush();
     }
 
     public FlowDatabaseHelper getHelper() {

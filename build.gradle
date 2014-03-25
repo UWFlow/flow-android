@@ -34,6 +34,7 @@ dependencies {
     compile 'com.makeramen:roundedimageview:1.2.4'
     compile 'org.apache.commons:commons-lang3:3.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
+    compile "com.mixpanel.android:mixpanel-android:4.0.0@aar"
 }
 
 android {
