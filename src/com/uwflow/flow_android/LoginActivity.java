@@ -72,10 +72,23 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
                                         // Remove any cookies
                                         FlowAsyncClient.clearCookie();
 
+                                        FlowApplication app = (FlowApplication) getApplication();
+
+                                        // TODO(david): The server should return an app error code to be less brittle
                                         if (error.toLowerCase().contains("create an account")) {
+                                            app.track("Login with new account");
+
                                             // Prompt the user to create an account on uwflow.com or skip login
                                             promptCreateAccount();
                                         } else {
+                                            JSONObject properties = new JSONObject();
+                                            try {
+                                                properties.put("error", error);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                            app.track("Login error", properties);
+
                                             // Toast with error text
                                             Toast.makeText(
                                                     getApplicationContext(),
@@ -122,7 +135,10 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
     }
 
     private void skipLogin() {
-        ((FlowApplication)getApplication()).setUserLoggedIn(false);
+        FlowApplication app = (FlowApplication) getApplication();
+        app.setUserLoggedIn(false);
+        app.track("Login skipped", new JSONObject());
+
         Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
         LoginActivity.this.startActivity(myIntent);
     }
@@ -163,10 +179,15 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
         mLoginButton.setVisibility(View.GONE);
         mSkipLoginButton.setVisibility(View.GONE);
 
+        ((FlowApplication) getApplication()).track("Login started");
+
         databaseLoader.loadOrReloadProfileData(new ResultCollectorCallback() {
             @Override
             public void loadOrReloadCompleted() {
-                ((FlowApplication)getApplication()).setUserLoggedIn(true);
+                FlowApplication app = (FlowApplication) getApplication();
+                app.setUserLoggedIn(true);
+                app.track("Login completed");
+
                 Intent myIntent = new Intent(LoginActivity.this, MainFlowActivity.class);
                 LoginActivity.this.startActivity(myIntent);
                 finish();

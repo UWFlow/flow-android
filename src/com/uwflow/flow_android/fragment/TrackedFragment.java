@@ -6,6 +6,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
+import com.uwflow.flow_android.FlowApplication;
 
 /**
  * A base fragment that supports analytics logging. Adapted from http://stackoverflow.com/questions/14883613
@@ -22,7 +23,13 @@ public abstract class TrackedFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mTracker.set(Fields.SCREEN_NAME, ((Object) this).getClass().getSimpleName());
+        String fragmentName = ((Object) this).getClass().getSimpleName();
+
+        // Send data to Google Analytics
+        mTracker.set(Fields.SCREEN_NAME, fragmentName);
         mTracker.send(MapBuilder.createAppView().build());
+
+        // Send data to Mixpanel
+        ((FlowApplication) getActivity().getApplication()).track("Impression: " + fragmentName);
     }
 }

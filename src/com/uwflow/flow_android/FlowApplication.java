@@ -9,6 +9,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.uwflow.flow_android.network.FlowAsyncClient;
+import org.json.JSONObject;
 
 public class FlowApplication extends Application {
     private static final String IS_USER_LOGGED_IN_KEY = "is_user_logged_in";
@@ -54,10 +55,30 @@ public class FlowApplication extends Application {
 
     }
 
+    /**
+     * @return A reference to the singleton Mixpanel API tracker object.
+     */
     public MixpanelAPI getMixpanel() {
         if (mMixpanel == null) {
             mMixpanel = MixpanelAPI.getInstance(getApplicationContext(), MIXPANEL_TOKEN);
         }
         return mMixpanel;
+    }
+
+    /**
+     * Records an event and sends to analytics loggers.
+     * @param eventName
+     */
+    public void track(String eventName) {
+        track(eventName, new JSONObject());
+    }
+
+    /**
+     * Records an event and sends to analytics loggers.
+     * @param eventName
+     * @param properties Additional parameters for this event.
+     */
+    public void track(String eventName, JSONObject properties) {
+        getMixpanel().track("Android: " + eventName, properties);
     }
 }

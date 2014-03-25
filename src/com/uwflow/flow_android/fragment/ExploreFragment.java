@@ -18,6 +18,8 @@ import com.uwflow.flow_android.db_object.Course;
 import com.uwflow.flow_android.db_object.SearchResults;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.*;
 
@@ -216,7 +218,10 @@ public class ExploreFragment extends TrackedFragment implements AdapterView.OnIt
         // Get whether we should exclude taken courses
         boolean excludeTakenCourses = mExcludeTakenCheckBox.isChecked();
 
-        FlowApiRequests.searchCourses(keywords, sortMode, excludeTakenCourses, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE,
+        int count = ITEMS_PER_PAGE;
+        int offset = page * count;
+
+        FlowApiRequests.searchCourses(keywords, sortMode, excludeTakenCourses, count, offset,
                 new FlowApiRequestCallbackAdapter() {
             @Override
             public void searchCoursesCallback(SearchResults searchResults) {
@@ -234,6 +239,21 @@ public class ExploreFragment extends TrackedFragment implements AdapterView.OnIt
                 mFooterView.setVisibility(View.GONE);
             }
         });
+
+        // Track for analytics
+        JSONObject properties = new JSONObject();
+        try {
+            properties
+                    .put("keywords", keywords)
+                    .put("sort_mode", sortMode)
+                    .put("exclude_taken_course", excludeTakenCourses)
+                    .put("count", count)
+                    .put("offset", offset);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ((FlowApplication) getActivity().getApplication()).track("Course search", properties);
     }
 
     // Adapted from http://guides.thecodepath.com/android/Endless-Scrolling-with-AdapterViews

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.uwflow.flow_android.FlowApplication;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.activities.FullScreenImageActivity;
@@ -75,6 +76,8 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_share:
+                ((FlowApplication) getActivity().getApplication()).track("Share schedule intent");
+
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
                 shareIntent.putExtra(Intent.EXTRA_TEXT, mScheduleImageURL);
@@ -83,6 +86,8 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
                 break;
             case R.id.image_schedule:
                 if (scheduleImage != null && scheduleImage.getImage() != null) {
+                    ((FlowApplication) getActivity().getApplication()).track("Schedule image expanded");
+
                     Intent fullscreenImageIntent = new Intent(getActivity(), FullScreenImageActivity.class);
                     fullscreenImageIntent.putExtra("id", scheduleImage.getId());
                     getActivity().startActivity(fullscreenImageIntent);
