@@ -18,7 +18,6 @@
             android:icon="@drawable/ic_launcher"
             android:allowBackup="true"
             android:allowClearUserData="true"
-            android:debuggable="true"
             android:vmSafeMode="true"
             android:hardwareAccelerated="true">
         <activity android:name="LoginActivity"
