@@ -9,7 +9,7 @@ import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.UserFriends;
 import com.uwflow.flow_android.fragment.ProfileFragment;
 
-public class UserFriendsLoaderCallback implements LoaderManager.LoaderCallbacks<UserFriends>{
+public class UserFriendsLoaderCallback implements LoaderManager.LoaderCallbacks<UserFriends> {
 
     // This is the fragment that contains all other fragments
     protected Fragment parentFragment;
@@ -24,13 +24,15 @@ public class UserFriendsLoaderCallback implements LoaderManager.LoaderCallbacks<
 
     @Override
     public Loader<UserFriends> onCreateLoader(int i, Bundle bundle) {
-        return new UserFriendsLoader(context, flowDatabaseHelper);
+        return new UserFriendsLoader(context, flowDatabaseHelper, parentFragment);
     }
 
     @Override
     public void onLoadFinished(Loader<UserFriends> usersLoader, UserFriends users) {
-        if (parentFragment instanceof ProfileFragment){
-            final ProfileFragment profileFragment= (ProfileFragment) parentFragment;
+        if (users == null)
+            return;
+        if (parentFragment instanceof ProfileFragment) {
+            final ProfileFragment profileFragment = (ProfileFragment) parentFragment;
             profileFragment.setUserFriends(users);
         }
     }

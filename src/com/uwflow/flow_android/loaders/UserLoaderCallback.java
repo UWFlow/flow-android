@@ -23,11 +23,14 @@ public class UserLoaderCallback implements LoaderManager.LoaderCallbacks<User> {
 
     @Override
     public Loader<User> onCreateLoader(int i, Bundle bundle) {
-        return new UserLoader(context, flowDatabaseHelper);
+        return new UserLoader(context, flowDatabaseHelper, parentFragment);
     }
 
     @Override
     public void onLoadFinished(Loader<User> userLoader, User user) {
+        if (user == null)
+            return;
+
         if (parentFragment instanceof ProfileFragment) {
             final ProfileFragment profileFragment = (ProfileFragment) parentFragment;
             profileFragment.setUser(user);

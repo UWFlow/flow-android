@@ -24,11 +24,13 @@ public class UserCoursesLoaderCallback implements LoaderManager.LoaderCallbacks<
 
     @Override
     public Loader<UserCourseDetail> onCreateLoader(int i, Bundle bundle) {
-        return new UserCoursesLoader(context, flowDatabaseHelper);
+        return new UserCoursesLoader(context, flowDatabaseHelper, parentFragment);
     }
 
     @Override
     public void onLoadFinished(Loader<UserCourseDetail> userCourseDetailLoader, UserCourseDetail userCourseDetail) {
+        if (userCourseDetail == null)
+            return;
         if (parentFragment instanceof ProfileFragment){
             final ProfileFragment profileFragment= (ProfileFragment) parentFragment;
             profileFragment.setUserCourses(userCourseDetail);

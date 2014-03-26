@@ -7,6 +7,9 @@ import com.j256.ormlite.dao.Dao;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.ScheduleCourse;
 import com.uwflow.flow_android.db_object.ScheduleCourses;
+import com.uwflow.flow_android.fragment.ProfileFragment;
+import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
+import com.uwflow.flow_android.network.FlowApiRequests;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,18 +18,45 @@ import java.util.List;
 public class UserScheduleLoader extends FlowAbstractDataLoader<ScheduleCourses> {
 
 
-    public UserScheduleLoader(Context context, FlowDatabaseHelper flowDatabaseHelper) {
-        super(context, flowDatabaseHelper);
+    public UserScheduleLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment baseFragment) {
+        super(context, flowDatabaseHelper, baseFragment);
     }
 
     @Override
     protected ScheduleCourses loadDelegate() {
+        // we first check if we should load from database or from the network
+        if (baseFragment != null) {
+            final ProfileFragment profileFragment = ProfileFragment.convertFragment(baseFragment);
+            if (profileFragment != null && profileFragment.getProfileID() != null) {
+                baseFragment.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FlowApiRequests.getUserSchedule(
+                                profileFragment.getProfileID(),
+                                new FlowApiRequestCallbackAdapter() {
+                                    @Override
+                                    public void getUserScheduleCallback(ScheduleCourses scheduleCourses) {
+                                        if (scheduleCourses == null) return;
+                                        profileFragment.setUserSchedule(scheduleCourses);
+                                    }
+
+                                    @Override
+                                    public void onFailure(String error) {
+                                    }
+                                });
+                    }
+                });
+                return null;
+            }
+        }
+
+        // load from database for profile
         ScheduleCourses scheduleCourses = new ScheduleCourses();
         try {
             Dao<ScheduleCourse, String> userScheduleDao = flowDatabaseHelper.getUserScheduleCourseDao();
             List<ScheduleCourse> courses = userScheduleDao.queryForAll();
             scheduleCourses.setScheduleCourses(new ArrayList<ScheduleCourse>(courses));
-            if (!courses.isEmpty()){
+            if (!courses.isEmpty()) {
                 scheduleCourses.setScreenshotUrl(courses.get(0).getScheduleUrl());
             }
         } catch (SQLException e) {

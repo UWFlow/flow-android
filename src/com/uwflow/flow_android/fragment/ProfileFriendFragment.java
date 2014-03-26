@@ -49,10 +49,15 @@ public class ProfileFriendFragment extends TrackedFragment {
             return;
         UserFriends friends = profileFragment.getUserFriends();
         if (friends != null) {
-            mProfileFriendAdapter = new ProfileFriendAdapter(friends.getFriends(),
-                    getActivity(), getActivity().getSupportFragmentManager());
-            mProfileFriendList.setAdapter(mProfileFriendAdapter);
-            mProfileFriendList.invalidate();
+            if (mProfileFriendAdapter == null) {
+                mProfileFriendAdapter = new ProfileFriendAdapter(friends.getFriends(),
+                        getActivity(), getActivity().getSupportFragmentManager());
+                mProfileFriendList.setAdapter(mProfileFriendAdapter);
+            } else {
+                mProfileFriendAdapter.setmFriends(friends.getFriends());
+                mProfileFriendAdapter.notifyDataSetChanged();
+                if (mProfileFriendList.getAdapter() == null) mProfileFriendList.setAdapter(mProfileFriendAdapter);
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.uwflow.flow_android.loaders;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.LocalBroadcastManager;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
@@ -13,9 +14,18 @@ public abstract class FlowAbstractDataLoader<T extends Object> extends AsyncTask
     protected FlowDatabaseHelper flowDatabaseHelper;
     protected LoaderUpdateReceiver loaderUpdateReceiver;
 
+    // This is used to load data from the network to the fragment
+    protected Fragment baseFragment;
+
     public FlowAbstractDataLoader(Context context, FlowDatabaseHelper flowDatabaseHelper) {
         super(context);
         this.flowDatabaseHelper = flowDatabaseHelper;
+    }
+
+    public FlowAbstractDataLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment baseFragment) {
+        super(context);
+        this.flowDatabaseHelper = flowDatabaseHelper;
+        this.baseFragment = baseFragment;
     }
 
     /**
