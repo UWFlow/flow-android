@@ -52,9 +52,6 @@ public class ProfileFragment extends TrackedFragment {
     protected FlowImageLoaderCallback userProfileCallback;
     protected FlowResultCollector collector;
 
-    // only fetch data once
-    protected boolean fetchCompleted = false;
-
     /**
      * Static method to instantiate this class with arguments passed as a bundle.
      *
@@ -129,7 +126,7 @@ public class ProfileFragment extends TrackedFragment {
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
         tabs.setViewPager(viewPager);
 
-        if (!fetchCompleted) fetchProfileInfo();
+        initLoaders();
         populateData();
         return rootView;
     }
@@ -164,11 +161,6 @@ public class ProfileFragment extends TrackedFragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    protected void fetchProfileInfo() {
-        fetchCompleted = true;
-        initLoaders();
     }
 
     @Override
