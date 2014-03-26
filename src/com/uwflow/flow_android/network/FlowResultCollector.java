@@ -1,21 +1,22 @@
 package com.uwflow.flow_android.network;
 
-import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
 /**
  * This class is used to sync multiple async results
- * TODO: A TIME OUT SO IT DOESNT LOAD FOREVER
  */
 public class FlowResultCollector {
+    private static final String TAG = FlowResultCollector.class.getSimpleName();
+
     protected boolean processCompleteState[];
-    protected ResultCollectorCallback callback;
+    protected ResultCollectorCallback mCallback;
     protected static final String COLLECTOR = "collector";
 
     public FlowResultCollector(int numProcess, ResultCollectorCallback callback) {
         this.processCompleteState = new boolean[numProcess];
-        this.callback = callback;
+        mCallback = callback;
     }
 
     public synchronized void setState(int index, boolean state) {
@@ -24,9 +25,10 @@ public class FlowResultCollector {
             processCompleteState[index] = state;
         }
 
-        if (isAllProcessCompeted()) {
+        if (isAllProcessCompeted() && mCallback != null) {
+            ResultCollectorCallback callback = mCallback;
+            mCallback = null;
             callback.loadOrReloadCompleted();
-            callback = null;
         }
     }
 
@@ -45,29 +47,34 @@ public class FlowResultCollector {
         return true;
     }
 
+    public void startTimer() {
+        startTimer(null);
+    }
+
     /**
      * Call this method if you require a timer for the callback. This means that
-     * the callback will be called after 8 seconds regardless if the async calls are
-     * successful or not. 
+     * the callback will be called after delayMillis seconds regardless if the async calls are
+     * successful or not.
+     * @param delayMillis Milliseconds to wait before force-executing callback
      */
-    public void startTimer() {
-        new AsyncTask<Void, Void, Void>() {
+    public void startTimer(Long delayMillis) {
+        final long finalDelayMillis = delayMillis == null ? 30000 : delayMillis;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    Thread.sleep(8000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Crashlytics.logException(e);
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                if (callback != null)
+            public void run() {
+                if (mCallback != null) {
+                    ResultCollectorCallback callback = mCallback;
+                    mCallback = null;
                     callback.loadOrReloadCompleted();
+
+                    // This is an abnormal situation, so log it
+                    String message = "Async requests timed out after " + finalDelayMillis +
+                            " millis. Callback called anyway.";
+                    Log.w(TAG, message);
+                    Crashlytics.log(Log.WARN, TAG, message);
+                }
             }
-        };
+        }, finalDelayMillis);
     }
 }

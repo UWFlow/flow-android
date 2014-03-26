@@ -231,8 +231,8 @@ public class FlowApiRequests {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                callback.onFailure(null);
+            public void onFailure(int statusCode, Header[] headers, String responseBody, Throwable e) {
+                callback.onFailure(responseBody);
             }
         });
     }

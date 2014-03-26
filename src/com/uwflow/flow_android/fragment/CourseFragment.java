@@ -151,6 +151,8 @@ public class CourseFragment extends TrackedFragment {
                         public void onFailure(String error) {
                             String message = String.format("Failed to add %s to shortlist. :(", humanizedCourseId);
                             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            Crashlytics.log(Log.ERROR, TAG, String.format("Failed to add %s to shortlist. Error: %s",
+                                    mCourseID, error));
                         }
                     });
 
