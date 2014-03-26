@@ -25,10 +25,10 @@ public class UserScheduleLoader extends FlowAbstractDataLoader<ScheduleCourses> 
     @Override
     protected ScheduleCourses loadDelegate() {
         // we first check if we should load from database or from the network
-        if (baseFragment != null) {
-            final ProfileFragment profileFragment = ProfileFragment.convertFragment(baseFragment);
+        if (mBaseFragment != null) {
+            final ProfileFragment profileFragment = ProfileFragment.convertFragment(mBaseFragment);
             if (profileFragment != null && profileFragment.getProfileID() != null) {
-                baseFragment.getActivity().runOnUiThread(new Runnable() {
+                mBaseFragment.getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         FlowApiRequests.getUserSchedule(

@@ -29,8 +29,9 @@ public class UserCoursesLoaderCallback implements LoaderManager.LoaderCallbacks<
 
     @Override
     public void onLoadFinished(Loader<UserCourseDetail> userCourseDetailLoader, UserCourseDetail userCourseDetail) {
-        if (userCourseDetail == null)
+        if (userCourseDetail == null){
             return;
+        }
         if (parentFragment instanceof ProfileFragment){
             final ProfileFragment profileFragment= (ProfileFragment) parentFragment;
             profileFragment.setUserCourses(userCourseDetail);

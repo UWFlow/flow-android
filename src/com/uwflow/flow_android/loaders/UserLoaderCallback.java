@@ -28,8 +28,9 @@ public class UserLoaderCallback implements LoaderManager.LoaderCallbacks<User> {
 
     @Override
     public void onLoadFinished(Loader<User> userLoader, User user) {
-        if (user == null)
+        if (user == null){
             return;
+        }
 
         if (parentFragment instanceof ProfileFragment) {
             final ProfileFragment profileFragment = (ProfileFragment) parentFragment;

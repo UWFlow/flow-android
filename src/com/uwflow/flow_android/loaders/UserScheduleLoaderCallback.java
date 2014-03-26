@@ -29,8 +29,9 @@ public class UserScheduleLoaderCallback implements LoaderManager.LoaderCallbacks
 
     @Override
     public void onLoadFinished(Loader<ScheduleCourses> scheduleCoursesLoader, ScheduleCourses scheduleCourses) {
-        if (scheduleCourses == null)
+        if (scheduleCourses == null){
             return;
+        }
 
         if (parentFragment instanceof ProfileFragment){
             final ProfileFragment profileFragment= (ProfileFragment) parentFragment;

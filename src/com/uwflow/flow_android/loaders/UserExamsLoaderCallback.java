@@ -31,8 +31,9 @@ public class UserExamsLoaderCallback implements LoaderManager.LoaderCallbacks<Ex
 
     @Override
     public void onLoadFinished(Loader<Exams> examsLoader, Exams exams) {
-        if (exams == null)
+        if (exams == null){
             return;
+        }
         if (parentFragment instanceof ProfileFragment){
             final ProfileFragment profileFragment= (ProfileFragment) parentFragment;
             profileFragment.setUserExams(exams);

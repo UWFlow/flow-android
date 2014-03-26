@@ -54,7 +54,7 @@ public class ProfileFriendFragment extends TrackedFragment {
                         getActivity(), getActivity().getSupportFragmentManager());
                 mProfileFriendList.setAdapter(mProfileFriendAdapter);
             } else {
-                mProfileFriendAdapter.setmFriends(friends.getFriends());
+                mProfileFriendAdapter.setFriends(friends.getFriends());
                 mProfileFriendAdapter.notifyDataSetChanged();
                 if (mProfileFriendList.getAdapter() == null) mProfileFriendList.setAdapter(mProfileFriendAdapter);
             }

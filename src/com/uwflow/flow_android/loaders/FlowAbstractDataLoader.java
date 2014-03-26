@@ -15,17 +15,17 @@ public abstract class FlowAbstractDataLoader<T extends Object> extends AsyncTask
     protected LoaderUpdateReceiver loaderUpdateReceiver;
 
     // This is used to load data from the network to the fragment
-    protected Fragment baseFragment;
+    protected Fragment mBaseFragment;
 
     public FlowAbstractDataLoader(Context context, FlowDatabaseHelper flowDatabaseHelper) {
         super(context);
         this.flowDatabaseHelper = flowDatabaseHelper;
     }
 
-    public FlowAbstractDataLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment baseFragment) {
+    public FlowAbstractDataLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment mBaseFragment) {
         super(context);
         this.flowDatabaseHelper = flowDatabaseHelper;
-        this.baseFragment = baseFragment;
+        this.mBaseFragment = mBaseFragment;
     }
 
     /**

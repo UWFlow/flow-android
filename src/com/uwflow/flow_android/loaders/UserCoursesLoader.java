@@ -21,11 +21,13 @@ public class UserCoursesLoader extends FlowAbstractDataLoader<UserCourseDetail> 
 
     @Override
     protected UserCourseDetail loadDelegate() {
-        if (baseFragment != null) {
-            final ProfileFragment profileFragment = ProfileFragment.convertFragment(baseFragment);
+        //Check if we are loading the logged in user's courseDetail or user friend's course detail
+        // For all user friend data we fetch from the network
+        if (mBaseFragment != null) {
+            final ProfileFragment profileFragment = ProfileFragment.convertFragment(mBaseFragment);
             if (profileFragment != null && profileFragment.getProfileID() != null) {
                 // It seems like async client must be run from the Main ui thread
-                baseFragment.getActivity().runOnUiThread(new Runnable() {
+                mBaseFragment.getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         FlowApiRequests.getUserCourses(

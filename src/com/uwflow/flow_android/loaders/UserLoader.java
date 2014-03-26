@@ -7,8 +7,6 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.fragment.ProfileFragment;
-import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
-import com.uwflow.flow_android.network.FlowApiRequests;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -22,8 +20,8 @@ public class UserLoader extends FlowAbstractDataLoader<User> {
     @Override
     protected User loadDelegate() {
         try {
-            if (baseFragment != null) {
-                final ProfileFragment profileFragment = ProfileFragment.convertFragment(baseFragment);
+            if (mBaseFragment != null) {
+                final ProfileFragment profileFragment = ProfileFragment.convertFragment(mBaseFragment);
                 if (profileFragment != null && profileFragment.getProfileID() != null) {
                     Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
                     QueryBuilder<User, String> queryBuilder =

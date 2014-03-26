@@ -6,7 +6,6 @@ import com.j256.ormlite.dao.Dao;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.Exam;
 import com.uwflow.flow_android.db_object.Exams;
-import com.uwflow.flow_android.db_object.ScheduleCourses;
 import com.uwflow.flow_android.fragment.ProfileFragment;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
@@ -22,10 +21,10 @@ public class UserExamsLoader extends FlowAbstractDataLoader<Exams> {
     @Override
     protected Exams loadDelegate() {
         // we first check if we should load from database or from the network
-        if (baseFragment != null) {
-            final ProfileFragment profileFragment = ProfileFragment.convertFragment(baseFragment);
+        if (mBaseFragment != null) {
+            final ProfileFragment profileFragment = ProfileFragment.convertFragment(mBaseFragment);
             if (profileFragment != null && profileFragment.getProfileID() != null) {
-                baseFragment.getActivity().runOnUiThread(new Runnable() {
+                mBaseFragment.getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         FlowApiRequests.getUserExams(

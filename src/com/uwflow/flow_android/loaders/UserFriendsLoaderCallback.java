@@ -29,8 +29,9 @@ public class UserFriendsLoaderCallback implements LoaderManager.LoaderCallbacks<
 
     @Override
     public void onLoadFinished(Loader<UserFriends> usersLoader, UserFriends users) {
-        if (users == null)
+        if (users == null){
             return;
+        }
         if (parentFragment instanceof ProfileFragment) {
             final ProfileFragment profileFragment = (ProfileFragment) parentFragment;
             profileFragment.setUserFriends(users);
