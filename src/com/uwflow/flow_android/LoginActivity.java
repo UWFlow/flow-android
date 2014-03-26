@@ -1,7 +1,6 @@
 package com.uwflow.flow_android;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -42,6 +41,9 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
         mLoginProgressBar = (ProgressBar) findViewById(R.id.login_progress_bar);
         mLoginButton = (LoginButton) findViewById(R.id.login_button);
         mSkipLoginButton = (Button) findViewById(R.id.skip_login_button);
+
+        // The only way to get to the login screen is if you're logged out.
+        ((FlowApplication) getApplication()).setUserLoggedIn(false);
 
         mLoginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
