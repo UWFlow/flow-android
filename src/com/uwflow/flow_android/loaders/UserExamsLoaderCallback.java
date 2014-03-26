@@ -35,8 +35,7 @@ public class UserExamsLoaderCallback implements LoaderManager.LoaderCallbacks<Ex
             return;
         }
         if (parentFragment instanceof ProfileFragment){
-            final ProfileFragment profileFragment= (ProfileFragment) parentFragment;
-            profileFragment.setUserExams(exams);
+            ((ProfileFragment) parentFragment).setUserExams(exams);
         }
     }
 

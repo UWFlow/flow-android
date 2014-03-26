@@ -33,8 +33,7 @@ public class UserFriendsLoaderCallback implements LoaderManager.LoaderCallbacks<
             return;
         }
         if (parentFragment instanceof ProfileFragment) {
-            final ProfileFragment profileFragment = (ProfileFragment) parentFragment;
-            profileFragment.setUserFriends(users);
+            ((ProfileFragment) parentFragment).setUserFriends(users);
         }
     }
 

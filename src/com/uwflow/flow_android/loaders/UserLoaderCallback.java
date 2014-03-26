@@ -33,8 +33,7 @@ public class UserLoaderCallback implements LoaderManager.LoaderCallbacks<User> {
         }
 
         if (parentFragment instanceof ProfileFragment) {
-            final ProfileFragment profileFragment = (ProfileFragment) parentFragment;
-            profileFragment.setUser(user);
+            ((ProfileFragment) parentFragment).setUser(user);
         }
     }
 

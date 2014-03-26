@@ -44,7 +44,7 @@ public class ProfileFriendFragment extends TrackedFragment {
     }
 
     protected void populateData() {
-        final ProfileFragment profileFragment = ProfileFragment.convertFragment(getParentFragment());
+        final ProfileFragment profileFragment = (ProfileFragment)getParentFragment();
         if (profileFragment == null)
             return;
         UserFriends friends = profileFragment.getUserFriends();
@@ -56,6 +56,8 @@ public class ProfileFriendFragment extends TrackedFragment {
             } else {
                 mProfileFriendAdapter.setFriends(friends.getFriends());
                 mProfileFriendAdapter.notifyDataSetChanged();
+                // This occurs when we pop Profile off from the back stack, the adapter is not null and not
+                // attached to the profileList
                 if (mProfileFriendList.getAdapter() == null) mProfileFriendList.setAdapter(mProfileFriendAdapter);
             }
         }

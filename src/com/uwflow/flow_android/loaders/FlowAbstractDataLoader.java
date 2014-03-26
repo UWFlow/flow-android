@@ -22,10 +22,10 @@ public abstract class FlowAbstractDataLoader<T extends Object> extends AsyncTask
         this.flowDatabaseHelper = flowDatabaseHelper;
     }
 
-    public FlowAbstractDataLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment mBaseFragment) {
+    public FlowAbstractDataLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment baseFragment) {
         super(context);
         this.flowDatabaseHelper = flowDatabaseHelper;
-        this.mBaseFragment = mBaseFragment;
+        this.mBaseFragment = baseFragment;
     }
 
     /**

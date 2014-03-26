@@ -34,8 +34,7 @@ public class UserScheduleLoaderCallback implements LoaderManager.LoaderCallbacks
         }
 
         if (parentFragment instanceof ProfileFragment){
-            final ProfileFragment profileFragment= (ProfileFragment) parentFragment;
-            profileFragment.setUserSchedule(scheduleCourses);
+            ((ProfileFragment) parentFragment).setUserSchedule(scheduleCourses);
         }
     }
 

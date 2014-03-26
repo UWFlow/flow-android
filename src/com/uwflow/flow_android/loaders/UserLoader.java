@@ -21,7 +21,7 @@ public class UserLoader extends FlowAbstractDataLoader<User> {
     protected User loadDelegate() {
         try {
             if (mBaseFragment != null) {
-                final ProfileFragment profileFragment = ProfileFragment.convertFragment(mBaseFragment);
+                final ProfileFragment profileFragment = (ProfileFragment) mBaseFragment;
                 if (profileFragment != null && profileFragment.getProfileID() != null) {
                     Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
                     QueryBuilder<User, String> queryBuilder =

@@ -33,12 +33,10 @@ public class UserCoursesLoaderCallback implements LoaderManager.LoaderCallbacks<
             return;
         }
         if (parentFragment instanceof ProfileFragment){
-            final ProfileFragment profileFragment= (ProfileFragment) parentFragment;
-            profileFragment.setUserCourses(userCourseDetail);
+            ((ProfileFragment) parentFragment).setUserCourses(userCourseDetail);
         }
         if (parentFragment instanceof CourseFragment) {
-            final CourseFragment courseFragment = (CourseFragment) parentFragment;
-            courseFragment.setUserCourseDetail(userCourseDetail);
+            ((CourseFragment) parentFragment).setUserCourseDetail(userCourseDetail);
         }
     }
 

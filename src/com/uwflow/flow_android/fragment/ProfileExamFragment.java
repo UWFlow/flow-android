@@ -59,7 +59,7 @@ public class ProfileExamFragment extends TrackedFragment {
     }
 
     protected void populateData() {
-        final ProfileFragment profileFragment = ProfileFragment.convertFragment(getParentFragment());
+        final ProfileFragment profileFragment = (ProfileFragment)getParentFragment();
         if (profileFragment == null)
             return;
         Exams userExams = profileFragment.getUserExams();

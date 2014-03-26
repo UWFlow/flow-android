@@ -22,7 +22,7 @@ public class UserExamsLoader extends FlowAbstractDataLoader<Exams> {
     protected Exams loadDelegate() {
         // we first check if we should load from database or from the network
         if (mBaseFragment != null) {
-            final ProfileFragment profileFragment = ProfileFragment.convertFragment(mBaseFragment);
+            final ProfileFragment profileFragment = (ProfileFragment) mBaseFragment;
             if (profileFragment != null && profileFragment.getProfileID() != null) {
                 mBaseFragment.getActivity().runOnUiThread(new Runnable() {
                     @Override

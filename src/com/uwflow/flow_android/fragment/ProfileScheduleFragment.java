@@ -40,7 +40,6 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
     protected ScheduleImage scheduleImage;
     protected ProfileRefreshReceiver updateReceiver;
     protected ScheduleCourses scheduleCourses;
-    protected ProfileFragment profileFragment;
 
     // variable used to track if the refresh button is pressed
     protected boolean forceReloadScheduleImage = false;
@@ -120,7 +119,7 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
     }
 
     protected void populateData() {
-        profileFragment = ProfileFragment.convertFragment(getParentFragment());
+        final ProfileFragment profileFragment = (ProfileFragment)getParentFragment();
         if (profileFragment == null)
             return;
         scheduleCourses = profileFragment.getUserSchedule();
@@ -147,6 +146,9 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
     }
 
     protected void loadScheduleImage() {
+        final ProfileFragment profileFragment = (ProfileFragment)getParentFragment();
+        if (profileFragment == null)
+            return;
         if (scheduleCourses != null && scheduleCourses.getScreenshotUrl() != null) {
             mScheduleImageURL = scheduleCourses.getScreenshotUrl();
             scheduleImageCallback = new FlowImageLoaderCallback() {

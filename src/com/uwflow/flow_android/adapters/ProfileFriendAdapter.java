@@ -30,8 +30,8 @@ public class ProfileFriendAdapter extends BaseAdapter {
         flowImageLoader = new FlowImageLoader(context);
     }
 
-    public void setFriends(List<User> mFriends) {
-        this.mFriends = mFriends;
+    public void setFriends(List<User> friends) {
+        this.mFriends = friends;
     }
 
     public int getCount() {
