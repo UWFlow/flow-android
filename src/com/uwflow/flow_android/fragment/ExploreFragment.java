@@ -180,7 +180,12 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Course course = (Course)parent.getItemAtPosition(position);
+        Object item = parent.getItemAtPosition(position);
+        if (item == null) {
+            return;
+        }
+
+        Course course = (Course) item;
         getFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, CourseFragment.newInstance(course.getId()))
                 .addToBackStack(null)
