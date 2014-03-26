@@ -1,10 +1,8 @@
 package com.uwflow.flow_android.fragment;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,9 +22,13 @@ import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.loaders.*;
 import com.uwflow.flow_android.network.*;
+import com.uwflow.flow_android.nfc.SharableURL;
 import com.uwflow.flow_android.util.FacebookUtilities;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class ProfileFragment extends TrackedFragment {
+public class ProfileFragment extends TrackedFragment implements SharableURL {
     private String mProfileID;
     private ProfilePagerAdapter profilePagerAdapter;
 
@@ -65,7 +67,7 @@ public class ProfileFragment extends TrackedFragment {
 
         Bundle bundle = new Bundle();
         if (tabID != null) {
-            bundle.putInt(Constants.TAB_ID, tabID);
+            bundle.putInt(Constants.TAB_ID_KEY, tabID);
         }
         if (userID != null) {
             bundle.putString(Constants.PROFILE_ID_KEY, userID);
@@ -103,7 +105,7 @@ public class ProfileFragment extends TrackedFragment {
         // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
         viewPager.setOffscreenPageLimit(3);
 
-        Integer tabID = getArguments() != null ? getArguments().getInt(Constants.TAB_ID) : null;
+        Integer tabID = getArguments() != null ? getArguments().getInt(Constants.TAB_ID_KEY) : null;
         if (tabID == null) {
             // Set default tab to Schedule
             viewPager.setCurrentItem(Constants.PROFILE_SCHEDULE_PAGE_INDEX);
@@ -114,7 +116,7 @@ public class ProfileFragment extends TrackedFragment {
         init();
         if (getArguments() != null) {
             final Bundle args = getArguments();
-            setUser((User) args.getSerializable(Constants.USER));
+            setUser((User) args.getSerializable(Constants.USER_KEY));
             if (user != null)
                 mProfileID = user.getId();
             else
@@ -175,6 +177,14 @@ public class ProfileFragment extends TrackedFragment {
     public void onPause() {
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(profileRefreshReceiver);
         super.onPause();
+    }
+
+    @Override
+    public String getUrl() {
+        if (user == null || StringUtils.isEmpty(user.getId())) {
+            return null;
+        }
+        return Constants.BASE_URL + Constants.URL_PROFILE_EXT + user.getId();
     }
 
     protected void initLoaders() {
@@ -250,8 +260,9 @@ public class ProfileFragment extends TrackedFragment {
     }
 
     public void setUser(User user) {
-        if (user == null)
+        if (user == null) {
             return;
+        }
         this.user = user;
         if (userCover == null && user.getFbid() != null) {
             FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), user.getFbid(), coverPhotoImageView,
