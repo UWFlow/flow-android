@@ -1,8 +1,16 @@
 package com.uwflow.flow_android;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
+import android.os.PatternMatcher;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,9 +25,11 @@ import com.uwflow.flow_android.adapters.NavDrawerAdapter;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.entities.NavDrawerItem;
 import com.uwflow.flow_android.fragment.AboutFragment;
+import com.uwflow.flow_android.fragment.CourseFragment;
 import com.uwflow.flow_android.fragment.ExploreFragment;
 import com.uwflow.flow_android.fragment.ProfileFragment;
 import com.uwflow.flow_android.network.FlowAsyncClient;
+import com.uwflow.flow_android.nfc.SharableURL;
 
 import java.util.ArrayList;
 
@@ -33,6 +43,8 @@ public class MainFlowActivity extends FlowActivity {
     private LinearLayout mBottomItemLayout;
     private NavDrawerAdapter mNavDrawerAdapter;
     private ArrayList<NavDrawerItem> mDrawerItems;
+
+    private NfcAdapter mNfcAdapter;
 
     private static final String PROFILE_ITEM_TEXT = "Profile";
     private static final String EXPLORE_ITEM_TEXT = "Explore";
@@ -143,6 +155,40 @@ public class MainFlowActivity extends FlowActivity {
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerList.setItemChecked(0, true);
+
+
+        // Check for available NFC Adapter
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+        if (mNfcAdapter == null) {
+            // TODO: Log that NFC is unavailable on this device?
+        } else {
+            // Register NFC push message callback
+            mNfcAdapter.setNdefPushMessageCallback(new NfcAdapter.CreateNdefMessageCallback() {
+                @Override
+                public NdefMessage createNdefMessage(NfcEvent event) {
+                    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+                    if (fragment != null && fragment instanceof SharableURL) {
+                        String url = ((SharableURL) fragment).getUrl();
+                        if (url == null) return null;
+
+                        NdefMessage msg = new NdefMessage(
+                                new NdefRecord[] {
+                                        NdefRecord.createUri(url)
+                                }
+                        );
+
+                        JSONObject properties = new JSONObject();
+                        properties.put("uri", url);
+                        ((FlowApplication) getApplication()).track("NFC push event: ", properties);
+
+                        return msg;
+                    }
+                    return null;
+                }
+            }, this);
+        }
+
     }
 
     /**
@@ -162,6 +208,30 @@ public class MainFlowActivity extends FlowActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mNfcAdapter != null) {
+            // If system supports NFC...
+            enableForegroundDispatch(this, mNfcAdapter);
+
+            // See if the Activity is being started/resumed due to an NFC event and handle it
+            handleNfcIntent(getIntent());
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mNfcAdapter != null) {
+            // If system supports NFC...
+            mNfcAdapter.disableForegroundDispatch(this);
+        }
+
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -227,5 +297,74 @@ public class MainFlowActivity extends FlowActivity {
         if (fragmentManager.getBackStackEntryCount() > 0){
              super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        handleNfcIntent(intent);
+    }
+
+    private void handleNfcIntent(Intent intent) {
+        if (intent == null) return;
+
+        // Check if Activity was opened via NFC to load a specific Fragment
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+
+            String payload = intent.getDataString();
+
+            if (payload != null) {
+
+                String profileUrlFormat = Constants.BASE_URL + Constants.URL_PROFILE_EXT;
+                String courseUrlFormat = Constants.BASE_URL + Constants.URL_COURSE_EXT;
+
+                if (payload.startsWith(profileUrlFormat)) {
+                    // Open a ProfileFragment with the provided payload profile ID
+
+                    String profileID = payload.substring(profileUrlFormat.length());
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.content_frame, ProfileFragment.newInstance(profileID))
+                            .addToBackStack(null)
+                            .commit();
+                } else if (payload.startsWith(courseUrlFormat)) {
+                    // Open a CourseFragment with the provided payload course ID
+
+                    String courseID = payload.substring(courseUrlFormat.length());
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.content_frame, CourseFragment.newInstance(courseID))
+                            .addToBackStack(null)
+                            .commit();
+                }
+
+                JSONObject properties = new JSONObject();
+                properties.put("uri", payload);
+                ((FlowApplication) getApplication()).track("NFC receive event: ", properties);
+            }
+        }
+    }
+
+    /**
+     * @param activity The activity that's requesting dispatch
+     * @param adapter NfcAdapter for the current context
+     */
+    private void enableForegroundDispatch(Activity activity, NfcAdapter adapter) {
+        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
+
+        IntentFilter[] filters = new IntentFilter[1];
+        String[][] techList = new String[][]{};
+
+        // Notice that this is the same filter as in our manifest.
+        filters[0] = new IntentFilter();
+        filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
+        filters[0].addDataScheme("https");
+        filters[0].addDataAuthority(Constants.FLOW_DOMAIN, null);
+        filters[0].addDataPath(".*", PatternMatcher.PATTERN_SIMPLE_GLOB);
+
+        adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
     }
 }

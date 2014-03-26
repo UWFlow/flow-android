@@ -2,9 +2,13 @@ package com.uwflow.flow_android.constant;
 
 public class Constants {
     public static final String SESSION_COOKIE_DOMAIN = "uwflow.com";
+    public static final String FLOW_DOMAIN = "uwflow.com";
     public static final String BASE_URL = "https://uwflow.com/";
     public static final String FBID = "fbid";
     public static final String FACEBOOK_ACCESS_TOKEN = "fb_access_token";
+
+    public static final String URL_PROFILE_EXT = "profile/";
+    public static final String URL_COURSE_EXT = "course/";
 
     public static final String API_LOGIN = "api/v1/login/facebook";
     public static final String API_COURSE = "api/v1/courses/%s";
@@ -68,8 +72,8 @@ public class Constants {
     // Keys used in bundles
     public static final String PROFILE_ID_KEY = "profileId";
     public static final String COURSE_ID_KEY = "courseId";
-    public static final String USER = "userId";
-    public static final String TAB_ID = "tabId";
+    public static final String USER_KEY = "userId";
+    public static final String TAB_ID_KEY = "tabId";
 
     public static final int COURSE_SCHEDULE_PAGE_INDEX = 0;
     public static final int COURSE_ABOUT_PAGE_INDEX = 1;
