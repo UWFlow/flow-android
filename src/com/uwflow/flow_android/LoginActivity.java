@@ -127,6 +127,9 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
 
         // Google Analytics tracking
         EasyTracker.getInstance(this).activityStart(this);
+
+        // Mixpanel tracking
+        ((FlowApplication) getApplication()).track("Impression: LoginActivity");
     }
 
     @Override
