@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
 import com.uwflow.flow_android.FlowApplication;
+import com.crashlytics.android.Crashlytics;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
@@ -327,6 +328,10 @@ public class ProfileFragment extends TrackedFragment {
             //     return user info on POST /api/v1/login/facebook.
             FlowApplication app = (FlowApplication) getActivity().getApplication();
             app.getMixpanel().identify(user.getId());
+
+            // Send Crashlytics info about current user (may be helpful in communicating/asking for more info)
+            Crashlytics.setUserIdentifier(user.getId());
+            Crashlytics.setUserName(user.getName());
         }
     }
 
