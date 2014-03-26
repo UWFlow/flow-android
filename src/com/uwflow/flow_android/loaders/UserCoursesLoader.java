@@ -1,10 +1,12 @@
 package com.uwflow.flow_android.loaders;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
+import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
-import com.uwflow.flow_android.db_object.*;
+import com.uwflow.flow_android.db_object.Course;
+import com.uwflow.flow_android.db_object.UserCourse;
+import com.uwflow.flow_android.db_object.UserCourseDetail;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class UserCoursesLoader extends FlowAbstractDataLoader<UserCourseDetail> 
             userCourseDetail.setUserCourses(userCourses);
         } catch (SQLException e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
         return userCourseDetail;
     }

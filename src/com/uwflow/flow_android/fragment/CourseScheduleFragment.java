@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.crashlytics.android.Crashlytics;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.CourseClassListAdapter;
 import com.uwflow.flow_android.constant.Constants;
@@ -39,9 +40,12 @@ public class CourseScheduleFragment extends TrackedFragment {
 	Bundle args = getArguments();
 	if (args != null) {
 	    mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
-	} else {
-	    Log.e(TAG, "Attempted instantiation without bundle: cannot fetch course details.");
-	}
+    } else {
+        // TODO(david): Add a FlowLogger class that auto-logs to Crashlytics
+        String errorLog = "Attempted instantiation without bundle: cannot fetch course details.";
+        Log.e(TAG, errorLog);
+        Crashlytics.log(Log.ERROR, TAG, errorLog);
+    }
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.course_schedule, container, false);

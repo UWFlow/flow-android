@@ -1,14 +1,13 @@
 package com.uwflow.flow_android.loaders;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
+import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.User;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserLoader extends FlowAbstractDataLoader<User> {
@@ -29,6 +28,7 @@ public class UserLoader extends FlowAbstractDataLoader<User> {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
         return new User();
     }

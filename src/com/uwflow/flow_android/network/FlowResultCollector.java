@@ -2,6 +2,7 @@ package com.uwflow.flow_android.network;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import com.crashlytics.android.Crashlytics;
 
 /**
  * This class is used to sync multiple async results
@@ -57,6 +58,7 @@ public class FlowResultCollector {
                     Thread.sleep(8000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    Crashlytics.logException(e);
                 }
                 return null;
             }

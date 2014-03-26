@@ -3,6 +3,7 @@ package com.uwflow.flow_android.dao;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
@@ -13,6 +14,8 @@ import com.uwflow.flow_android.db_object.*;
 import java.sql.SQLException;
 
 public class FlowDatabaseHelper extends OrmLiteSqliteOpenHelper {
+    private static final String TAG = "FlowDatabaseHelper";
+
     // name of the database file for your application -- change to something appropriate for your app
     private static final String DATABASE_NAME = "flowDatabaseAndroid.db";
 
@@ -45,7 +48,8 @@ public class FlowDatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, UserCourse.class);
             TableUtils.createTable(connectionSource, ScheduleImage.class);
         } catch (SQLException e) {
-            Log.e(User.class.getName(), "Unable to create databases", e);
+            Log.e(TAG, "Unable to create databases", e);
+            Crashlytics.logException(e);
         }
     }
 
@@ -60,8 +64,9 @@ public class FlowDatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, ScheduleImage.class, true);
             onCreate(sqLiteDatabase, connectionSource);
         } catch (SQLException e) {
-            Log.e(User.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "
+            Log.e(TAG, "Unable to upgrade database from version " + oldVer + " to new "
                     + newVer, e);
+            Crashlytics.logException(e);
         }
     }
 
