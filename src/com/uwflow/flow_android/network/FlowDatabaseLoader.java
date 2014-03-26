@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.uwflow.flow_android.constant.Constants;
@@ -62,6 +63,7 @@ public class FlowDatabaseLoader {
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
+                            Crashlytics.logException(e);
                         }
                         return null;
                     }
@@ -100,6 +102,7 @@ public class FlowDatabaseLoader {
                     userSchduleImageDao.createOrUpdate(scheduleImages[0]);
                 } catch (SQLException e) {
                     e.printStackTrace();
+                    Crashlytics.logException(e);
                 }
                 return null;
             }
@@ -122,6 +125,7 @@ public class FlowDatabaseLoader {
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
+                            Crashlytics.logException(e);
                         }
                         return null;
                     }
@@ -156,6 +160,7 @@ public class FlowDatabaseLoader {
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
+                            Crashlytics.logException(e);
                         }
                         return null;
                     }
@@ -190,6 +195,7 @@ public class FlowDatabaseLoader {
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
+                            Crashlytics.logException(e);
                         }
                         return null;
                     }
@@ -229,6 +235,7 @@ public class FlowDatabaseLoader {
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
+                            Crashlytics.logException(e);
                         }
                         return null;
                     }
@@ -266,6 +273,7 @@ public class FlowDatabaseLoader {
                     if (!images.isEmpty())
                         return images.get(0);
                 } catch (Exception e) {
+                    Crashlytics.logException(e);
                 }
                 return null;
             }

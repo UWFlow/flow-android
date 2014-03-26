@@ -10,12 +10,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.network.*;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +35,7 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.login_layout);
 
         databaseLoader = new FlowDatabaseLoader(this.getApplicationContext(), getHelper());
@@ -95,7 +96,9 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
                                                     "Oops! Couldn't log into Flow. " + error,
                                                     Toast.LENGTH_LONG)
                                                     .show();
-                                            Log.e(Constants.UW_FLOW, "Error logging in: " + error);
+                                            Log.e(TAG, "Error logging in: " + error);
+
+                                            Crashlytics.log(Log.ERROR, TAG, "Error logging in: " + error);
                                         }
                                     }
                                 });
@@ -171,6 +174,7 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
                 FlowAsyncClient.setCsrfToken(csrfToken);
             } catch (JSONException e) {
                 Log.e(TAG, "Could not extract CSRF token from JSON response " + response.toString());
+                Crashlytics.logException(e);
             }
         }
 

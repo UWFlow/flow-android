@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Response;
@@ -197,6 +198,7 @@ public class FlowApiRequests {
                                     FlowImageLoader loader = new FlowImageLoader(context);
                                     loader.loadImage(url, imageView, callback);
                                 } catch (Exception e) {
+                                    Crashlytics.logException(e);
                                 }
                             }
                         }
@@ -330,6 +332,7 @@ public class FlowApiRequests {
 
             } catch (Exception e) {
                 callback.onFailure("Failed to parse");
+                Crashlytics.logException(e);
             }
         }
     }

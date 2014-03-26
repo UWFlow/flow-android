@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.crashlytics.android.Crashlytics;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.network.FlowImageLoader;
@@ -69,6 +70,7 @@ public class AboutFragment extends TrackedFragment implements View.OnClickListen
                     getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(Constants.UW_FLOW, "Couldn't resolve version name: " + e);
+            Crashlytics.logException(e);
         }
     }
 

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
+import com.crashlytics.android.Crashlytics;
 import com.uwflow.flow_android.constant.Constants;
 
 import java.io.IOException;
@@ -43,8 +44,10 @@ public class FacebookUtilities {
                 return bitmap;
             } catch (MalformedURLException e) {
                 Log.e(Constants.UW_FLOW, "Error creating image URL: " + e);
+                Crashlytics.logException(e);
             } catch (IOException e) {
                 Log.e(Constants.UW_FLOW, "Error opening connection during image fetch: " + e);
+                Crashlytics.logException(e);
             }
         }
         return null;

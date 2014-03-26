@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
+import com.crashlytics.android.Crashlytics;
 import com.uwflow.flow_android.FlowApplication;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
@@ -110,7 +111,9 @@ public class CourseFragment extends TrackedFragment {
             mCourseID = getArguments().getString(Constants.COURSE_ID_KEY);
             fetchCourseInfo(mCourseID);
         } else {
-            Log.e(TAG, "CourseFragment created without bundle: cannot fetch course details.");
+            String errorLog = "CourseFragment created without bundle: cannot fetch course details.";
+            Log.e(TAG, errorLog);
+            Crashlytics.log(Log.ERROR, TAG, errorLog);
         }
 
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);

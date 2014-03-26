@@ -1,9 +1,13 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'http://download.crashlytics.com/maven' }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.8+'
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+
 
     }
 }
@@ -20,9 +24,12 @@ repositories {
     maven {
         url 'https://github.com/astuetz/PagerSlidingTabStrip'
     }
+    maven { url 'http://download.crashlytics.com/maven' }
+
 }
 
 apply plugin: 'android'
+apply plugin: 'crashlytics'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -35,6 +42,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
     compile "com.mixpanel.android:mixpanel-android:4.0.0@aar"
+    compile 'com.crashlytics.android:crashlytics:1.+'
 }
 
 android {
