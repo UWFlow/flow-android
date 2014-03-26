@@ -29,7 +29,7 @@ import java.util.HashMap;
 /**
  * Created by jasperfung on 2/21/14.
  */
-public class CourseAboutFragment extends Fragment {
+public class CourseAboutFragment extends TrackedFragment {
     private static final String TAG = "CourseAboutFragment";
 
     private String mCourseID;

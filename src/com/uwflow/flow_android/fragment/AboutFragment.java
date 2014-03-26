@@ -1,11 +1,9 @@
 package com.uwflow.flow_android.fragment;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +11,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
-import com.uwflow.flow_android.db_object.*;
-import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
-import com.uwflow.flow_android.network.FlowApiRequests;
 import com.uwflow.flow_android.network.FlowImageLoader;
 import com.uwflow.flow_android.util.FacebookUtilities;
-import org.json.JSONObject;
 
 
-public class AboutFragment extends Fragment implements View.OnClickListener {
+public class AboutFragment extends TrackedFragment implements View.OnClickListener {
     private FlowImageLoader flowImageLoader;
 
     private ImageView profilePic1;

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,7 @@ import com.uwflow.flow_android.adapters.ProfileFriendAdapter;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.UserFriends;
 
-public class ProfileFriendFragment extends Fragment {
+public class ProfileFriendFragment extends TrackedFragment {
     protected ListView mProfileFriendList;
     protected View rootView;
     protected ProfileFriendAdapter mProfileFriendAdapter;

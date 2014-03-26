@@ -17,7 +17,7 @@ import com.uwflow.flow_android.adapters.ProfileCoursesAdapter;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.UserCourseDetail;
 
-public class ProfileCourseFragment extends Fragment {
+public class ProfileCourseFragment extends TrackedFragment {
     private boolean mIsUserMe;
 
     private ExpandableListView mCoursesListView;

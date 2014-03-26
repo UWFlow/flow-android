@@ -14,6 +14,7 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
+import com.uwflow.flow_android.FlowApplication;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
@@ -23,7 +24,7 @@ import com.uwflow.flow_android.loaders.*;
 import com.uwflow.flow_android.network.*;
 import com.uwflow.flow_android.util.FacebookUtilities;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends TrackedFragment {
     private String mProfileID;
     private ProfilePagerAdapter profilePagerAdapter;
 
@@ -155,6 +156,7 @@ public class ProfileFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_view_on_fb:
                 if (user != null && user.getFbid() != null) {
+                    ((FlowApplication) getActivity().getApplication()).track("View user on Facebook");
                     FacebookUtilities.viewUserOnFacebook(getActivity(), user.getFbid());
                     return true;
                 }
@@ -318,6 +320,14 @@ public class ProfileFragment extends Fragment {
 
         userName.setText(user.getName());
         userProgram.setText(user.getProgramName());
+
+        if (user.isMe()) {
+            // Associate the current user for all future tracking calls to Mixpanel
+            // TODO(david): Ideally this should be called as soon as the user logs in. Will need to change server API to
+            //     return user info on POST /api/v1/login/facebook.
+            FlowApplication app = (FlowApplication) getActivity().getApplication();
+            app.getMixpanel().identify(user.getId());
+        }
     }
 
     // Getters and Setters for child fragment to pull data

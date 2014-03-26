@@ -31,12 +31,13 @@ import com.uwflow.flow_android.network.FlowApiRequestCallback;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
 import com.uwflow.flow_android.util.CourseUtil;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Created by jasperfung on 2/21/14.
  */
-public class CourseFragment extends Fragment {
+public class CourseFragment extends TrackedFragment {
     private static final String TAG = "CourseFragment";
 
     private String mCourseID;
@@ -149,12 +150,24 @@ public class CourseFragment extends Fragment {
                             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         }
                     });
+
+                    JSONObject properties = new JSONObject();
+                    try {
+                        properties.put("course_id", mCourseID);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    FlowApplication app = ((FlowApplication) getActivity().getApplication());
+                    app.track("Add to shortlist", properties);
+                    app.getMixpanel().getPeople().increment("Add to shortlist", 1);
                 }
             });
 
             shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ((FlowApplication) getActivity().getApplication()).track("Share course");
+
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
                     shareIntent.putExtra(Intent.EXTRA_TEXT,

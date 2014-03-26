@@ -5,11 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.uwflow.flow_android.FlowApplication;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.activities.FullScreenImageActivity;
@@ -29,7 +26,7 @@ import com.uwflow.flow_android.network.FlowDatabaseLoader;
 import com.uwflow.flow_android.network.FlowImageLoader;
 import com.uwflow.flow_android.network.FlowImageLoaderCallback;
 
-public class ProfileScheduleFragment extends Fragment implements View.OnClickListener {
+public class ProfileScheduleFragment extends TrackedFragment implements View.OnClickListener {
     private String mScheduleImageURL;
     private ImageView mImageSchedule;
     private Button mBtnShare;
@@ -79,6 +76,8 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_share:
+                ((FlowApplication) getActivity().getApplication()).track("Share schedule intent");
+
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
                 shareIntent.putExtra(Intent.EXTRA_TEXT, mScheduleImageURL);
@@ -87,6 +86,8 @@ public class ProfileScheduleFragment extends Fragment implements View.OnClickLis
                 break;
             case R.id.image_schedule:
                 if (scheduleImage != null && scheduleImage.getImage() != null) {
+                    ((FlowApplication) getActivity().getApplication()).track("Schedule image expanded");
+
                     Intent fullscreenImageIntent = new Intent(getActivity(), FullScreenImageActivity.class);
                     fullscreenImageIntent.putExtra("id", scheduleImage.getId());
                     getActivity().startActivity(fullscreenImageIntent);

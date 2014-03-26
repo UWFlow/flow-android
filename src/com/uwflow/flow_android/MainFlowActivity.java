@@ -77,7 +77,9 @@ public class MainFlowActivity extends FlowActivity {
                     // Remove flow cookies
                     FlowAsyncClient.clearCookie();
 
-                    ((FlowApplication) getApplication()).setUserLoggedIn(false);
+                    FlowApplication app = (FlowApplication) getApplication();
+                    app.setUserLoggedIn(false);
+                    app.track("Logout");
 
                     Intent intent = new Intent(MainFlowActivity.this, LoginActivity.class);
                     intent.putExtra("finish", true);
@@ -95,6 +97,8 @@ public class MainFlowActivity extends FlowActivity {
             mBottomItemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ((FlowApplication) getApplication()).track("Login intent from logged out user");
+
                     Intent intent = new Intent(MainFlowActivity.this, LoginActivity.class);
                     startActivity(intent);
                 }
