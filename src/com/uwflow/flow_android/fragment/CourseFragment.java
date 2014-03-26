@@ -32,13 +32,14 @@ import com.uwflow.flow_android.network.FlowApiRequestCallback;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
 import com.uwflow.flow_android.util.CourseUtil;
+import com.uwflow.flow_android.nfc.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Created by jasperfung on 2/21/14.
  */
-public class CourseFragment extends TrackedFragment {
+public class CourseFragment extends TrackedFragment implements SharableURL {
     private static final String TAG = "CourseFragment";
 
     private String mCourseID;
@@ -216,6 +217,12 @@ public class CourseFragment extends TrackedFragment {
     public void onPause() {
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(courseUpdateReceiver);
         super.onPause();
+    }
+
+    @Override
+    public String getUrl() {
+        if (mCourseID == null) return null;
+        return Constants.BASE_URL + Constants.URL_COURSE_EXT + mCourseID;
     }
 
     private void fetchCourseInfo(String course) {

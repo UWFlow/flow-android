@@ -23,9 +23,10 @@ import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.loaders.*;
 import com.uwflow.flow_android.network.*;
+import com.uwflow.flow_android.nfc.SharableURL;
 import com.uwflow.flow_android.util.FacebookUtilities;
 
-public class ProfileFragment extends TrackedFragment {
+public class ProfileFragment extends TrackedFragment implements SharableURL {
     private String mProfileID;
     private ProfilePagerAdapter profilePagerAdapter;
 
@@ -187,6 +188,12 @@ public class ProfileFragment extends TrackedFragment {
     public void onPause() {
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(profileRefreshReceiver);
         super.onPause();
+    }
+
+    @Override
+    public String getUrl() {
+        if (mProfileID == null) return null;
+        return Constants.BASE_URL + Constants.URL_PROFILE_EXT + mProfileID;
     }
 
     protected void initLoaders() {
