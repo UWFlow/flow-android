@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -21,6 +22,8 @@ public class FlowApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Crashlytics.start(this);
+
         // Do init here
         FlowAsyncClient.init(getApplicationContext());
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
