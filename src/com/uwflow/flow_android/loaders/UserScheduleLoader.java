@@ -2,8 +2,10 @@ package com.uwflow.flow_android.loaders;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
+import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.ScheduleCourse;
 import com.uwflow.flow_android.db_object.ScheduleCourses;
@@ -42,6 +44,7 @@ public class UserScheduleLoader extends FlowAbstractDataLoader<ScheduleCourses> 
 
                                     @Override
                                     public void onFailure(String error) {
+                                        Crashlytics.log(Log.ERROR, Constants.UW_FLOW, "Get user courses API request failed: " + error);
                                     }
                                 });
                     }

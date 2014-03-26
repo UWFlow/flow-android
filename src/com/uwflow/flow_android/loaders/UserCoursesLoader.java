@@ -2,8 +2,10 @@ package com.uwflow.flow_android.loaders;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
+import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.fragment.ProfileFragment;
@@ -23,7 +25,7 @@ public class UserCoursesLoader extends FlowAbstractDataLoader<UserCourseDetail> 
     protected UserCourseDetail loadDelegate() {
         //Check if we are loading the logged in user's courseDetail or user friend's course detail
         // For all user friend data we fetch from the network
-        if (mBaseFragment != null) {
+        if (mBaseFragment != null && mBaseFragment instanceof ProfileFragment) {
             final ProfileFragment profileFragment = (ProfileFragment) mBaseFragment;
             if (profileFragment != null && profileFragment.getProfileID() != null) {
                 // It seems like async client must be run from the Main ui thread
@@ -41,6 +43,7 @@ public class UserCoursesLoader extends FlowAbstractDataLoader<UserCourseDetail> 
 
                                     @Override
                                     public void onFailure(String error) {
+                                        Crashlytics.log(Log.ERROR, Constants.UW_FLOW, "Get user courses API request failed: " + error);
                                     }
                                 });
                     }
