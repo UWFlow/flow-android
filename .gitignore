@@ -34,3 +34,9 @@ out/
 .gradle/
 
 build/
+
+# Android APK-signing keystore
+flow-android-release-key.keystore
+
+# Passwords and keys and such
+secrets.properties
