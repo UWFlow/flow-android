@@ -114,13 +114,9 @@ public class ProfileFragment extends TrackedFragment implements SharableURL {
         }
 
         init();
+
         if (getArguments() != null) {
-            final Bundle args = getArguments();
-            setUser((User) args.getSerializable(Constants.USER_KEY));
-            if (user != null)
-                mProfileID = user.getId();
-            else
-                mProfileID = getArguments() != null ? args.getString(Constants.PROFILE_ID_KEY) : null;
+            mProfileID = getArguments().getString(Constants.PROFILE_ID_KEY);
         }
 
         profilePagerAdapter = new ProfilePagerAdapter(getChildFragmentManager(), getArguments(), mProfileID == null);
