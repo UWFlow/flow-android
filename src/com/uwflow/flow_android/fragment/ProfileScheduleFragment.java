@@ -33,7 +33,7 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
     private ProfileScheduleReceiver profileScheduleReceiver;
     private TextView mEmptyScheduleView;
     private LinearLayout mScheduleContainer;
-    private ProgressBar mScheduleLoadingProgress;
+    private ProgressBar mLoadingProgress;
     protected FlowImageLoaderCallback scheduleImageCallback;
     protected FlowImageLoader flowImageLoader;
     protected FlowDatabaseLoader flowDatabaseLoader;
@@ -58,13 +58,13 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
         mBtnShare = (Button) rootView.findViewById(R.id.btn_share);
         mEmptyScheduleView = (TextView) rootView.findViewById(R.id.empty_profile_schedule);
         mScheduleContainer = (LinearLayout) rootView.findViewById(R.id.profile_schedule);
-        mScheduleLoadingProgress = (ProgressBar) rootView.findViewById(R.id.schedule_loading_progress);
+        mLoadingProgress = (ProgressBar) rootView.findViewById(R.id.profile_schedule_loading_progress);
 
         mBtnShare.setEnabled(false);
         mBtnShare.setOnClickListener(this);
 
         // call this before setting up the receiver
-        populateData(/* fromNetwork */ false);
+        populateData(/* isFromServer */ false);
         profileScheduleReceiver = new ProfileScheduleReceiver();
         updateReceiver = new ProfileRefreshReceiver();
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(profileScheduleReceiver,
@@ -111,7 +111,7 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
     private void toggleShowSchedule(boolean shouldShow) {
         mImageSchedule.setVisibility(View.VISIBLE);
         mBtnShare.setEnabled(shouldShow);
-        mScheduleLoadingProgress.setVisibility(View.GONE);
+        mLoadingProgress.setVisibility(View.GONE);
 
         if (shouldShow) {
             mScheduleContainer.setVisibility(View.VISIBLE);
@@ -122,7 +122,11 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
         }
     }
 
-    protected void populateData(final boolean fromNetwork) {
+    /**
+     * Render data to the views.
+     * @param isFromServer Whether the data we received was just fetched from the server.
+     */
+    protected void populateData(final boolean isFromServer) {
         final ProfileFragment profileFragment = (ProfileFragment)getParentFragment();
         if (profileFragment == null)
             return;
@@ -139,7 +143,7 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
                             // assume the URL is valid and an image will be returned
                             // TODO: change this conditional to 'if the image is successfully fetched'
                             loadScheduleImage();
-                        } else if (fromNetwork) {
+                        } else if (isFromServer) {
                             // Definitely no schedule, load an empty state
                             toggleShowSchedule(false);
                         }
@@ -186,7 +190,7 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
     protected class ProfileScheduleReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            populateData(/* fromNetwork */ true);
+            populateData(/* isFromServer */ true);
         }
     }
 

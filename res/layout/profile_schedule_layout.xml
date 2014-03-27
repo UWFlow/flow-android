@@ -23,7 +23,7 @@
                      android:layout_weight="1"
                      android:orientation="vertical">
             <ProgressBar
-                    android:id="@+id/schedule_loading_progress"
+                    android:id="@+id/profile_schedule_loading_progress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"/>
