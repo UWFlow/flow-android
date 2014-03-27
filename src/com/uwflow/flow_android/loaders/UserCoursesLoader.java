@@ -1,7 +1,12 @@
 package com.uwflow.flow_android.loaders;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
@@ -17,8 +22,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserCoursesLoader extends FlowAbstractDataLoader<UserCourseDetail> {
+    private LoaderUpdateReceiver courseLoadedReceiver;
     public UserCoursesLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment baseFragment) {
         super(context, flowDatabaseHelper, baseFragment);
+    }
+
+    protected void registerReceiver(){
+        super.registerReceiver();
+        // Start watching for changes in the app data.
+        if (courseLoadedReceiver == null) {
+            courseLoadedReceiver = new LoaderUpdateReceiver(this, Constants.BroadcastActionId.PROFILE_DATABASE_USER_COURSE_LOADED);
+        }
+    }
+
+    protected void unregisterReceiver(){
+        super.unregisterReceiver();
+        if (courseLoadedReceiver != null) {
+            LocalBroadcastManager.getInstance(this.getContext().getApplicationContext()).unregisterReceiver(courseLoadedReceiver);
+            courseLoadedReceiver = null;
+        }
     }
 
     @Override
@@ -51,6 +73,7 @@ public class UserCoursesLoader extends FlowAbstractDataLoader<UserCourseDetail> 
                 return null;
             }
         }
+
 
         UserCourseDetail userCourseDetail = new UserCourseDetail();
         try {

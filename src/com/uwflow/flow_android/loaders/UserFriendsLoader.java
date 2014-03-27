@@ -2,9 +2,11 @@ package com.uwflow.flow_android.loaders;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.db_object.UserFriends;
@@ -15,9 +17,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserFriendsLoader extends FlowAbstractDataLoader<UserFriends> {
-
+    private LoaderUpdateReceiver userFriendsLoadedReceiver;
     public UserFriendsLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment baseFragment) {
         super(context, flowDatabaseHelper, baseFragment);
+    }
+
+    protected void registerReceiver(){
+        super.registerReceiver();
+        // Start watching for changes in the app data.
+        if (userFriendsLoadedReceiver == null) {
+            userFriendsLoadedReceiver = new LoaderUpdateReceiver(this, Constants.BroadcastActionId.PROFILE_DATABASE_USER_FRIEND_LOADED);
+        }
+    }
+
+    protected void unregisterReceiver(){
+        super.unregisterReceiver();
+        if (userFriendsLoadedReceiver != null) {
+            LocalBroadcastManager.getInstance(this.getContext().getApplicationContext()).unregisterReceiver(userFriendsLoadedReceiver);
+            userFriendsLoadedReceiver = null;
+        }
     }
 
     @Override

@@ -2,9 +2,11 @@ package com.uwflow.flow_android.loaders;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.fragment.ProfileFragment;
@@ -13,9 +15,25 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class UserLoader extends FlowAbstractDataLoader<User> {
-
+    private LoaderUpdateReceiver userLoadedReceiver;
     public UserLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment baseFragment) {
         super(context, flowDatabaseHelper, baseFragment);
+    }
+
+    protected void registerReceiver(){
+        super.registerReceiver();
+        // Start watching for changes in the app data.
+        if (userLoadedReceiver == null) {
+            userLoadedReceiver = new LoaderUpdateReceiver(this, Constants.BroadcastActionId.PROFILE_DATABASE_USER_LOADED);
+        }
+    }
+
+    protected void unregisterReceiver(){
+        super.unregisterReceiver();
+        if (userLoadedReceiver != null) {
+            LocalBroadcastManager.getInstance(this.getContext().getApplicationContext()).unregisterReceiver(userLoadedReceiver);
+            userLoadedReceiver = null;
+        }
     }
 
     @Override

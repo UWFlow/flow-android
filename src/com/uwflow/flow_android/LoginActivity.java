@@ -188,7 +188,7 @@ public class LoginActivity extends OrmLiteBaseActivity<FlowDatabaseHelper> {
 
         ((FlowApplication) getApplication()).track("Login started");
 
-        databaseLoader.loadOrReloadProfileData(new ResultCollectorCallback() {
+        databaseLoader.loadOrReloadProfileForLogin(new ResultCollectorCallback() {
             @Override
             public void loadOrReloadCompleted() {
                 FlowApplication app = (FlowApplication) getApplication();
