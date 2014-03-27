@@ -10,10 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 import com.uwflow.flow_android.FlowApplication;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
@@ -27,6 +24,8 @@ import com.uwflow.flow_android.network.FlowImageLoader;
 import com.uwflow.flow_android.network.FlowImageLoaderCallback;
 
 public class ProfileScheduleFragment extends TrackedFragment implements View.OnClickListener {
+    private static final String TAG = ProfileScheduleFragment.class.getSimpleName();
+
     private String mScheduleImageURL;
     private ImageView mImageSchedule;
     private Button mBtnShare;
@@ -34,6 +33,7 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
     private ProfileScheduleReceiver profileScheduleReceiver;
     private TextView mEmptyScheduleView;
     private LinearLayout mScheduleContainer;
+    private ProgressBar mScheduleLoadingProgress;
     protected FlowImageLoaderCallback scheduleImageCallback;
     protected FlowImageLoader flowImageLoader;
     protected FlowDatabaseLoader flowDatabaseLoader;
@@ -58,12 +58,13 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
         mBtnShare = (Button) rootView.findViewById(R.id.btn_share);
         mEmptyScheduleView = (TextView) rootView.findViewById(R.id.empty_profile_schedule);
         mScheduleContainer = (LinearLayout) rootView.findViewById(R.id.profile_schedule);
+        mScheduleLoadingProgress = (ProgressBar) rootView.findViewById(R.id.schedule_loading_progress);
 
         mBtnShare.setEnabled(false);
         mBtnShare.setOnClickListener(this);
 
         // call this before setting up the receiver
-        populateData();
+        populateData(/* fromNetwork */ false);
         profileScheduleReceiver = new ProfileScheduleReceiver();
         updateReceiver = new ProfileRefreshReceiver();
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(profileScheduleReceiver,
@@ -108,6 +109,10 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
     }
 
     private void toggleShowSchedule(boolean shouldShow) {
+        mImageSchedule.setVisibility(View.VISIBLE);
+        mBtnShare.setEnabled(shouldShow);
+        mScheduleLoadingProgress.setVisibility(View.GONE);
+
         if (shouldShow) {
             mScheduleContainer.setVisibility(View.VISIBLE);
             mEmptyScheduleView.setVisibility(View.GONE);
@@ -115,10 +120,9 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
             mScheduleContainer.setVisibility(View.GONE);
             mEmptyScheduleView.setVisibility(View.VISIBLE);
         }
-        mBtnShare.setEnabled(shouldShow);
     }
 
-    protected void populateData() {
+    protected void populateData(final boolean fromNetwork) {
         final ProfileFragment profileFragment = (ProfileFragment)getParentFragment();
         if (profileFragment == null)
             return;
@@ -135,9 +139,8 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
                             // assume the URL is valid and an image will be returned
                             // TODO: change this conditional to 'if the image is successfully fetched'
                             loadScheduleImage();
-                        } else if (scheduleCourses == null) {
-                            // No schedule, load an empty state
-                            // TODO(david): Don't show this if the schedule is still loading from network
+                        } else if (fromNetwork) {
+                            // Definitely no schedule, load an empty state
                             toggleShowSchedule(false);
                         }
                         forceReloadScheduleImage = false;
@@ -183,7 +186,7 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
     protected class ProfileScheduleReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            populateData();
+            populateData(/* fromNetwork */ true);
         }
     }
 
