@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.LocalBroadcastManager;
+import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 
 public abstract class FlowAbstractDataLoader<T extends Object> extends AsyncTaskLoader<T> {
@@ -28,6 +29,19 @@ public abstract class FlowAbstractDataLoader<T extends Object> extends AsyncTask
         this.mBaseFragment = baseFragment;
     }
 
+    protected void registerReceiver(){
+        // Start watching for changes in the app data.
+        if (loaderUpdateReceiver == null) {
+            loaderUpdateReceiver = new LoaderUpdateReceiver(this, Constants.BroadcastActionId.UPDATE_PROFILE_LOADER);
+        }
+    }
+
+    protected void unregisterReceiver(){
+        if (loaderUpdateReceiver != null) {
+            LocalBroadcastManager.getInstance(this.getContext().getApplicationContext()).unregisterReceiver(loaderUpdateReceiver);
+            loaderUpdateReceiver = null;
+        }
+    }
     /**
      * Runs on a worker thread, loading in our data. Delegates the real work to
      * concrete subclass' buildCursor() method.
@@ -71,10 +85,7 @@ public abstract class FlowAbstractDataLoader<T extends Object> extends AsyncTask
             deliverResult(mLastData);
         }
 
-        // Start watching for changes in the app data.
-        if (loaderUpdateReceiver == null) {
-            loaderUpdateReceiver = new LoaderUpdateReceiver(this);
-        }
+        registerReceiver();
 
         if (takeContentChanged() || mLastData == null) {
             forceLoad();
@@ -111,10 +122,7 @@ public abstract class FlowAbstractDataLoader<T extends Object> extends AsyncTask
         onStopLoading();
         mLastData = null;
 
-        if (loaderUpdateReceiver != null) {
-            LocalBroadcastManager.getInstance(this.getContext().getApplicationContext()).unregisterReceiver(loaderUpdateReceiver);
-            loaderUpdateReceiver = null;
-        }
+        unregisterReceiver();
 
     }
 }

@@ -1,12 +1,15 @@
 package com.uwflow.flow_android.network;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.uwflow.flow_android.broadcast_receiver.BroadcastFactory;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.*;
@@ -35,14 +38,41 @@ public class FlowDatabaseLoader {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    /**
+     * Waits for all 5 API calls to be loaded before calling the callback
+     * @param callback
+     */
     public void loadOrReloadProfileData(ResultCollectorCallback callback) {
-        final FlowResultCollector resultCollector = new FlowResultCollector(5, callback);
+        final int NUM_PROCESS = 5;
+        final FlowResultCollector resultCollector = new FlowResultCollector(NUM_PROCESS, callback);
         reloadUserMe(0, resultCollector);
         reloadProfileCourses(1, resultCollector);
         reloadProfileExams(2, resultCollector);
         reloadProfileFriends(3, resultCollector);
         reloadProfileSchedule(4, resultCollector);
         resultCollector.startTimer();
+    }
+
+
+    /**
+     *
+     * Only wait for the user basic detail data and leave the rest async
+     *
+     * @param callback
+     */
+    public void loadOrReloadProfileForLogin(ResultCollectorCallback callback) {
+        if (callback != null) {
+            final int NUM_PROCESS = 1;
+            final FlowResultCollector resultCollector = new FlowResultCollector(NUM_PROCESS, callback);
+            reloadUserMe(0, resultCollector);
+        } else {
+            reloadUserMe(0, null);
+        }
+
+        reloadProfileCourses(0, null);
+        reloadProfileExams(0, null);
+        reloadProfileFriends(0, null);
+        reloadProfileSchedule(0, null);
     }
 
     public void reloadUserMe(final int index, final FlowResultCollector flowResultCollector) {
@@ -72,14 +102,22 @@ public class FlowDatabaseLoader {
 
                     @Override
                     protected void onPostExecute(Object obj) {
-                        handleCallback(index, flowResultCollector);
+                        if (flowResultCollector != null) {
+                            handleCallback(index, flowResultCollector);
+                        } else {
+                            BroadcastFactory.fireProfileMeLoadedBroadcast(context);
+                        }
                     }
                 }.execute(response);
             }
 
             @Override
             public void onFailure(String error) {
-                handleCallback(index, flowResultCollector);
+                if (flowResultCollector != null) {
+                    handleCallback(index, flowResultCollector);
+                } else {
+                    BroadcastFactory.fireProfileMeLoadedBroadcast(context);
+                }
             }
         });
     }
@@ -140,14 +178,22 @@ public class FlowDatabaseLoader {
 
                     @Override
                     protected void onPostExecute(Object obj) {
-                        handleCallback(index, flowResultCollector);
+                        if (flowResultCollector != null) {
+                            handleCallback(index, flowResultCollector);
+                        } else {
+                            BroadcastFactory.fireProfileFriendLoadedBroadcast(context);
+                        }
                     }
                 }.execute(response);
             }
 
             @Override
             public void onFailure(String error) {
-                handleCallback(index, flowResultCollector);
+                if (flowResultCollector != null) {
+                    handleCallback(index, flowResultCollector);
+                } else {
+                    BroadcastFactory.fireProfileFriendLoadedBroadcast(context);
+                }
             }
         });
     }
@@ -184,14 +230,22 @@ public class FlowDatabaseLoader {
 
                     @Override
                     protected void onPostExecute(Object obj) {
-                        handleCallback(index, flowResultCollector);
+                        if (flowResultCollector != null) {
+                            handleCallback(index, flowResultCollector);
+                        } else {
+                            BroadcastFactory.fireProfileScheduleLoadedBroadcast(context);
+                        }
                     }
                 }.execute(response);
             }
 
             @Override
             public void onFailure(String error) {
-                handleCallback(index, flowResultCollector);
+                if (flowResultCollector != null) {
+                    handleCallback(index, flowResultCollector);
+                } else {
+                    BroadcastFactory.fireProfileScheduleLoadedBroadcast(context);
+                }
             }
         });
     }
@@ -225,14 +279,22 @@ public class FlowDatabaseLoader {
 
                     @Override
                     protected void onPostExecute(Object obj) {
-                        handleCallback(index, flowResultCollector);
+                        if (flowResultCollector != null) {
+                            handleCallback(index, flowResultCollector);
+                        } else {
+                            BroadcastFactory.fireProfileExamLoadedBroadcast(context);
+                        }
                     }
                 }.execute(response);
             }
 
             @Override
             public void onFailure(String error) {
-                handleCallback(index, flowResultCollector);
+                if (flowResultCollector != null) {
+                    handleCallback(index, flowResultCollector);
+                } else {
+                    BroadcastFactory.fireProfileExamLoadedBroadcast(context);
+                }
             }
         });
     }
@@ -277,14 +339,22 @@ public class FlowDatabaseLoader {
 
                     @Override
                     protected void onPostExecute(Object obj) {
-                        handleCallback(index, flowResultCollector);
+                        if (flowResultCollector != null) {
+                            handleCallback(index, flowResultCollector);
+                        } else {
+                            BroadcastFactory.fireProfileCoursesLoadedBroadcast(context);
+                        }
                     }
                 }.execute(response);
             }
 
             @Override
             public void onFailure(String error) {
-                handleCallback(index, flowResultCollector);
+                if (flowResultCollector != null) {
+                    handleCallback(index, flowResultCollector);
+                } else {
+                    BroadcastFactory.fireProfileCoursesLoadedBroadcast(context);
+                }
             }
         });
     }
@@ -315,7 +385,9 @@ public class FlowDatabaseLoader {
 
             @Override
             protected void onPostExecute(ScheduleImage result) {
-                callback.onScheduleImageLoaded(result);
+                if (callback != null) {
+                    callback.onScheduleImageLoaded(result);
+                }
             }
         }.execute(id);
     }

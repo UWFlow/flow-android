@@ -15,10 +15,16 @@ import com.uwflow.flow_android.constant.Constants;
 public class LoaderUpdateReceiver extends BroadcastReceiver {
     final Loader loader;
 
-    public LoaderUpdateReceiver(Loader loader) {
+    public LoaderUpdateReceiver(Loader loader, String... actions) {
         this.loader = loader;
+        IntentFilter filter = new IntentFilter();
+
+        for (int i = 0; i < actions.length; i++) {
+            filter.addAction(actions[i]);
+        }
+
         LocalBroadcastManager.getInstance(this.loader.getContext().getApplicationContext()).registerReceiver(this,
-                new IntentFilter(Constants.BroadcastActionId.UPDATE_PROFILE_LOADER));
+                filter);
     }
 
     @Override

@@ -59,8 +59,14 @@ public class Constants {
         public static final String UPDATE_PROFILE_USER_SCHEDULE = "UpdateProfileUserSchedule";
         public static final String UPDATE_PROFILE_USER_EXAMS = "UpdateProfileUserExams";
         public static final String UPDATE_PROFILE_USER_COURSES = "UpdateProfileUserCourses";
-        public static final String UPDATE_CURRENT_FRAGMENT = "updateCurrentFragment";
-        public static final String UPDATE_PROFILE_LOADER = "updateProfileLoader";
+        public static final String UPDATE_CURRENT_FRAGMENT = "UpdateCurrentFragment";
+        public static final String UPDATE_PROFILE_LOADER = "UpdateProfileLoader";
+
+        public static final String PROFILE_DATABASE_USER_LOADED = "profileDatabaseLoaded";
+        public static final String PROFILE_DATABASE_USER_FRIEND_LOADED = "profileFriendDatabaseLoaded";
+        public static final String PROFILE_DATABASE_USER_COURSE_LOADED = "profileCourseDatabaseLoaded";
+        public static final String PROFILE_DATABASE_USER_EXAM_LOADED = "profileExamDatabaseLoaded";
+        public static final String PROFILE_DATABASE_USER_SCHEDULE_LOADED = "profileScheduleDatabaseLoaded";
     }
 
     public static final String UW_FLOW = "uwflow";

@@ -19,6 +19,7 @@ import com.crashlytics.android.Crashlytics;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfilePagerAdapter;
+import com.uwflow.flow_android.broadcast_receiver.BroadcastFactory;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.loaders.*;
@@ -256,8 +257,7 @@ public class ProfileFragment extends TrackedFragment {
             FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), user.getFbid(), coverPhotoImageView,
                     userCoverCallback);
         }
-        fireUserBroadcast();
-
+        BroadcastFactory.fireProfileMeFragmentDataLoaded(this.getActivity().getApplicationContext());
     }
 
     public UserFriends getUserFriends() {
@@ -266,8 +266,7 @@ public class ProfileFragment extends TrackedFragment {
 
     public void setUserFriends(UserFriends userFriends) {
         this.userFriends = userFriends;
-        fireUserFriendBroadcast();
-
+        BroadcastFactory.fireProfileFriendFragmentDataLoaded(this.getActivity().getApplicationContext());
     }
 
     public Exams getUserExams() {
@@ -276,8 +275,7 @@ public class ProfileFragment extends TrackedFragment {
 
     public void setUserExams(Exams userExams) {
         this.userExams = userExams;
-        fireUserExamBroadcast();
-
+        BroadcastFactory.fireProfileExamFragmentDataLoaded(this.getActivity().getApplicationContext());
     }
 
     public UserCourseDetail getUserCourses() {
@@ -286,7 +284,7 @@ public class ProfileFragment extends TrackedFragment {
 
     public void setUserCourses(UserCourseDetail userCourses) {
         this.userCourses = userCourses;
-        fireUserCoursesBroadcast();
+        BroadcastFactory.fireProfileCourseFragmentDataLoaded(this.getActivity().getApplicationContext());
 
     }
 
@@ -296,33 +294,7 @@ public class ProfileFragment extends TrackedFragment {
 
     public void setUserSchedule(ScheduleCourses userSchedule) {
         this.userSchedule = userSchedule;
-        fireUserScheduleBroadcast();
-
-    }
-
-    protected void fireUserBroadcast() {
-        Intent intent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_USER);
-        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).sendBroadcast(intent);
-    }
-
-    protected void fireUserFriendBroadcast() {
-        Intent intent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_USER_FRIENDS);
-        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).sendBroadcast(intent);
-    }
-
-    protected void fireUserScheduleBroadcast() {
-        Intent intent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_USER_SCHEDULE);
-        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).sendBroadcast(intent);
-    }
-
-    protected void fireUserExamBroadcast() {
-        Intent intent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_USER_EXAMS);
-        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).sendBroadcast(intent);
-    }
-
-    protected void fireUserCoursesBroadcast() {
-        Intent intent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_USER_COURSES);
-        LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).sendBroadcast(intent);
+        BroadcastFactory.fireProfileScheduleFragmentDataLoaded(this.getActivity().getApplicationContext());
     }
 
     public String getProfileID() {
@@ -331,14 +303,6 @@ public class ProfileFragment extends TrackedFragment {
 
     public void setProfileID(String profileId) {
         this.mProfileID = profileId;
-    }
-
-    public static ProfileFragment convertFragment(Fragment fragment) {
-        try {
-            return (ProfileFragment) fragment;
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     /**
@@ -362,8 +326,14 @@ public class ProfileFragment extends TrackedFragment {
             userCover = null;
             // TODO maybe insted of clearing the whole cache, we can manually clear part of the cache we want to reload
             mFlowImageLoader.clearImageCache();
-            Intent reloadLoadersIntent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_LOADER);
-            LocalBroadcastManager.getInstance(ProfileFragment.this.getActivity().getApplicationContext()).sendBroadcast(reloadLoadersIntent);
+            // if not logged in user then just fire async call without loading into database
+            if (mProfileID != null) {
+                Intent reloadLoadersIntent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_LOADER);
+                LocalBroadcastManager.getInstance(ProfileFragment.this.getActivity().getApplicationContext()).sendBroadcast(reloadLoadersIntent);
+            } else {
+                // fire async call and load into database
+                mFlowDatabaseLoader.loadOrReloadProfileForLogin(null);
+            }
         }
     }
 }
