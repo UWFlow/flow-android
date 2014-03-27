@@ -6,6 +6,9 @@ public class Constants {
     public static final String FBID = "fbid";
     public static final String FACEBOOK_ACCESS_TOKEN = "fb_access_token";
 
+    public static final String URL_PROFILE_EXT = "profile/";
+    public static final String URL_COURSE_EXT = "course/";
+
     public static final String API_LOGIN = "api/v1/login/facebook";
     public static final String API_COURSE = "api/v1/courses/%s";
     public static final String API_COURSE_PROFESSORS = "api/v1/courses/%s/professors";

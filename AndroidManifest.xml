@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.NFC" />
 
     <!-- Required by Google Analytics and Mixpanel -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -36,6 +37,13 @@
         <activity android:name=".MainFlowActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/Flow.Styled">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="https"
+                      android:host="uwflow.com"
+                      android:pathPattern=".*" />
+            </intent-filter>
         </activity>
         <activity android:name=".activities.FullScreenImageActivity"
                   android:screenOrientation="portrait">
