@@ -18,3 +18,27 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# This is required for ORMLite because it uses reflection:
+# http://stackoverflow.com/questions/14264199 http://stackoverflow.com/questions/9853096
+-keepattributes Signature
+
+-keep class com.j256.**
+-keepclassmembers class com.j256.** { *; }
+-keep enum com.j256.**
+-keepclassmembers enum com.j256.** { *; }
+-keep interface com.j256.**
+-keepclassmembers interface com.j256.** { *; }
+
+-keepclassmembers class * {
+  public <init>(android.content.Context);
+}
+
+-keepattributes *Annotation*
+
+-keep class com.uwflow.flow_android.db_object.**
+
+-keepclassmembers class com.uwflow.flow_android.db_object.** { *; }
+
+# We're open-sourced anyway... let's make life easier :)
+-dontobfuscate
