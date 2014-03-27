@@ -69,4 +69,29 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+
+    // Configure release certificate signing if the secrets.properties file exists
+    if (file("secrets.properties").exists()) {
+        Properties props = new Properties();
+        props.load(new FileInputStream(file("secrets.properties")))
+
+        signingConfigs {
+            release {
+                storeFile file(props['release.storeFile'])
+                storePassword props['release.storePassword']
+                keyAlias props['release.keyAlias']
+                keyPassword props['release.keyPassword']
+            }
+        }
+
+        buildTypes {
+            release {
+                signingConfig signingConfigs.release
+                runProguard true
+                proguardFile getDefaultProguardFile('proguard-android.txt')
+            }
+        }
+    } else {
+        System.out.println("File 'secrets.properties' not found. Will not generate signed release APK.");
+    }
 }
