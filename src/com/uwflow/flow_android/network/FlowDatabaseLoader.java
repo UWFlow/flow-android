@@ -15,11 +15,14 @@ import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * This class fetches data from the network and populates the database
  */
 public class FlowDatabaseLoader {
+    private static final String TAG = FlowDatabaseLoader.class.getSimpleName();
+
     protected FlowDatabaseHelper flowDatabaseHelper;
     protected Context context;
     protected FlowImageLoader flowImageLoader;
@@ -33,7 +36,7 @@ public class FlowDatabaseLoader {
     }
 
     public void loadOrReloadProfileData(ResultCollectorCallback callback) {
-        FlowResultCollector resultCollector = new FlowResultCollector(5, callback);
+        final FlowResultCollector resultCollector = new FlowResultCollector(5, callback);
         reloadUserMe(0, resultCollector);
         reloadProfileCourses(1, resultCollector);
         reloadProfileExams(2, resultCollector);
@@ -47,7 +50,6 @@ public class FlowDatabaseLoader {
             @Override
             public void onSuccess(JSONObject response) {
                 new AsyncTask<JSONObject, Void, Object>() {
-
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
                         try {
@@ -117,13 +119,19 @@ public class FlowDatabaseLoader {
                 new AsyncTask<JSONObject, Void, Object>() {
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
-                        UserFriends userFriends = JsonToDbUtil.getUserFriends(jsonObjects[0]);
+                        final UserFriends userFriends = JsonToDbUtil.getUserFriends(jsonObjects[0]);
                         try {
-                            Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
-                            for (User u : userFriends.getFriends()) {
-                                userDao.createOrUpdate(u);
-                            }
-                        } catch (SQLException e) {
+                            final Dao<User, String> userDao = flowDatabaseHelper.getUserDao();
+                            userDao.callBatchTasks(new Callable<Object>() {
+                                @Override
+                                public Void call() throws Exception {
+                                    for (User u : userFriends.getFriends()) {
+                                        userDao.createOrUpdate(u);
+                                    }
+                                    return null;
+                                }
+                            });
+                        } catch (Exception e) {
                             e.printStackTrace();
                             Crashlytics.logException(e);
                         }
@@ -151,14 +159,23 @@ public class FlowDatabaseLoader {
                 new AsyncTask<JSONObject, Void, Object>() {
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
-                        ScheduleCourses scheduleCourses = JsonToDbUtil.getUserSchedule(jsonObjects[0]);
+                        final ScheduleCourses scheduleCourses = JsonToDbUtil.getUserSchedule(jsonObjects[0]);
                         try {
-                            Dao<ScheduleCourse, String> userCourseSchedule = flowDatabaseHelper.getUserScheduleCourseDao();
-                            for (ScheduleCourse sc : scheduleCourses.getScheduleCourses()) {
-                                sc.setScheduleUrl(scheduleCourses.getScreenshotUrl());
-                                userCourseSchedule.createOrUpdate(sc);
-                            }
+                            final Dao<ScheduleCourse, String> userCourseSchedule = flowDatabaseHelper.getUserScheduleCourseDao();
+                            userCourseSchedule.callBatchTasks(new Callable<Object>() {
+                                @Override
+                                public Void call() throws Exception {
+                                    for (ScheduleCourse sc : scheduleCourses.getScheduleCourses()) {
+                                        sc.setScheduleUrl(scheduleCourses.getScreenshotUrl());
+                                        userCourseSchedule.createOrUpdate(sc);
+                                    }
+                                    return null;
+                                }
+                            });
                         } catch (SQLException e) {
+                            e.printStackTrace();
+                            Crashlytics.logException(e);
+                        } catch (Exception e) {
                             e.printStackTrace();
                             Crashlytics.logException(e);
                         }
@@ -187,13 +204,19 @@ public class FlowDatabaseLoader {
                 new AsyncTask<JSONObject, Void, Object>() {
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
-                        Exams userExams = JsonToDbUtil.getUserExams(jsonObjects[0]);
+                        final Exams userExams = JsonToDbUtil.getUserExams(jsonObjects[0]);
                         try {
-                            Dao<Exam, Integer> userExamDao = flowDatabaseHelper.getUserExamDao();
-                            for (Exam exam : userExams.getExams()) {
-                                userExamDao.createOrUpdate(exam);
-                            }
-                        } catch (SQLException e) {
+                            final Dao<Exam, Integer> userExamDao = flowDatabaseHelper.getUserExamDao();
+                            userExamDao.callBatchTasks(new Callable<Object>() {
+                                @Override
+                                public Void call() throws Exception {
+                                    for (Exam exam : userExams.getExams()) {
+                                        userExamDao.createOrUpdate(exam);
+                                    }
+                                    return null;
+                                }
+                            });
+                        } catch (Exception e) {
                             e.printStackTrace();
                             Crashlytics.logException(e);
                         }
@@ -221,19 +244,31 @@ public class FlowDatabaseLoader {
                 new AsyncTask<JSONObject, Void, Object>() {
                     @Override
                     protected Void doInBackground(JSONObject... jsonObjects) {
-                        UserCourseDetail userCourses = JsonToDbUtil.getUserCourseDetail(jsonObjects[0]);
+                        final UserCourseDetail userCourses = JsonToDbUtil.getUserCourseDetail(jsonObjects[0]);
                         try {
-                            Dao<Course, String> courseDao = flowDatabaseHelper.getUserCourseDao();
-                            for (Course c : userCourses.getCourses()) {
-                                courseDao.createOrUpdate(c);
+                            final Dao<Course, String> courseDao = flowDatabaseHelper.getUserCourseDao();
+                            courseDao.callBatchTasks(new Callable<Object>() {
+                                @Override
+                                public Void call() throws Exception {
+                                    for (Course c : userCourses.getCourses()) {
+                                        courseDao.createOrUpdate(c);
+                                    }
+                                    return null;
+                                }
+                            });
 
-                            }
-                            Dao<UserCourse, String> userCourseExtraDao = flowDatabaseHelper.getUserCourseExtraDao();
-                            for (UserCourse c : userCourses.getUserCourses()) {
-                                userCourseExtraDao.createOrUpdate(c);
-
-                            }
-                        } catch (SQLException e) {
+                            final Dao<UserCourse, String> userCourseExtraDao =
+                                    flowDatabaseHelper.getUserCourseExtraDao();
+                            userCourseExtraDao.callBatchTasks(new Callable<Object>() {
+                                @Override
+                                public Void call() throws Exception {
+                                    for (UserCourse c : userCourses.getUserCourses()) {
+                                        userCourseExtraDao.createOrUpdate(c);
+                                    }
+                                    return null;
+                                }
+                            });
+                        } catch (Exception e) {
                             e.printStackTrace();
                             Crashlytics.logException(e);
                         }
