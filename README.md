@@ -1,5 +1,4 @@
-Flow Android
-============
+# Flow Android App
 
 Android app for [UW Flow](https://uwflow.com): plan your University of Waterloo courses with friends.
 
