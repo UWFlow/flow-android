@@ -8,7 +8,6 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.db_object.UserFriends;
-import com.uwflow.flow_android.db_object.Users;
 import com.uwflow.flow_android.fragment.ProfileFragment;
 
 import java.sql.SQLException;
@@ -17,12 +16,21 @@ import java.util.List;
 
 public class UserFriendsLoader extends FlowAbstractDataLoader<UserFriends> {
 
-    public UserFriendsLoader(Context context, FlowDatabaseHelper flowDatabaseHelper) {
-        super(context, flowDatabaseHelper);
+    public UserFriendsLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment baseFragment) {
+        super(context, flowDatabaseHelper, baseFragment);
     }
 
     @Override
     protected UserFriends loadDelegate() {
+        // we first check if we should load from database or from the network
+        if (mBaseFragment != null) {
+            final ProfileFragment profileFragment = (ProfileFragment) mBaseFragment;
+            if (profileFragment != null && profileFragment.getProfileID() != null) {
+                // TODO add this call when we decide to add friends to user friend profile
+                //return null;
+            }
+        }
+
         List<User> userFriends = new ArrayList<User>();
         try {
             Dao<User, String> userDao = flowDatabaseHelper.getUserDao();

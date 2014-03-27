@@ -52,14 +52,11 @@ public class ProfileFragment extends TrackedFragment {
     protected FlowImageLoaderCallback userProfileCallback;
     protected FlowResultCollector collector;
 
-    // only fetch data once
-    protected boolean fetchCompleted = false;
-
     /**
      * Static method to instantiate this class with arguments passed as a bundle.
      *
      * @param userID The ID of the user to show.
-     * @param tabID The ID of the initial tab to show
+     * @param tabID  The ID of the initial tab to show
      * @return A new instance.
      */
     public static ProfileFragment newInstance(String userID, Integer tabID) {
@@ -105,7 +102,7 @@ public class ProfileFragment extends TrackedFragment {
         // Note: this is sorta cheating. We might need to decrease this number so that we don't run into memory issues.
         viewPager.setOffscreenPageLimit(3);
 
-        Integer tabID = getArguments() != null? getArguments().getInt(Constants.TAB_ID) : null;
+        Integer tabID = getArguments() != null ? getArguments().getInt(Constants.TAB_ID) : null;
         if (tabID == null) {
             // Set default tab to Schedule
             viewPager.setCurrentItem(Constants.PROFILE_SCHEDULE_PAGE_INDEX);
@@ -129,7 +126,7 @@ public class ProfileFragment extends TrackedFragment {
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
         tabs.setViewPager(viewPager);
 
-        if (!fetchCompleted) fetchProfileInfo();
+        initLoaders();
         populateData();
         return rootView;
     }
@@ -166,16 +163,6 @@ public class ProfileFragment extends TrackedFragment {
         }
     }
 
-    protected void fetchProfileInfo() {
-        fetchCompleted = true;
-        if (mProfileID == null) {
-            // Load logged-in users profile if an ID is unspecified.
-            initLoaders();
-        } else {
-            initLoadFromNetwork(mProfileID, false);
-        }
-    }
-
     @Override
     public void onResume() {
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(profileRefreshReceiver,
@@ -190,95 +177,16 @@ public class ProfileFragment extends TrackedFragment {
     }
 
     protected void initLoaders() {
-        final UserLoaderCallback userLoader = new UserLoaderCallback(getActivity().getApplicationContext(), this, ((MainFlowActivity) getActivity()).getHelper());
-        final UserFriendsLoaderCallback userFriendsLoader = new UserFriendsLoaderCallback(getActivity().getApplicationContext(), this, ((MainFlowActivity) getActivity()).getHelper());
+        final UserLoaderCallback userLoaderCallback = new UserLoaderCallback(getActivity().getApplicationContext(), this, ((MainFlowActivity) getActivity()).getHelper());
+        final UserFriendsLoaderCallback userFriendsLoaderCallback = new UserFriendsLoaderCallback(getActivity().getApplicationContext(), this, ((MainFlowActivity) getActivity()).getHelper());
         final UserScheduleLoaderCallback userScheduleLoaderCallback = new UserScheduleLoaderCallback(getActivity().getApplicationContext(), this, ((MainFlowActivity) getActivity()).getHelper());
         final UserExamsLoaderCallback userExamsLoaderCallback = new UserExamsLoaderCallback(getActivity().getApplicationContext(), this, ((MainFlowActivity) getActivity()).getHelper());
         final UserCoursesLoaderCallback userCoursesLoaderCallback = new UserCoursesLoaderCallback(getActivity().getApplicationContext(), this, ((MainFlowActivity) getActivity()).getHelper());
-        getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_LOADER_ID, null, userLoader);
-        getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_FRIENDS_LOADER_ID, null, userFriendsLoader);
+        getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_LOADER_ID, null, userLoaderCallback);
+        getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_FRIENDS_LOADER_ID, null, userFriendsLoaderCallback);
         getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_SCHEDULE_LOADER_ID, null, userScheduleLoaderCallback);
         getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_EXAMS_LOADER_ID, null, userExamsLoaderCallback);
         getLoaderManager().initLoader(Constants.LoaderManagerId.PROFILE_COURSES_LOADER_ID, null, userCoursesLoaderCallback);
-    }
-
-    protected void initLoadFromNetwork(final String uid, boolean sync) {
-        // Triggered by the refresh button, need to wait for async results
-        if (sync) {
-            loadingDialog = new ProgressDialog(ProfileFragment.this.getActivity());
-            loadingDialog.setTitle("Refreshing...");
-            loadingDialog.setMessage("Loading ...");
-            loadingDialog.show();
-            userCover = null;
-            collector = new FlowResultCollector(4, new ResultCollectorCallback() {
-                @Override
-                public void loadOrReloadCompleted() {
-                    loadingDialog.dismiss();
-                    collector = null;
-                }
-            });
-            collector.startTimer();
-        }
-
-        if (user == null || collector != null) {
-            FlowApiRequests.getUser(
-                    uid,
-                    new FlowApiRequestCallbackAdapter() {
-                        @Override
-                        public void getUserCallback(User user) {
-                            if (collector != null) collector.setState(0, true);
-                            setUser(user);
-                        }
-
-                        @Override
-                        public void onFailure(String error) {
-                            if (collector != null) collector.setState(0, true);
-                        }
-                    });
-        }
-
-        FlowApiRequests.getUserSchedule(
-                uid,
-                new FlowApiRequestCallbackAdapter() {
-                    @Override
-                    public void getUserScheduleCallback(ScheduleCourses scheduleCourses) {
-                        if (collector != null) collector.setState(1, true);
-                        setUserSchedule(scheduleCourses);
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                        if (collector != null) collector.setState(1, true);
-                    }
-                });
-        FlowApiRequests.getUserExams(
-                uid,
-                new FlowApiRequestCallbackAdapter() {
-                    @Override
-                    public void getUserExamsCallback(Exams exams) {
-                        if (collector != null) collector.setState(2, true);
-                        setUserExams(exams);
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                        if (collector != null) collector.setState(2, true);
-                    }
-                });
-        FlowApiRequests.getUserCourses(
-                uid,
-                new FlowApiRequestCallbackAdapter() {
-                    @Override
-                    public void getUserCoursesCallback(UserCourseDetail userCourseDetail) {
-                        if (collector != null) collector.setState(3, true);
-                        setUserCourses(userCourseDetail);
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                        if (collector != null) collector.setState(3, true);
-                    }
-                });
     }
 
     protected void init() {
@@ -444,32 +352,18 @@ public class ProfileFragment extends TrackedFragment {
         }
     }
 
-
     /**
      * This class is to listen for the refresh button and reloads all the data
      */
     protected class ProfileRefreshReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (mProfileID == null) {
-                loadingDialog = new ProgressDialog(ProfileFragment.this.getActivity());
-                loadingDialog.setTitle("Refreshing...");
-                loadingDialog.setMessage("Loading ...");
-                loadingDialog.show();
-                userProfileImage = null;
-                userCover = null;
-                mFlowImageLoader.clearImageCache();
-                mFlowDatabaseLoader.loadOrReloadProfileData(new ResultCollectorCallback() {
-                    @Override
-                    public void loadOrReloadCompleted() {
-                        loadingDialog.dismiss();
-                        Intent intent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_FROM_DATABASE);
-                        LocalBroadcastManager.getInstance(ProfileFragment.this.getActivity().getApplicationContext()).sendBroadcast(intent);
-                    }
-                });
-            } else {
-                initLoadFromNetwork(mProfileID, true);
-            }
+            userProfileImage = null;
+            userCover = null;
+            // TODO maybe insted of clearing the whole cache, we can manually clear part of the cache we want to reload
+            mFlowImageLoader.clearImageCache();
+            Intent reloadLoadersIntent = new Intent(Constants.BroadcastActionId.UPDATE_PROFILE_LOADER);
+            LocalBroadcastManager.getInstance(ProfileFragment.this.getActivity().getApplicationContext()).sendBroadcast(reloadLoadersIntent);
         }
     }
 }

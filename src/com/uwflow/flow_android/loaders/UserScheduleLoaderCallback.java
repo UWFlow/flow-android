@@ -24,14 +24,17 @@ public class UserScheduleLoaderCallback implements LoaderManager.LoaderCallbacks
 
     @Override
     public Loader<ScheduleCourses> onCreateLoader(int i, Bundle bundle) {
-        return new UserScheduleLoader(context, flowDatabaseHelper);
+        return new UserScheduleLoader(context, flowDatabaseHelper, parentFragment);
     }
 
     @Override
     public void onLoadFinished(Loader<ScheduleCourses> scheduleCoursesLoader, ScheduleCourses scheduleCourses) {
+        if (scheduleCourses == null){
+            return;
+        }
+
         if (parentFragment instanceof ProfileFragment){
-            final ProfileFragment profileFragment= (ProfileFragment) parentFragment;
-            profileFragment.setUserSchedule(scheduleCourses);
+            ((ProfileFragment) parentFragment).setUserSchedule(scheduleCourses);
         }
     }
 

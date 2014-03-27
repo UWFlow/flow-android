@@ -22,6 +22,12 @@ public class FlowDatabaseHelper extends OrmLiteSqliteOpenHelper {
     // any time you make changes to your database objects, you may have to increase the database version
     private static final int DATABASE_VERSION = 1;
 
+    /**
+     * NOTE IF YOU CHANGE ANYTHING IN ANY OF THE DATABASE FILES OR ADD NEW DATABASE FILES
+     * YOU MUST RE-RUN THE MAIN METHOD IN DatabaseConfigUtil class in the util folder
+     * Use Run as a different java application! Not the same CONTEXT as flow.
+     */
+
     private Dao<User, String> userDao;
     private Dao<Course, String> userCourseDao;
     private Dao<ScheduleCourse, String> userScheduleCourseDao;
@@ -29,11 +35,6 @@ public class FlowDatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<UserCourse, String> userCourseExtraDao;
     private Dao<ScheduleImage, String> userSchduleImageDao;
 
-    /**
-     * NOTE IF YOU CHANGE ANYTHING IN ANY OF THE DATABASE FILES OR ADD NEW DATABASE FILES
-     * YOU MUST RE-RUN THE MAIN METHOD IN DatabaseConfigUtil class in the util folder
-     * @param context
-     */
     public FlowDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
     }
