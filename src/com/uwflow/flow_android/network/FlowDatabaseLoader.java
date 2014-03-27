@@ -1,11 +1,9 @@
 package com.uwflow.flow_android.network;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -214,6 +212,11 @@ public class FlowDatabaseLoader {
                                     for (ScheduleCourse sc : scheduleCourses.getScheduleCourses()) {
                                         sc.setScheduleUrl(scheduleCourses.getScreenshotUrl());
                                         userCourseSchedule.createOrUpdate(sc);
+
+                                        // FIXME(david): This is a major hack to just save the first schedule item,
+                                        //     because this loop takes a long time, causes thrashing, and we don't use
+                                        //     any of the schedule item data yet.
+                                        break;
                                     }
                                     return null;
                                 }
