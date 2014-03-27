@@ -40,3 +40,6 @@ flow-android-release-key.keystore
 
 # Passwords and keys and such
 secrets.properties
+
+# crashlytics build identification
+res/values/com_crashlytics_export_strings.xml
