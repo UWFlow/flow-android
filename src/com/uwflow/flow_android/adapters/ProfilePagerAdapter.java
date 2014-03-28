@@ -17,10 +17,10 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
     private static final int USER_FRIEND_PROFILE_TAB_NUMBER = 3;
 
     private static final String[] TITLES = new String[]{
-            "Friends",
             "Schedule",
             "Courses",
             "Exams",
+            "Friends",
     };
 
     public ProfilePagerAdapter(FragmentManager fm, Bundle bundle, boolean isUserMe) {
@@ -35,9 +35,6 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (!mIsUserMe) {
-            position++;
-        }
         Fragment fragment = null;
         switch (position) {
             case Constants.PROFILE_FRIENDS_PAGE_INDEX:
@@ -68,9 +65,6 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if (!mIsUserMe) {
-            position++;
-        }
         return TITLES[position];
     }
 }
