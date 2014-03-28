@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">UW Flow</string>
     <string name="fb_app_id">219309734863464</string>
-    <string name="app_version_name">1.0.3</string>
+    <string name="app_version_name">1.0.4</string>
 
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
