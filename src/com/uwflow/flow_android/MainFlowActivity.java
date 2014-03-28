@@ -30,6 +30,8 @@ import com.uwflow.flow_android.fragment.ExploreFragment;
 import com.uwflow.flow_android.fragment.ProfileFragment;
 import com.uwflow.flow_android.network.FlowAsyncClient;
 import com.uwflow.flow_android.nfc.SharableURL;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -179,8 +181,12 @@ public class MainFlowActivity extends FlowActivity {
                         );
 
                         JSONObject properties = new JSONObject();
-                        properties.put("uri", url);
-                        ((FlowApplication) getApplication()).track("NFC push event: ", properties);
+                        try {
+                            properties.put("uri", url);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        ((FlowApplication) getApplication()).track("NFC push event", properties);
 
                         return msg;
                     }
@@ -338,8 +344,12 @@ public class MainFlowActivity extends FlowActivity {
                 }
 
                 JSONObject properties = new JSONObject();
-                properties.put("uri", payload);
-                ((FlowApplication) getApplication()).track("NFC receive event: ", properties);
+                try {
+                    properties.put("uri", payload);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                ((FlowApplication) getApplication()).track("NFC receive event", properties);
             }
         }
     }

@@ -259,7 +259,8 @@ public class ProfileFragment extends TrackedFragment implements SharableURL {
                             // Log unauthorized profile access event.
                             JSONObject properties = new JSONObject();
                             properties.put("requestedProfileID", mProfileID);
-                            ((FlowApplication) getApplication()).track("Unauthorized profile access", properties);
+                            ((FlowApplication) getActivity().getApplication())
+                                    .track("Unauthorized profile access", properties);
                         }
                     });
         }

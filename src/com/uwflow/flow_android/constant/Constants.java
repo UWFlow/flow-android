@@ -1,8 +1,8 @@
 package com.uwflow.flow_android.constant;
 
 public class Constants {
-    public static final String SESSION_COOKIE_DOMAIN = "uwflow.com";
     public static final String FLOW_DOMAIN = "uwflow.com";
+    public static final String SESSION_COOKIE_DOMAIN = FLOW_DOMAIN;
     public static final String BASE_URL = "https://uwflow.com/";
     public static final String FBID = "fbid";
     public static final String FACEBOOK_ACCESS_TOKEN = "fb_access_token";
