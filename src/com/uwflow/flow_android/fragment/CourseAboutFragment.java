@@ -4,7 +4,6 @@ package com.uwflow.flow_android.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -177,11 +176,8 @@ public class CourseAboutFragment extends TrackedFragment {
         }
 
         public int compare(TermUser a, TermUser b) {
-            if (a.getTermId().compareTo(b.getTermId()) > 0) {
-                return -1;
-            } else {
-                return 1;
-            }
+            // Order terms by descending order (latest first)
+            return -a.getTermId().compareTo(b.getTermId());
         }
     }
 
