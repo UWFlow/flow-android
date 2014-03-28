@@ -39,9 +39,9 @@ public class FlowApiRequests {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(String responseBody, Throwable error) {
                 Log.d(TAG, "Login failed");
-                callback.onFailure(new String(responseBody));
+                callback.onFailure(responseBody);
             }
         });
     }
@@ -56,9 +56,9 @@ public class FlowApiRequests {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(String responseBody, Throwable error) {
                 Log.d(TAG, "Add course " + courseId +  " to shortlist failed.");
-                callback.onFailure(new String(responseBody));
+                callback.onFailure(responseBody);
             }
 
             @Override
@@ -216,8 +216,8 @@ public class FlowApiRequests {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                callback.onFailure(null);
+            public void onFailure(String responseBody, Throwable error) {
+                callback.onFailure(responseBody);
             }
         });
     }
