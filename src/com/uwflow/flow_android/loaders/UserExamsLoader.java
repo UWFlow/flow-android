@@ -18,6 +18,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class UserExamsLoader extends FlowAbstractDataLoader<Exams> {
+    private final static String TAG = UserExamsLoader.class.getSimpleName();
+
     private LoaderUpdateReceiver userExamsLoadedReceiver;
     public UserExamsLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment baseFragment) {
         super(context, flowDatabaseHelper, baseFragment);
@@ -59,7 +61,7 @@ public class UserExamsLoader extends FlowAbstractDataLoader<Exams> {
 
                                     @Override
                                     public void onFailure(String error) {
-                                        Crashlytics.log(Log.ERROR, Constants.UW_FLOW, "Get user courses API request failed: " + error);
+                                        Crashlytics.log(Log.ERROR, TAG, "Get user exams API request failed: " + error);
                                     }
                                 });
                     }

@@ -1,18 +1,16 @@
 package com.uwflow.flow_android.loaders;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
-import com.uwflow.flow_android.db_object.*;
+import com.uwflow.flow_android.db_object.Course;
+import com.uwflow.flow_android.db_object.UserCourse;
+import com.uwflow.flow_android.db_object.UserCourseDetail;
 import com.uwflow.flow_android.fragment.ProfileFragment;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
@@ -22,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserCoursesLoader extends FlowAbstractDataLoader<UserCourseDetail> {
+    private static final String TAG = UserCoursesLoader.class.getSimpleName();
+
     private LoaderUpdateReceiver courseLoadedReceiver;
     public UserCoursesLoader(Context context, FlowDatabaseHelper flowDatabaseHelper, Fragment baseFragment) {
         super(context, flowDatabaseHelper, baseFragment);
@@ -65,7 +65,8 @@ public class UserCoursesLoader extends FlowAbstractDataLoader<UserCourseDetail> 
 
                                     @Override
                                     public void onFailure(String error) {
-                                        Crashlytics.log(Log.ERROR, Constants.UW_FLOW, "Get user courses API request failed: " + error);
+                                        Crashlytics.log(Log.ERROR, TAG,
+                                                "Get user courses API request failed: " + error);
                                     }
                                 });
                     }
@@ -73,7 +74,6 @@ public class UserCoursesLoader extends FlowAbstractDataLoader<UserCourseDetail> 
                 return null;
             }
         }
-
 
         UserCourseDetail userCourseDetail = new UserCourseDetail();
         try {

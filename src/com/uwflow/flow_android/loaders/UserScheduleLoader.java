@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserScheduleLoader extends FlowAbstractDataLoader<ScheduleCourses> {
+    private static final String TAG = UserScheduleLoader.class.getSimpleName();
 
     private LoaderUpdateReceiver UserScheduleLoadedReceiver;
 
@@ -62,7 +63,8 @@ public class UserScheduleLoader extends FlowAbstractDataLoader<ScheduleCourses> 
 
                                     @Override
                                     public void onFailure(String error) {
-                                        Crashlytics.log(Log.ERROR, Constants.UW_FLOW, "Get user courses API request failed: " + error);
+                                        Crashlytics.log(Log.ERROR, TAG,
+                                                "Get user schedule API request failed: " + error);
                                     }
                                 });
                     }
