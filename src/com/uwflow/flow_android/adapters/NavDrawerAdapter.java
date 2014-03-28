@@ -31,8 +31,16 @@ public class NavDrawerAdapter extends BaseAdapter {
     }
 
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
-        return position;
+        return ((NavDrawerItem)getItem(position)).getId();
+    }
+
+    public int getPositionFromId(int id) {
+        for (int i = 0; i < navDrawerItemList.size(); i++) {
+            if (navDrawerItemList.get(i).getId() == id) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {

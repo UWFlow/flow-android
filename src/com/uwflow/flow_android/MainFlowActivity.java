@@ -48,10 +48,6 @@ public class MainFlowActivity extends FlowActivity {
 
     private NfcAdapter mNfcAdapter;
 
-    private static final String PROFILE_ITEM_TEXT = "Profile";
-    private static final String EXPLORE_ITEM_TEXT = "Explore";
-    private static final String ABOUT_ITEM_TEXT = "About";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,11 +63,20 @@ public class MainFlowActivity extends FlowActivity {
         mDrawerItems = new ArrayList<NavDrawerItem>();
 
         if (isUserLoggedIn) {
-            mDrawerItems.add(new NavDrawerItem(PROFILE_ITEM_TEXT, R.drawable.drawer_profile_icon));
+            mDrawerItems.add(new NavDrawerItem(
+                    Constants.NAV_DRAWER_PROFILE_INDEX,
+                    getString(R.string.drawer_item_profile),
+                    R.drawable.drawer_profile_icon));
         }
 
-        mDrawerItems.add(new NavDrawerItem(EXPLORE_ITEM_TEXT, R.drawable.drawer_explore_icon));
-        mDrawerItems.add(new NavDrawerItem(ABOUT_ITEM_TEXT, R.drawable.drawer_about_icon));
+        mDrawerItems.add(new NavDrawerItem(
+                Constants.NAV_DRAWER_EXPLORE_INDEX,
+                getString(R.string.drawer_item_explore),
+                R.drawable.drawer_explore_icon));
+        mDrawerItems.add(new NavDrawerItem(
+                Constants.NAV_DRAWER_ABOUT_INDEX,
+                getString(R.string.drawer_item_about),
+                R.drawable.drawer_about_icon));
 
         // Configure bottom menu item
         TextView label = (TextView) mBottomItemLayout.findViewById(R.id.drawer_item_name);
@@ -141,23 +146,16 @@ public class MainFlowActivity extends FlowActivity {
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
         if (savedInstanceState == null) {
             Fragment initialFragment;
             if (isUserLoggedIn) {
-                initialFragment = new ProfileFragment();
+                selectItem(Constants.NAV_DRAWER_PROFILE_INDEX);
             } else {
-                initialFragment = new ExploreFragment();
+                selectItem(Constants.NAV_DRAWER_EXPLORE_INDEX);
             }
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, initialFragment)
-                    .commit();
         }
-
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        mDrawerList.setItemChecked(0, true);
-
 
         // Check for available NFC Adapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -244,27 +242,7 @@ public class MainFlowActivity extends FlowActivity {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             NavDrawerItem drawerItem = (NavDrawerItem) parent.getItemAtPosition(position);
-            String itemName = drawerItem.getName();
-            Fragment fragment;
-
-            if (itemName.equals(PROFILE_ITEM_TEXT)) {
-                fragment = new ProfileFragment();
-            } else if (itemName.equals(EXPLORE_ITEM_TEXT)) {
-                fragment = new ExploreFragment();
-            } else if (itemName.equals(ABOUT_ITEM_TEXT)) {
-                fragment = new AboutFragment();
-            } else {
-                Log.e(TAG, "Unrecognized drawer item selected.");
-                return;
-            }
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment)
-                    .addToBackStack(null)
-                    .commit();
-            mDrawerList.setItemChecked(position, true);
-            mDrawerLayout.closeDrawer(mDrawerContainer);
+            selectItem(drawerItem.getId());
         }
     }
 
@@ -287,10 +265,7 @@ public class MainFlowActivity extends FlowActivity {
                 LocalBroadcastManager.getInstance(this.getApplicationContext()).sendBroadcast(intent);
                 break;
             case R.id.action_search:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, new ExploreFragment())
-                        .addToBackStack(null)
-                        .commit();
+                selectItem(Constants.NAV_DRAWER_EXPLORE_INDEX);
                 break;
                 // TODO: mark the Explore page as checked in the nav drawer
         }
@@ -310,6 +285,55 @@ public class MainFlowActivity extends FlowActivity {
         super.onNewIntent(intent);
 
         handleNfcIntent(intent);
+    }
+
+    /** Swaps fragments in the main content view */
+    private void selectItem(int itemID) {
+        Fragment fragment;
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+
+        switch (itemID) {
+            case(Constants.NAV_DRAWER_PROFILE_INDEX) :
+                if (currentFragment != null && currentFragment instanceof ProfileFragment) {
+                    if (((ProfileFragment)currentFragment).getProfileID() == null) {
+                        // Do nothing. Signed-in user's profile is already onscreen.
+                        mDrawerLayout.closeDrawer(mDrawerContainer);
+                        return;
+                    }
+                }
+                fragment = new ProfileFragment();
+                break;
+            case(Constants.NAV_DRAWER_EXPLORE_INDEX) :
+                if (currentFragment != null && currentFragment instanceof ExploreFragment) {
+                    // Do nothing. Explore fragment is already onscreen.
+                    mDrawerLayout.closeDrawer(mDrawerContainer);
+                    return;
+                }
+                fragment = new ExploreFragment();
+                break;
+            case(Constants.NAV_DRAWER_ABOUT_INDEX) :
+                if (currentFragment != null && currentFragment instanceof AboutFragment) {
+                    // Do nothing. About fragment is already onscreen.
+                    mDrawerLayout.closeDrawer(mDrawerContainer);
+                    return;
+                }
+                fragment = new AboutFragment();
+                break;
+            default :
+                Log.e(TAG, "Unrecognized drawer item selected.");
+                return;
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .commit();
+        int selectedPosition = mNavDrawerAdapter.getPositionFromId(itemID);
+        if (selectedPosition >= 0) {
+            mDrawerList.setItemChecked(selectedPosition, true);
+        }
+        mDrawerLayout.closeDrawer(mDrawerContainer);
     }
 
     private void handleNfcIntent(Intent intent) {
