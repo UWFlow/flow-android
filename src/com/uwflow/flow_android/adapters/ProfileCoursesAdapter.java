@@ -4,15 +4,12 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
 import com.uwflow.flow_android.R;
-import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.Course;
 import com.uwflow.flow_android.db_object.UserCourse;
 import com.uwflow.flow_android.db_object.UserCourseDetail;
@@ -171,11 +168,8 @@ public class ProfileCoursesAdapter extends BaseExpandableListAdapter {
         public UserCourseTermComparator() {}
 
         public int compare(UserCourse a, UserCourse b) {
-            if (a.getTermId().compareTo(b.getTermId()) > 0) {
-                return -1;
-            } else {
-                return 1;
-            }
+            // Ensure descending order, with the shortlist (term id 9999_99) on top and oldest term on bottom
+            return -a.getTermId().compareTo(b.getTermId());
         }
     }
 }
