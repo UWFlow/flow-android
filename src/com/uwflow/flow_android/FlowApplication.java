@@ -12,7 +12,12 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.uwflow.flow_android.network.FlowAsyncClient;
 import org.json.JSONObject;
 
+
+
 public class FlowApplication extends Application {
+
+    public static final boolean isBlackberry = System.getProperty("os.name").equals("qnx");
+
     private static final String IS_USER_LOGGED_IN_KEY = "is_user_logged_in";
     private static final String MIXPANEL_TOKEN = "0a5e88bd3f288fe8a2d8adf94b452212";
 

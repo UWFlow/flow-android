@@ -146,7 +146,8 @@ public class ExploreFragment extends TrackedFragment implements AdapterView.OnIt
         mSearchBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if ( (FlowApplication.isBlackberry==false && actionId == EditorInfo.IME_ACTION_SEARCH) ||
+                        (FlowApplication.isBlackberry==true && actionId == EditorInfo.IME_ACTION_UNSPECIFIED )) {
                     doSearch(0);
 
                     // Hide the keyboard. See http://stackoverflow.com/questions/1109022
