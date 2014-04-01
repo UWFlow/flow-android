@@ -11,6 +11,10 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
+    <string name="drawer_item_profile">Profile</string>
+    <string name="drawer_item_explore">Explore</string>
+    <string name="drawer_item_about">About</string>
+
     <string name="explore_sort_prompt">Sort by…</string>
 
     <string name="skip_login_text"><u>Or skip login</u></string>

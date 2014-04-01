@@ -89,6 +89,11 @@ public class Constants {
     public static final int PROFILE_EXAMS_PAGE_INDEX = 2;
     public static final int PROFILE_FRIENDS_PAGE_INDEX = 3;
 
+    public static final int NAV_DRAWER_PROFILE_INDEX = 0;
+    public static final int NAV_DRAWER_EXPLORE_INDEX = 1;
+    public static final int NAV_DRAWER_SHORTLIST_INDEX = 2;
+    public static final int NAV_DRAWER_ABOUT_INDEX = 3;
+
     public static final String FBID_DAVID = "541400376";
     public static final String FBID_JASPER = "505131734";
     public static final String FBID_WENTAO = "100000580776460";
