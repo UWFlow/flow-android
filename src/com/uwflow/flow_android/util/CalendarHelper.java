@@ -4,13 +4,16 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.AlarmClock;
 import android.provider.CalendarContract;
 import com.uwflow.flow_android.db_object.Exam;
+import com.uwflow.flow_android.db_object.ScheduleCourse;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by jasperfung on 3/2/14.
@@ -23,6 +26,9 @@ public class CalendarHelper {
     private static final String shortMonth[] = {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    };
+    private static final String daysOfWeek[] = {
+            "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
     };
 
     public static String getSeason( Date date ) {
@@ -65,6 +71,10 @@ public class CalendarHelper {
         return String.format("%s %d", seasons[month], year);
     }
 
+    public static String getDayOfWeek(int i) {
+        return daysOfWeek[i - 1 < 0 ? 0 : i - 1];
+    }
+
     public static Intent getAddCalenderEventIntent(Exam exam) {
         String courseId = exam.getCourseId();
         String sections = exam.getSections();
@@ -100,6 +110,22 @@ public class CalendarHelper {
                                 location))
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, location)
                 .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+        return intent;
+    }
+
+    public static Intent getAddAlarmIntent(String title, String location, Date startDate) {
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(startDate);
+
+        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+        intent.putExtra(AlarmClock.EXTRA_HOUR, calendar.get(Calendar.HOUR_OF_DAY));
+        intent.putExtra(AlarmClock.EXTRA_MINUTES, calendar.get(Calendar.MINUTE));
+        intent.putExtra(AlarmClock.EXTRA_MESSAGE, String.format("%s - %s", title, location));
+        // To show the Alarm app after adding an alarm, uncomment the line below:
+        // intent.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
+
+        /* Note: API 19 (KitKat) allows you to set the alarm's day(s) via the extra AlarmClock.EXTRA_DAYS */
+
         return intent;
     }
 }

@@ -9,8 +9,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="center"
-              android:textColor="#999999"
-              android:text="No courses uploaded :("
+              android:textColor="@color/grey_dark"
+              android:text="No courses uploaded"
               android:textSize="18dp"
               android:visibility="gone"/>
     <ProgressBar
