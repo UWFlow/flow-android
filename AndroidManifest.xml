@@ -49,6 +49,8 @@
                   android:screenOrientation="portrait"/>
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/fb_app_id"/>
         <meta-data android:name="com.crashlytics.ApiKey" android:value="0cced89c07497c684c2bd8361b9395d97483cad0"/>
+        <meta-data android:name="com.google.android.gms.version"
+                   android:value="@integer/google_play_services_version" />
     </application>
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
