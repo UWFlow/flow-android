@@ -98,7 +98,6 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
         mImageSchedule.setOnClickListener(this);
 
         // call this before setting up the receiver
-//        populateData(/* isFromServer */ false);
         mProfileScheduleReceiver = new ProfileScheduleReceiver();
         updateReceiver = new ProfileRefreshReceiver();
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(mProfileScheduleReceiver,

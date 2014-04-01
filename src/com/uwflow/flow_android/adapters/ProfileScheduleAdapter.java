@@ -24,8 +24,12 @@ import java.util.*;
 
 
 public class ProfileScheduleAdapter extends BaseExpandableListAdapter {
+    // This map holds all ScheduleCourse objects for the current week, keyed by the day of the week
     private Map<String,List<ScheduleCourse>> mScheduleMap;
+
+    // This list holds the labels for all ExpandableListView groups
     private List<String> mWeekdayList;
+
     private Context mContext;
     private FragmentManager mFragmentManager;
 
