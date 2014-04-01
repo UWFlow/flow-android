@@ -212,11 +212,6 @@ public class FlowDatabaseLoader {
                                     for (ScheduleCourse sc : scheduleCourses.getScheduleCourses()) {
                                         sc.setScheduleUrl(scheduleCourses.getScreenshotUrl());
                                         userCourseSchedule.createOrUpdate(sc);
-
-                                        // FIXME(david): This is a major hack to just save the first schedule item,
-                                        //     because this loop takes a long time, causes thrashing, and we don't use
-                                        //     any of the schedule item data yet.
-                                        break;
                                     }
                                     return null;
                                 }

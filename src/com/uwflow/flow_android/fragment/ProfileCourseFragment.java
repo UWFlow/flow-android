@@ -16,6 +16,7 @@ import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.adapters.ProfileCoursesAdapter;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.UserCourseDetail;
+import com.uwflow.flow_android.util.CourseUtil;
 
 public class ProfileCourseFragment extends TrackedFragment {
     private static final String TAG = ProfileCourseFragment.class.getSimpleName();
@@ -74,7 +75,7 @@ public class ProfileCourseFragment extends TrackedFragment {
                     getActivity().getSupportFragmentManager());
             mCoursesListView.setAdapter(profileListAdapter);
             profileListAdapter.notifyDataSetChanged();
-            expandAllGroups(mCoursesListView);
+            CourseUtil.expandAllGroups(mCoursesListView);
         } else if (isFromServer) {
             toggleShowCourses(false);
         }
@@ -95,12 +96,6 @@ public class ProfileCourseFragment extends TrackedFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             populateData(/* isFromServer */ true);
-        }
-    }
-
-    private void expandAllGroups(ExpandableListView listView) {
-        for (int i = 0; i < listView.getExpandableListAdapter().getGroupCount(); i++) {
-            listView.expandGroup(i);
         }
     }
 }

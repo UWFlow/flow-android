@@ -1,5 +1,7 @@
 package com.uwflow.flow_android.util;
 
+import android.widget.ExpandableListView;
+
 import java.util.regex.Pattern;
 
 /**
@@ -21,6 +23,16 @@ public class CourseUtil {
             return (parts[0] + " " + parts[1]).toUpperCase();
         } else {
             return courseId.toUpperCase();
+        }
+    }
+
+    /**
+     * Expands all groups in an ExpandableListView
+     * @param listView ExpandableListView to expand
+     */
+    public static void expandAllGroups(ExpandableListView listView) {
+        for (int i = 0; i < listView.getExpandableListAdapter().getGroupCount(); i++) {
+            listView.expandGroup(i);
         }
     }
 }

@@ -24,6 +24,9 @@ public class CalendarHelper {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     };
+    private static final String daysOfWeek[] = {
+            "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    };
 
     public static String getSeason( Date date ) {
         return seasons[ date.getMonth() ];
@@ -63,6 +66,10 @@ public class CalendarHelper {
         if (month >= 12) return null;
 
         return String.format("%s %d", seasons[month], year);
+    }
+
+    public static String getDayOfWeek(int i) {
+        return daysOfWeek[i - 1 < 0 ? 0 : i - 1];
     }
 
     public static Intent getAddCalenderEventIntent(Exam exam) {
