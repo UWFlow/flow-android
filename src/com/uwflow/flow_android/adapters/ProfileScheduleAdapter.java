@@ -132,21 +132,26 @@ public class ProfileScheduleAdapter extends BaseExpandableListAdapter {
             new View(mContext).setLayoutParams(new TableLayout.LayoutParams(0, 0));
         }
 
-        Date startDate = new Date(startDateSeconds);
+        final Date startDate = new Date(startDateSeconds);
         Date endDate = new Date(endDateSeconds);
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
 
-        first.setText(String.format("%s - %s %s", CourseUtil.humanizeCourseId(courseId), sectionType, sectionNumber));
-        second.setText(String.format("%s - %s    %s %s",
+        final String title = String.format("%s - %s %s",
+                CourseUtil.humanizeCourseId(courseId),
+                sectionType,
+                sectionNumber);
+        first.setText(title);
+        final String location = String.format("%s %s", locationBuilding, locationRoom);
+        second.setText(String.format("%s - %s    %s",
                 timeFormat.format(startDate),
                 timeFormat.format(endDate),
-                locationBuilding,
-                locationRoom));
+                location));
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: Add an alarm for the current course
+                mContext.startActivity(CalendarHelper.getAddAlarmIntent(title, location, startDate));
             }
         });
 
