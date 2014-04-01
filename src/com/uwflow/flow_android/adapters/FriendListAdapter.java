@@ -42,28 +42,28 @@ public class FriendListAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder = null;
         // verify that convertView is not null
         if (convertView == null) {
+            holder = new ViewHolder();
             // inflate a new view
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.profile_friends_row_item, parent, false);
+            holder.first = (TextView) convertView.findViewById(R.id.first);
+            holder.second = (TextView) convertView.findViewById(R.id.second);
+            holder.imageView = (ImageView) convertView.findViewById(R.id.image);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder)convertView.getTag();
         }
-
-        // Fill view with appropriate data
-        TextView first, second;
-        ImageView image;
-
-        first = (TextView) convertView.findViewById(R.id.first);
-        second = (TextView) convertView.findViewById(R.id.second);
-        image = (ImageView) convertView.findViewById(R.id.image);
 
         final User user = mList.get(position).getUser();
 
         // Set text fields
-        first.setText(user.getName());
-        second.setText(mList.get(position).getTermName());
+        holder.first.setText(user.getName());
+        holder.second.setText(mList.get(position).getTermName());
 
-        flowImageLoader.loadImageForList(user.getProfilePicUrls().getLarge(), image);
+        flowImageLoader.loadImageForList(user.getProfilePicUrls().getLarge(), holder.imageView);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -80,6 +80,10 @@ public class FriendListAdapter extends BaseAdapter {
     }
 
 
-
+    public static class ViewHolder {
+        public TextView first;
+        public TextView second;
+        public ImageView imageView;
+    }
 }
 
