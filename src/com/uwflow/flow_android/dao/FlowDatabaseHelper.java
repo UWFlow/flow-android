@@ -71,6 +71,19 @@ public class FlowDatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public static void clearDatabase(ConnectionSource connectionSource){
+        try {
+            TableUtils.clearTable(connectionSource, User.class);
+            TableUtils.clearTable(connectionSource, Course.class);
+            TableUtils.clearTable(connectionSource, ScheduleCourse.class);
+            TableUtils.clearTable(connectionSource, Exam.class);
+            TableUtils.clearTable(connectionSource, UserCourse.class);
+            TableUtils.clearTable(connectionSource, ScheduleImage.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Dao<User, String> getUserDao() throws SQLException {
         if (userDao == null) {
             userDao = getDao(User.class);

@@ -24,6 +24,7 @@ import android.widget.*;
 import com.facebook.Session;
 import com.uwflow.flow_android.adapters.NavDrawerAdapter;
 import com.uwflow.flow_android.constant.Constants;
+import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.entities.NavDrawerItem;
 import com.uwflow.flow_android.fragment.AboutFragment;
@@ -98,7 +99,8 @@ public class MainFlowActivity extends FlowActivity {
 
                     // Remove flow cookies
                     FlowAsyncClient.clearCookie();
-
+                    // Remove database entries from all tables on logout
+                    FlowDatabaseHelper.clearDatabase(getHelper().getConnectionSource());
                     FlowApplication app = (FlowApplication) getApplication();
                     app.setUserLoggedIn(false);
                     app.track("Logout");
