@@ -7,15 +7,17 @@ import android.preference.PreferenceManager;
 import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.uwflow.flow_android.adapters.ProfileScheduleAdapter;
 import com.uwflow.flow_android.broadcast_receiver.BroadcastFactory;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.*;
+import com.uwflow.flow_android.util.CalendarHelper;
 import com.uwflow.flow_android.util.JsonToDbUtil;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
@@ -206,12 +208,33 @@ public class FlowDatabaseLoader {
                         final ScheduleCourses scheduleCourses = JsonToDbUtil.getUserSchedule(jsonObjects[0]);
                         try {
                             final Dao<ScheduleCourse, String> userCourseSchedule = flowDatabaseHelper.getUserScheduleCourseDao();
+
+                            // Sort list of ScheduleCourse objects by date
+                            final List<ScheduleCourse> scheduleCourseList = scheduleCourses.getScheduleCourses();
+                            Collections.sort(scheduleCourseList, new ScheduleCourseComparator());
+
+                            final Date startOfWeek = CalendarHelper.getCurrentWeekStartDate();
+                            final Date endOfWeek = CalendarHelper.getCurrentWeekEndDate();
+
                             userCourseSchedule.callBatchTasks(new Callable<Object>() {
                                 @Override
                                 public Void call() throws Exception {
-                                    for (ScheduleCourse sc : scheduleCourses.getScheduleCourses()) {
-                                        sc.setScheduleUrl(scheduleCourses.getScreenshotUrl());
-                                        userCourseSchedule.createOrUpdate(sc);
+
+                                    for (ScheduleCourse scheduleCourse : scheduleCourseList) {
+                                        // Create Date object for the start datetime of the current ScheduleCourse
+                                        Date entryDate = new Date(scheduleCourse.getStartDate());
+
+                                        if (entryDate.before(startOfWeek)) {
+                                            // Haven't reached the current week yet
+                                            continue;
+                                        } else if (entryDate.after(endOfWeek)) {
+                                            // Past the current week
+                                            break;
+                                        }
+
+                                        // Only add ScheduleCourses in this week to the DB
+                                        scheduleCourse.setScheduleUrl(scheduleCourses.getScreenshotUrl());
+                                        userCourseSchedule.createOrUpdate(scheduleCourse);
                                     }
                                     return null;
                                 }
@@ -394,6 +417,16 @@ public class FlowDatabaseLoader {
     protected void handleCallback(int index, FlowResultCollector flowResultCollector) {
         if (flowResultCollector != null) {
             flowResultCollector.setState(index, true);
+        }
+    }
+
+    public class ScheduleCourseComparator implements Comparator<ScheduleCourse> {
+
+        public ScheduleCourseComparator() {}
+
+        public int compare(ScheduleCourse a, ScheduleCourse b) {
+            return a.getStartDate() < b.getStartDate() ? -1 :
+                    a.getStartDate() > b.getStartDate() ? 1 : 0;
         }
     }
 }
