@@ -196,6 +196,7 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
             if (mScheduleListAdapter.getCount() == 0) {
                 showEmptyView(true);
             } else {
+                showEmptyView(false);
                 showScheduleList(true);
 
                 // Load schedule image

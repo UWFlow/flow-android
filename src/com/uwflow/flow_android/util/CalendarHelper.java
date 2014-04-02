@@ -128,4 +128,32 @@ public class CalendarHelper {
 
         return intent;
     }
+
+    public static Calendar getCurrentWeek() {
+        Calendar currentWeek = Calendar.getInstance();
+        currentWeek.setFirstDayOfWeek(Calendar.MONDAY);
+        currentWeek.set(Calendar.HOUR_OF_DAY, 0);
+        currentWeek.clear(Calendar.MINUTE);
+        currentWeek.clear(Calendar.SECOND);
+        currentWeek.clear(Calendar.MILLISECOND);
+        return currentWeek;
+    }
+
+    public static Date getCurrentWeekStartDate() {
+        // Get a calendar set to the current week
+        final Calendar currentWeek = getCurrentWeek();
+
+        // Create a start Date for this week
+        currentWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        return currentWeek.getTime();
+    }
+
+    public static Date getCurrentWeekEndDate() {
+        // Get a calendar set to the current week
+        final Calendar currentWeek = getCurrentWeek();
+
+        // Create an end Date for this week
+        currentWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        return currentWeek.getTime();
+    }
 }
