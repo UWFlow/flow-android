@@ -251,11 +251,14 @@ public class ProfileFragment extends TrackedFragment implements SharableURL {
             return;
         }
         this.user = user;
-        if (userCover == null && user.getFbid() != null) {
-            FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), user.getFbid(), coverPhotoImageView,
-                    userCoverCallback);
+        if (user.getFbid() != null) {
             if (mFbMenuItem != null) {
                 mFbMenuItem.setEnabled(true);
+            }
+
+            if (userCover == null) {
+                FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), user.getFbid(), coverPhotoImageView,
+                        userCoverCallback);
             }
         }
         BroadcastFactory.fireProfileMeFragmentDataLoaded(this.getActivity().getApplicationContext());
