@@ -23,6 +23,7 @@ import android.widget.*;
 import com.facebook.Session;
 import com.uwflow.flow_android.adapters.NavDrawerAdapter;
 import com.uwflow.flow_android.constant.Constants;
+import com.uwflow.flow_android.db_object.User;
 import com.uwflow.flow_android.entities.NavDrawerItem;
 import com.uwflow.flow_android.fragment.AboutFragment;
 import com.uwflow.flow_android.fragment.CourseFragment;
@@ -30,6 +31,7 @@ import com.uwflow.flow_android.fragment.ExploreFragment;
 import com.uwflow.flow_android.fragment.ProfileFragment;
 import com.uwflow.flow_android.network.FlowAsyncClient;
 import com.uwflow.flow_android.nfc.SharableURL;
+import com.uwflow.flow_android.util.FacebookUtilities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -267,7 +269,17 @@ public class MainFlowActivity extends FlowActivity {
             case R.id.action_search:
                 selectItem(Constants.NAV_DRAWER_EXPLORE_INDEX);
                 break;
-                // TODO: mark the Explore page as checked in the nav drawer
+            case R.id.action_view_on_fb:
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+                if (fragment != null && fragment instanceof ProfileFragment) {
+                    User user = ((ProfileFragment) fragment).getUser();
+                    if (user != null && user.getFbid() != null) {
+                        FacebookUtilities.viewUserOnFacebook(this, user.getFbid());
+                        ((FlowApplication) getApplication()).track("View user on Facebook");
+                    }
+                }
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }
