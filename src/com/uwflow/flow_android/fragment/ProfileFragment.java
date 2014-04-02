@@ -31,6 +31,7 @@ import org.json.JSONObject;
 public class ProfileFragment extends TrackedFragment implements SharableURL {
     private String mProfileID;
     private ProfilePagerAdapter profilePagerAdapter;
+    private MenuItem mFbMenuItem;
 
     protected ImageView userPhotoImageView;
     protected ImageView coverPhotoImageView;
@@ -49,7 +50,6 @@ public class ProfileFragment extends TrackedFragment implements SharableURL {
     protected Bitmap userProfileImage;
     protected FlowImageLoader mFlowImageLoader;
     protected FlowDatabaseLoader mFlowDatabaseLoader;
-    protected ProgressDialog loadingDialog;
     // for having hard reference to callbacks so they dont get garbage recycled
     protected FlowImageLoaderCallback userCoverCallback;
     protected FlowImageLoaderCallback userProfileCallback;
@@ -143,26 +143,6 @@ public class ProfileFragment extends TrackedFragment implements SharableURL {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.profile_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_view_on_fb:
-                if (user != null && user.getFbid() != null) {
-                    ((FlowApplication) getActivity().getApplication()).track("View user on Facebook");
-                    FacebookUtilities.viewUserOnFacebook(getActivity(), user.getFbid());
-                    return true;
-                }
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     public void onResume() {
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).registerReceiver(profileRefreshReceiver,
                 new IntentFilter(Constants.BroadcastActionId.UPDATE_CURRENT_FRAGMENT));
@@ -173,6 +153,14 @@ public class ProfileFragment extends TrackedFragment implements SharableURL {
     public void onPause() {
         LocalBroadcastManager.getInstance(this.getActivity().getApplicationContext()).unregisterReceiver(profileRefreshReceiver);
         super.onPause();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        mFbMenuItem = menu.findItem(R.id.action_view_on_fb);
+        mFbMenuItem.setVisible(true);
     }
 
     @Override
@@ -257,12 +245,21 @@ public class ProfileFragment extends TrackedFragment implements SharableURL {
 
     public void setUser(User user) {
         if (user == null) {
+            if (mFbMenuItem != null) {
+                mFbMenuItem.setEnabled(false);
+            }
             return;
         }
         this.user = user;
-        if (userCover == null && user.getFbid() != null) {
-            FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), user.getFbid(), coverPhotoImageView,
-                    userCoverCallback);
+        if (user.getFbid() != null) {
+            if (mFbMenuItem != null) {
+                mFbMenuItem.setEnabled(true);
+            }
+
+            if (userCover == null) {
+                FlowApiRequests.getUserCoverImage(this.getActivity().getApplicationContext(), user.getFbid(), coverPhotoImageView,
+                        userCoverCallback);
+            }
         }
         BroadcastFactory.fireProfileMeFragmentDataLoaded(this.getActivity().getApplicationContext());
     }
