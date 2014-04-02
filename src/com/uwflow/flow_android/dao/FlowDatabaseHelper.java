@@ -71,6 +71,11 @@ public class FlowDatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    /**
+     * Call this method to delete all entries in the database
+     *
+     * @param connectionSource
+     */
     public static void clearDatabase(ConnectionSource connectionSource){
         try {
             TableUtils.clearTable(connectionSource, User.class);
