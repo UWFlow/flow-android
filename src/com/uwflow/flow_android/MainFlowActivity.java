@@ -14,6 +14,7 @@ import android.os.PatternMatcher;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -153,9 +154,9 @@ public class MainFlowActivity extends FlowActivity {
         if (savedInstanceState == null) {
             Fragment initialFragment;
             if (isUserLoggedIn) {
-                selectItem(Constants.NAV_DRAWER_PROFILE_INDEX);
+                selectItem(Constants.NAV_DRAWER_PROFILE_INDEX, false);
             } else {
-                selectItem(Constants.NAV_DRAWER_EXPLORE_INDEX);
+                selectItem(Constants.NAV_DRAWER_EXPLORE_INDEX, false);
             }
         }
 
@@ -244,7 +245,7 @@ public class MainFlowActivity extends FlowActivity {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             NavDrawerItem drawerItem = (NavDrawerItem) parent.getItemAtPosition(position);
-            selectItem(drawerItem.getId());
+            selectItem(drawerItem.getId(), true);
         }
     }
 
@@ -267,7 +268,7 @@ public class MainFlowActivity extends FlowActivity {
                 LocalBroadcastManager.getInstance(this.getApplicationContext()).sendBroadcast(intent);
                 break;
             case R.id.action_search:
-                selectItem(Constants.NAV_DRAWER_EXPLORE_INDEX);
+                selectItem(Constants.NAV_DRAWER_EXPLORE_INDEX, true);
                 break;
             case R.id.action_view_on_fb:
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
@@ -300,7 +301,7 @@ public class MainFlowActivity extends FlowActivity {
     }
 
     /** Swaps fragments in the main content view */
-    private void selectItem(int itemID) {
+    private void selectItem(int itemID, boolean addToBackStack) {
         Fragment fragment;
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
@@ -337,10 +338,12 @@ public class MainFlowActivity extends FlowActivity {
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .addToBackStack(null)
-                .commit();
+        FragmentTransaction transaction = fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment);
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
         int selectedPosition = mNavDrawerAdapter.getPositionFromId(itemID);
         if (selectedPosition >= 0) {
             mDrawerList.setItemChecked(selectedPosition, true);
