@@ -232,7 +232,8 @@ public class FlowDatabaseLoader {
                                             break;
                                         }
 
-                                        // Only add ScheduleCourses in this week to the DB
+                                        // Only add ScheduleCourses in this week to the DB. This reduces thrash in the
+                                        // DB and speeds up loading schedules from the DB by *a lot*
                                         scheduleCourse.setScheduleUrl(scheduleCourses.getScreenshotUrl());
                                         userCourseSchedule.createOrUpdate(scheduleCourse);
                                     }
