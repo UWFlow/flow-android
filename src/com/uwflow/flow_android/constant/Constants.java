@@ -103,4 +103,6 @@ public class Constants {
 
     public static final String SHORTLIST_TERM_ID = "9999_99";
 
+    public static final String APP_VERSION_KEY = "app_version";
+
 }

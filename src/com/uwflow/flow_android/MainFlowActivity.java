@@ -34,6 +34,7 @@ import com.uwflow.flow_android.fragment.ProfileFragment;
 import com.uwflow.flow_android.network.FlowAsyncClient;
 import com.uwflow.flow_android.nfc.SharableURL;
 import com.uwflow.flow_android.util.FacebookUtilities;
+import com.uwflow.flow_android.util.RegistrationIdUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -198,6 +199,8 @@ public class MainFlowActivity extends FlowActivity {
             }, this);
         }
 
+        // Register this device with GCM to receive push notifications, if possible.
+        RegistrationIdUtil.init(getApplicationContext());
     }
 
     /**
