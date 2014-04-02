@@ -8,10 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.TableLayout;
-import android.widget.TextView;
+import android.widget.*;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.*;
@@ -151,7 +148,8 @@ public class ProfileScheduleAdapter extends BaseExpandableListAdapter {
                 timeFormat.format(endDate),
                 location));
 
-        convertView.setOnClickListener(new View.OnClickListener() {
+        ImageButton addAlarmButton = (ImageButton) convertView.findViewById(R.id.add_alarm_button);
+        addAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: Add an alarm for the current course

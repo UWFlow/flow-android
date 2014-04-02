@@ -37,7 +37,6 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
     private ExpandableListView mScheduleListView;
     private View rootView;
     private TextView mEmptyWeekScheduleView;
-    private TextView mScheduleListViewTip;
     private ProgressBar mImageLoadingProgress;
     private ProgressBar mListLoadingProgress;
 
@@ -75,7 +74,6 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
         mScheduleListView = (ExpandableListView) rootView.findViewById(R.id.schedule_list);
         mScheduleWeekLayout = (LinearLayout) rootView.findViewById(R.id.week_layout);
         mEmptyWeekScheduleView = (TextView) rootView.findViewById(R.id.empty_profile_schedule);
-        mScheduleListViewTip = (TextView) rootView.findViewById(R.id.schedule_list_tip);
 
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -170,10 +168,8 @@ public class ProfileScheduleFragment extends TrackedFragment implements View.OnC
 
         if (shouldShow) {
             mScheduleListView.setVisibility(View.VISIBLE);
-            mScheduleListViewTip.setVisibility(View.VISIBLE);
         } else {
             mScheduleListView.setVisibility(View.GONE);
-            mScheduleListViewTip.setVisibility(View.GONE);
         }
     }
 

@@ -77,14 +77,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
-            <TextView android:text="Click a schedule entry to add an alarm"
-                      android:id="@+id/schedule_list_tip"
-                      style="@style/Flow.TipBox"
-                      android:visibility="gone"
-                      android:layout_marginTop="10dp"
-                      android:layout_marginBottom="10dp"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content" />
         </LinearLayout>
     </FrameLayout>
     <TextView android:id="@+id/empty_profile_schedule"
