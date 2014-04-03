@@ -34,6 +34,11 @@ public class JsonToDbUtil {
         return gson.fromJson(gsonObject, UserFriends.class);
     }
 
+    public static UserCourse getUserCourse(JSONObject jsonObject) {
+        JsonObject gsonUserCourse = getJsonObject(jsonObject);
+        return gson.fromJson(gsonUserCourse, UserCourse.class);
+    }
+
     public static UserCourseDetail getUserCourseDetail(JSONObject jsonObject) {
         JsonObject gsonCourses = getJsonObject(jsonObject);
         UserCourseDetail courseDetail = gson.fromJson(gsonCourses, UserCourseDetail.class);
@@ -50,8 +55,13 @@ public class JsonToDbUtil {
         return gson.fromJson(gsonObject, Exams.class);
     }
 
+    public static Course getCourse(Object json) {
+        JsonObject gsonObject = getJsonObject(json);
+        return gson.fromJson(gsonObject, Course.class);
+    }
+
     public static CourseDetail getCourseDetail(JSONObject jsonObject) {
-        JsonObject gsonObject = (JsonObject) new JsonParser().parse(jsonObject.toString());
+        JsonObject gsonObject = getJsonObject(jsonObject);
         return gson.fromJson(gsonObject, CourseDetail.class);
     }
 
@@ -59,7 +69,6 @@ public class JsonToDbUtil {
         JsonObject gsonObject = getJsonObject(jsonObject);
         return gson.fromJson(gsonObject, Professors.class);
     }
-
 
     public static Sections getCourseSections(JSONObject jsonObject) {
         JsonObject gsonObject = getJsonObject(jsonObject);
@@ -81,8 +90,8 @@ public class JsonToDbUtil {
         return gson.fromJson(gsonObject, SearchResults.class);
     }
 
-    private static JsonObject getJsonObject(JSONObject jsonObject) {
-        return (JsonObject) new JsonParser().parse(jsonObject.toString());
+    private static JsonObject getJsonObject(Object json) {
+        return (JsonObject) new JsonParser().parse(json.toString());
     }
 
     private static class TimestampDeserializer implements JsonDeserializer<Timestamp> {

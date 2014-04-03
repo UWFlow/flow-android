@@ -20,10 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
+import com.j256.ormlite.dao.Dao;
 import com.uwflow.flow_android.FlowApplication;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
+import com.uwflow.flow_android.dao.FlowDatabaseHelper;
+import com.uwflow.flow_android.db_object.Course;
 import com.uwflow.flow_android.db_object.CourseDetail;
 import com.uwflow.flow_android.db_object.UserCourse;
 import com.uwflow.flow_android.db_object.UserCourseDetail;
@@ -31,11 +35,14 @@ import com.uwflow.flow_android.loaders.UserCoursesLoaderCallback;
 import com.uwflow.flow_android.network.FlowApiRequestCallback;
 import com.uwflow.flow_android.network.FlowApiRequestCallbackAdapter;
 import com.uwflow.flow_android.network.FlowApiRequests;
+import com.uwflow.flow_android.nfc.SharableURL;
 import com.uwflow.flow_android.util.CourseUtil;
-import com.uwflow.flow_android.nfc.*;
+import com.uwflow.flow_android.util.JsonToDbUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.sql.SQLException;
 
 /**
  * Created by jasperfung on 2/21/14.
@@ -57,6 +64,7 @@ public class CourseFragment extends TrackedFragment implements SharableURL {
     private CourseAboutFragment mCourseAboutFragment;
     private CourseReviewsFragment mCourseReviewsFragment;
 
+    private CourseDetail mCourseDetail;
     private UserCourseDetail userCourseDetail;
     private CourseUpdateReceiver courseUpdateReceiver;
 
@@ -146,7 +154,30 @@ public class CourseFragment extends TrackedFragment implements SharableURL {
                             String message = String.format("%s added to shortlist.", humanizedCourseId);
                             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                             disableShortlistButton("Shortlisted");
-                            // TODO(david): Also update the DB to reflect the change
+
+                            if (mCourseDetail == null) {
+                                return;
+                            }
+
+                            // Add the shortlisted course to the DB to update course list on profile page.
+                            try {
+                                JSONObject userCourseJson = response.getJSONObject("user_course");
+                                UserCourse userCourse = JsonToDbUtil.getUserCourse(userCourseJson);
+                                FlowDatabaseHelper helper = ((MainFlowActivity) getActivity()).getHelper();
+
+                                final Dao<UserCourse, String> userCourseDao = helper.getUserCourseExtraDao();
+                                userCourseDao.createOrUpdate(userCourse);
+
+                                final Dao<Course, String> courseDao = helper.getUserCourseDao();
+                                Course course = getCourseFromCourseDetail(mCourseDetail, userCourse.getId());
+                                courseDao.createOrUpdate(course);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Crashlytics.logException(e);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                                Crashlytics.logException(e);
+                            }
                         }
 
                         @Override
@@ -237,6 +268,8 @@ public class CourseFragment extends TrackedFragment implements SharableURL {
                 new FlowApiRequestCallbackAdapter() {
                     @Override
                     public void getCourseCallback(CourseDetail courseDetail) {
+                        mCourseDetail = courseDetail;
+
                         mCourseCodeTextView.setText(courseDetail.getCode());
                         mCourseNameTextView.setText(courseDetail.getName());
 
@@ -261,6 +294,21 @@ public class CourseFragment extends TrackedFragment implements SharableURL {
                 break;
             }
         }
+    }
+
+    /**
+     * A hacky method to convert a CourseDetail (returned from /api/v1/courses/:id) to a Course (returned from
+     * /api/v1/user/courses).
+     *
+     * TODO(david): This really shouldn't be here -- the CourseDetail class should be removed completely and
+     *     replaced with just Course.
+     */
+    private Course getCourseFromCourseDetail(CourseDetail courseDetail, String userCourseId) {
+        Gson gson = new Gson();
+        String json = gson.toJson(courseDetail);
+        Course course = JsonToDbUtil.getCourse(json);
+        course.setUserCourseId(userCourseId);
+        return course;
     }
 
     private void disableShortlistButton(String buttonText) {
@@ -295,10 +343,6 @@ public class CourseFragment extends TrackedFragment implements SharableURL {
             switch (position) {
                 case Constants.COURSE_SCHEDULE_PAGE_INDEX:
                     return fragment1;
-//                    if (mCourseScheduleFragment == null) {
-//                        courseScheduleFragment = new CourseScheduleFragment();
-//                    };
-//                    return courseScheduleFragment;
                 case Constants.COURSE_ABOUT_PAGE_INDEX:
                     return fragment2;
                 case Constants.COURSE_REVIEWS_PAGE_INDEX:
