@@ -16,6 +16,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
+import com.uwflow.flow_android.util.CourseUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Random;
 
@@ -59,8 +62,22 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
      * @param data
      */
     private void displayNotification(Context context, Bundle data) {
+        String courseId = data.getString("course_id");
+        String humanizedCourseId = CourseUtil.humanizeCourseId(courseId);
+        String courseName = "";
+        try {
+            JSONObject course = new JSONObject(data.getString("course"));
+            courseName = course.getString("name");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+
+        String title = String.format("%s: spots open!", humanizedCourseId);
+        String text = String.format("Enroll now for %s: %s", humanizedCourseId, courseName);
+
         Intent resultIntent = new Intent(context, MainFlowActivity.class);
-        resultIntent.putExtra(Constants.COURSE_ID_KEY, "cs241");  // FIXME(david): Don't hardcode
+        resultIntent.putExtra(Constants.COURSE_ID_KEY, courseId);
 
         // The stack builder object will contain an artificial back stack for the started Activity.
         // This ensures that navigating backward from the Activity leads out of the app to the Home screen.
@@ -75,8 +92,8 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
         // TODO(david): Hook up text with data format from server
         Notification notification = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle("Content title is here")
-                .setContentText("This is the content text")
+                .setContentTitle(title)
+                .setContentText(text)
                 .setContentIntent(contentIntent)
                 .setAutoCancel(true)
                 .setPriority(Notification.PRIORITY_HIGH)
