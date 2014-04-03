@@ -1,5 +1,7 @@
 package com.uwflow.flow_android.adapters;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.uwflow.flow_android.FlowApplication;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.*;
@@ -156,6 +159,13 @@ public class ProfileScheduleAdapter extends BaseExpandableListAdapter {
                 mContext.startActivity(CalendarHelper.getAddAlarmIntent(title, location, startDate));
             }
         });
+
+        if (mContext instanceof Activity) {
+            Application app = ((Activity)mContext).getApplication();
+            if (app instanceof FlowApplication && ((FlowApplication)app).isBlackberry) {
+                addAlarmButton.setEnabled(false);
+            }
+        }
 
         return convertView;
     }
