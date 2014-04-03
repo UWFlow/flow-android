@@ -1,23 +1,28 @@
 package com.uwflow.flow_android.adapters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.Meeting;
 import com.uwflow.flow_android.db_object.Section;
 import com.uwflow.flow_android.util.StringHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by jasperfung on 2/22/14.
  */
 public class CourseClassListAdapter extends BaseAdapter {
+    private static final String TAG = CourseClassListAdapter.class.getSimpleName();
+
     private List<Section> mClasses;
     private Context mContext;
 
@@ -51,11 +56,10 @@ public class CourseClassListAdapter extends BaseAdapter {
 
         // Fill view with appropriate data
         TextView column1, column2;
-        CheckBox checkbox;
 
         column1 = (TextView) convertView.findViewById(R.id.col1);
         column2 = (TextView) convertView.findViewById(R.id.col2);
-        checkbox = (CheckBox) convertView.findViewById(R.id.checkbox);
+        ImageButton addAlertButton = (ImageButton) convertView.findViewById(R.id.add_alert_button);
 
         Section currClass = mClasses.get(position);
 
@@ -117,22 +121,19 @@ public class CourseClassListAdapter extends BaseAdapter {
         }
         column2.setText(Html.fromHtml(string2));
 
-
-        // Enable notification subscription checkbox for at-capacity classes
+        // Enable notification subscription button for at-capacity classes
+        // TODO(david): Would be good to change button styling if alert already added
         if (enrollmentTotal >= enrollmentCapacity) {
-            // TODO: we need some way of checking the reminder state of this class
-            checkbox.setChecked(true);
-            checkbox.setVisibility(View.VISIBLE);
+            addAlertButton.setVisibility(View.VISIBLE);
         } else {
-            checkbox.setVisibility(View.INVISIBLE);
+            addAlertButton.setVisibility(View.INVISIBLE);
         }
 
-        convertView.setOnClickListener(new View.OnClickListener() {
+        addAlertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CheckBox cb = (CheckBox)v.findViewById(R.id.checkbox);
-                cb.setChecked(!cb.isChecked());
                 // TODO: subscribe for notifications of open seats in this class
+                Log.d(TAG, "Subscribe to class opening alert button clicked!");
             }
         });
 

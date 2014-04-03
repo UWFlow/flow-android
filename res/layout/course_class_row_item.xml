@@ -3,5 +3,13 @@
           android:layout_width="match_parent" android:layout_height="wrap_content">
     <TextView android:id="@+id/col1" android:layout_gravity="fill" android:layout_weight="1" android:paddingLeft="10dp"/>
     <TextView android:id="@+id/col2" android:layout_gravity="fill" android:layout_weight="1" />
-    <CheckBox android:id="@+id/checkbox" android:checked="true" android:layout_gravity="center_vertical"/>
+    <ImageButton android:id="@+id/add_alert_button"
+                 style="@style/Flow.StyledButton"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                 android:background="@drawable/blue_button"
+                 android:src="@drawable/ic_add_alert"
+                 android:layout_weight="0"
+                 android:layout_marginRight="10dp" />
 </TableRow>

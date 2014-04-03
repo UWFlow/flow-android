@@ -59,10 +59,5 @@
                   android:padding="7dp"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"/>
-        <TextView android:text="Select a checkbox to receive a notification when a seat becomes available"
-                  style="@style/Flow.TipBox"
-                  android:layout_marginBottom="10dp"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"/>
     </LinearLayout>
 </FrameLayout>
