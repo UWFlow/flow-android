@@ -163,7 +163,7 @@ public class ProfileScheduleAdapter extends BaseExpandableListAdapter {
         if (mContext instanceof Activity) {
             Application app = ((Activity)mContext).getApplication();
             if (app instanceof FlowApplication && ((FlowApplication)app).isBlackberry) {
-                addAlarmButton.setEnabled(false);
+                addAlarmButton.setVisibility(View.GONE);
             }
         }
 
