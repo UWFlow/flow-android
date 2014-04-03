@@ -17,6 +17,8 @@ import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
 
+import java.util.Random;
+
 /**
  * Receives push notifications from GCM.
  *
@@ -25,8 +27,6 @@ import com.uwflow.flow_android.constant.Constants;
  */
 public class GcmBroadcastReceiver extends BroadcastReceiver {
     private final String TAG = GcmBroadcastReceiver.class.getSimpleName();
-
-    private static final int NOTIFICATION_ID = 1;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -85,7 +85,7 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(
                 Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, notification);
+        notificationManager.notify(new Random().nextInt(), notification);
     }
 
 }

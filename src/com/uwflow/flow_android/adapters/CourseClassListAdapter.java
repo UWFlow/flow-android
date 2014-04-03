@@ -123,6 +123,7 @@ public class CourseClassListAdapter extends BaseAdapter {
 
         // Enable notification subscription button for at-capacity classes
         // TODO(david): Would be good to change button styling if alert already added
+        // TODO(david): Change back to checkbox (and style it properly) if above is done.
         if (enrollmentTotal >= enrollmentCapacity) {
             addAlertButton.setVisibility(View.VISIBLE);
         } else {
