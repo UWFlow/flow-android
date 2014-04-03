@@ -17,6 +17,7 @@
     <!-- Required for push notifications from GCM: http://developer.android.com/google/gcm/client.html -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />  <!-- TODO(david): Look into removing this -->
     <permission android:name="com.uwflow.flow_android.permission.C2D_MESSAGE" android:protectionLevel="signature" />
     <uses-permission android:name="com.uwflow.flow_android.permission.C2D_MESSAGE" />
 
@@ -53,14 +54,14 @@
         </activity>
         <activity android:name="com.facebook.LoginActivity"
                   android:screenOrientation="portrait"/>
-        <receiver android:name=".GcmBroadcastReceiver"
+        <receiver android:name=".broadcast_receiver.GcmBroadcastReceiver"
                   android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <category android:name="com.uwflow.flow_android" />
             </intent-filter>
         </receiver>
-        <service android:name=".GcmIntentService" />
+        <service android:name=".services.GcmIntentService" />
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/fb_app_id"/>
         <meta-data android:name="com.crashlytics.ApiKey" android:value="0cced89c07497c684c2bd8361b9395d97483cad0"/>
         <meta-data android:name="com.google.android.gms.version"
