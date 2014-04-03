@@ -31,10 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".fragment.ProfileFragment"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/Flow.Styled">
-        </activity>
         <activity android:name=".MainFlowActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/Flow.Styled">
