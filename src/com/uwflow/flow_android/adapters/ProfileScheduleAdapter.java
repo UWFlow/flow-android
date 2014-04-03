@@ -160,6 +160,9 @@ public class ProfileScheduleAdapter extends BaseExpandableListAdapter {
             }
         });
 
+        // We're getting crashes on BB because there isn't a system activity/app that catches our Alarm intent
+        // android.content.ActivityNotFoundException: No Activity found to handle Intent { act=android.intent.action.SET_ALARM (has extras) }
+        // Here, we hide this "Add alarm" button if the system is Blackberry.
         if (mContext instanceof Activity) {
             Application app = ((Activity)mContext).getApplication();
             if (app instanceof FlowApplication && ((FlowApplication)app).isBlackberry) {
