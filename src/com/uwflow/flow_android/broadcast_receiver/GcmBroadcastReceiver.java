@@ -16,7 +16,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.uwflow.flow_android.MainFlowActivity;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.constant.Constants;
-import com.uwflow.flow_android.util.CourseUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,20 +61,21 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
      * @param data
      */
     private void displayNotification(Context context, Bundle data) {
-        String courseId = data.getString("course_id");
-        String humanizedCourseId = CourseUtil.humanizeCourseId(courseId);
         String courseName = "";
+        String courseId = "";
+        String courseCode = "";
+
         try {
             JSONObject course = new JSONObject(data.getString("course"));
             courseName = course.getString("name");
+            courseId = course.getString("id");
+            courseCode = course.getString("code");
         } catch (JSONException e) {
             e.printStackTrace();
             Crashlytics.logException(e);
         }
 
-        String title = String.format("%s: spots open!", humanizedCourseId);
-        String text = String.format("Enroll now for %s: %s", humanizedCourseId, courseName);
-
+        // TODO(david): Look into why this doesn't go to the right course if Flow is already started
         Intent resultIntent = new Intent(context, MainFlowActivity.class);
         resultIntent.putExtra(Constants.COURSE_ID_KEY, courseId);
 
@@ -89,7 +89,9 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 
         PendingIntent contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // TODO(david): Hook up text with data format from server
+        String title = String.format("%s: spots open!", courseCode);
+        String text = String.format("%s: %s has seats open now.", courseCode, courseName);
+
         Notification notification = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(title)
