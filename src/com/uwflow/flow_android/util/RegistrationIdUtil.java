@@ -37,7 +37,7 @@ public class RegistrationIdUtil {
      * @param context
      */
     public static void init(Context context) {
-        if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS) {
+        if (supportsGcm(context)) {
             mGcm = GoogleCloudMessaging.getInstance(context);
             mRegistrationId = getRegistrationId(context);
 
@@ -48,6 +48,10 @@ public class RegistrationIdUtil {
         } else {
             Log.w(TAG, "Google Play Services SDK not available. Cannot receive push notifications.");
         }
+    }
+
+    public static boolean supportsGcm(Context context) {
+        return GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
     }
 
     /**

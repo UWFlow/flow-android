@@ -9,10 +9,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.crashlytics.android.Crashlytics;
 import com.uwflow.flow_android.R;
 import com.uwflow.flow_android.db_object.Meeting;
 import com.uwflow.flow_android.db_object.Section;
+import com.uwflow.flow_android.network.FlowApiRequestCallback;
+import com.uwflow.flow_android.network.FlowApiRequests;
+import com.uwflow.flow_android.util.CourseUtil;
+import com.uwflow.flow_android.util.RegistrationIdUtil;
 import com.uwflow.flow_android.util.StringHelper;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,10 +67,9 @@ public class CourseClassListAdapter extends BaseAdapter {
 
         column1 = (TextView) convertView.findViewById(R.id.col1);
         column2 = (TextView) convertView.findViewById(R.id.col2);
-        ImageButton addAlertButton = (ImageButton) convertView.findViewById(R.id.add_alert_button);
+        final ImageButton addAlertButton = (ImageButton) convertView.findViewById(R.id.add_alert_button);
 
-        Section currClass = mClasses.get(position);
-
+        final Section currClass = mClasses.get(position);
 
         // Populate first column (class info)
         String sectionType = currClass.getSectionType();
@@ -87,7 +94,6 @@ public class CourseClassListAdapter extends BaseAdapter {
                 enrollmentTotal,
                 enrollmentCapacity);
         column1.setText(string1);
-
 
         // Populate second column (time and location)
         String string2;
@@ -124,17 +130,58 @@ public class CourseClassListAdapter extends BaseAdapter {
         // Enable notification subscription button for at-capacity classes
         // TODO(david): Would be good to change button styling if alert already added
         // TODO(david): Change back to checkbox (and style it properly) if above is done.
-        if (enrollmentTotal >= enrollmentCapacity) {
+        final String registrationId = RegistrationIdUtil.getRegistrationId(mContext);
+        if (RegistrationIdUtil.supportsGcm(mContext) && StringUtils.isNotEmpty(registrationId) &&
+                enrollmentTotal >= enrollmentCapacity) {
             addAlertButton.setVisibility(View.VISIBLE);
         } else {
             addAlertButton.setVisibility(View.INVISIBLE);
         }
 
+        final String finalSectionType = sectionType;
+        final String finalSectionNumber = sectionNumber;
+        final String userId = null;  // TODO(david): Get the user ID
+
         addAlertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: subscribe for notifications of open seats in this class
-                Log.d(TAG, "Subscribe to class opening alert button clicked!");
+                final String courseId = currClass.getCourseId();
+                final String humanizedCourseId = CourseUtil.humanizeCourseId(courseId);
+                final String termId = currClass.getTermId();
+                String registrationId = RegistrationIdUtil.getRegistrationId(mContext);
+
+                addAlertButton.setEnabled(false);
+
+                FlowApiRequests.addCourseAlert(registrationId, courseId, termId, finalSectionType, finalSectionNumber,
+                        userId, new FlowApiRequestCallback() {
+                    @Override
+                    public void onSuccess(JSONObject response) {
+                        String message = String.format(
+                                "You will be notified when a seat opens up for %s: %s %s.",
+                                humanizedCourseId, finalSectionType, finalSectionNumber);
+                        Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+                        addAlertButton.setEnabled(true);
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        String message;
+
+                        // TODO(david): Server should return error code instead
+                        if (StringUtils.containsIgnoreCase(error, "already exists")) {
+                            message = String.format("You've already added an alert for %s: %s %s",
+                                    humanizedCourseId, finalSectionType, finalSectionNumber);
+                        } else {
+                            message = String.format("Uh oh, could not add a course alert for %s. Error: %s",
+                                    humanizedCourseId, error);
+                            Log.d(TAG, message);
+                            Crashlytics.log(Log.ERROR, TAG, message);
+                        }
+
+                        Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+                        addAlertButton.setEnabled(true);
+                    }
+                });
             }
         });
 

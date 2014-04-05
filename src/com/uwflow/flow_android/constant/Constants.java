@@ -28,6 +28,7 @@ public class Constants {
     public static final String API_USERS_FRIENDS = "api/v1/users/%s/friends";
     public static final String API_USER_SHORTLIST_COURSE = "api/v1/user/shortlist/%s";
     public static final String API_SEARCH_COURSES = "api/v1/search/courses?%s";
+    public static final String API_GCM_COURSE_ALERTS = "api/v1/alerts/course/gcm";
 
     public static class DatabaseColumnName{
         public static final String USER_ID = "user_id";
