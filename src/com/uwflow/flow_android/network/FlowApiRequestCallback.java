@@ -3,8 +3,6 @@ package com.uwflow.flow_android.network;
 import com.uwflow.flow_android.db_object.*;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 public abstract class FlowApiRequestCallback {
     abstract public void onSuccess(JSONObject response);
     abstract public void onFailure(String error);

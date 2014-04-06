@@ -19,6 +19,7 @@ import com.uwflow.flow_android.network.FlowApiRequests;
 import com.uwflow.flow_android.util.CourseUtil;
 import com.uwflow.flow_android.util.RegistrationIdUtil;
 import com.uwflow.flow_android.util.StringHelper;
+import com.uwflow.flow_android.util.UserUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
@@ -140,7 +141,7 @@ public class CourseClassListAdapter extends BaseAdapter {
 
         final String finalSectionType = sectionType;
         final String finalSectionNumber = sectionNumber;
-        final String userId = null;  // TODO(david): Get the user ID
+        final String userId = UserUtil.getLoggedInUserId(mContext);
 
         addAlertButton.setOnClickListener(new View.OnClickListener() {
             @Override

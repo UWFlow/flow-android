@@ -97,7 +97,8 @@ public class FlowApiRequests {
             params.put("user_id", userId);
         }
 
-        FlowAsyncClient.post(Constants.API_GCM_COURSE_ALERTS, params, new JsonHttpResponseHandler() {
+        //FlowAsyncClient.post(Constants.API_GCM_COURSE_ALERTS, params, new JsonHttpResponseHandler() {
+        FlowAsyncClient.client.post("https://divad12.fwd.wf/" + Constants.API_GCM_COURSE_ALERTS, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(JSONObject response) {
                 Log.d(TAG, "Add alert for course " + courseId + " success.");
