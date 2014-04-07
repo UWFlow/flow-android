@@ -126,9 +126,8 @@ public class CourseClassListAdapter extends BaseAdapter {
         // TODO(david): Would be good to change button styling if alert already added
         // TODO(david): Change back to checkbox (and style it properly) if above is done.
         final String registrationId = RegistrationIdUtil.getRegistrationId(mContext);
-        //if (RegistrationIdUtil.supportsGcm(mContext) && StringUtils.isNotEmpty(registrationId) &&
-        //        enrollmentTotal >= enrollmentCapacity) {
-        if (enrollmentTotal >= enrollmentCapacity) {
+        if (RegistrationIdUtil.supportsGcm(mContext) && StringUtils.isNotEmpty(registrationId) &&
+                enrollmentTotal >= enrollmentCapacity) {
             addAlertButton.setVisibility(View.VISIBLE);
         } else {
             addAlertButton.setVisibility(View.INVISIBLE);
