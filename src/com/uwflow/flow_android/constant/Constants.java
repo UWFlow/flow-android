@@ -85,8 +85,8 @@ public class Constants {
     public static final int COURSE_ABOUT_PAGE_INDEX = 1;
     public static final int COURSE_REVIEWS_PAGE_INDEX = 2;
 
-    public static final int PROFILE_SCHEDULE_PAGE_INDEX = 0;
-    public static final int PROFILE_COURSES_PAGE_INDEX = 1;
+    public static final int PROFILE_COURSES_PAGE_INDEX = 0;
+    public static final int PROFILE_SCHEDULE_PAGE_INDEX = 1;
     public static final int PROFILE_EXAMS_PAGE_INDEX = 2;
     public static final int PROFILE_FRIENDS_PAGE_INDEX = 3;
 

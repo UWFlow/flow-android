@@ -17,8 +17,8 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
     private static final int USER_FRIEND_PROFILE_TAB_NUMBER = 3;
 
     private static final String[] TITLES = new String[]{
-            "Schedule",
             "Courses",
+            "Schedule",
             "Exams",
             "Friends",
     };
