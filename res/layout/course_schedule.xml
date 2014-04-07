@@ -24,31 +24,6 @@
                          android:layout_weight="1"
                          android:layout_width="match_parent"
                          android:layout_height="0dp" >
-                <!-- 3 columns -->
-                <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/flow_blue">
-                    <TextView android:text="Class Info"
-                              android:textStyle="bold"
-                              android:layout_weight="1"
-                              android:textColor="@color/white"
-                              android:paddingLeft="10dp"/>
-                    <TextView android:text="Time and Location"
-                              android:textStyle="bold"
-                              android:layout_weight="1"
-                              android:textColor="@color/white"/>
-                    <TextView android:text="Alert?"
-                              android:textStyle="bold"
-                              android:layout_weight="0"
-                              android:textColor="@color/white"
-                              android:paddingRight="10dp"
-                            />
-                </TableRow>
-
-                <!-- Header divider -->
-                <View android:layout_height="2dip" android:background="#ff5ba7ea" />
-
             </TableLayout>
         </ScrollView>
         <TextView android:text=""

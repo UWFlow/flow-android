@@ -23,7 +23,10 @@ import com.uwflow.flow_android.util.UserUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -64,10 +67,11 @@ public class CourseClassListAdapter extends BaseAdapter {
         }
 
         // Fill view with appropriate data
-        TextView column1, column2;
+        TextView column1, column2, seatsAvailableTextView;
 
         column1 = (TextView) convertView.findViewById(R.id.col1);
         column2 = (TextView) convertView.findViewById(R.id.col2);
+        seatsAvailableTextView = (TextView) convertView.findViewById(R.id.seats_available_textview);
         final ImageButton addAlertButton = (ImageButton) convertView.findViewById(R.id.add_alert_button);
 
         final Section currClass = mClasses.get(position);
@@ -75,65 +79,56 @@ public class CourseClassListAdapter extends BaseAdapter {
         // Populate first column (class info)
         String sectionType = currClass.getSectionType();
         String sectionNumber = currClass.getSectionNum();
-        Meeting meeting = currClass.getMeetings().get(0); // TODO: find out if we should ever handle >1 meeting
-        String professor = meeting.getProfId();
-        if (professor != null) {
-            professor = StringHelper.capitalize(professor.replaceAll("_", " "));
-        }
-        int enrollmentTotal = currClass.getEnrollmentTotal();
-        int enrollmentCapacity = currClass.getEnrollmentCapacity();
+        Meeting meeting = currClass.getMeetings().get(0); // TODO: Handle more than 1 meeting
 
         // Make sure we don't have nulls
-        if (sectionType == null) sectionType = "---";
-        if (sectionNumber == null) sectionNumber = "---";
-        if (professor == null) professor = "---";
+        if (sectionType == null) sectionType = "";
+        if (sectionNumber == null) sectionNumber = "";
 
-        String string1 = String.format("%s %s\n%s\nSeats: %d/%d",
-                sectionType,
-                sectionNumber,
-                professor,
-                enrollmentTotal,
-                enrollmentCapacity);
-        column1.setText(string1);
+        column1.setText(String.format("%s\n%s", sectionType, sectionNumber));
 
-        // Populate second column (time and location)
-        String string2;
+        // Populate second column (class details)
+        List<String> detailsList = new LinkedList<String>();
         String building = meeting.getBuilding();
         String room = meeting.getRoom();
         String campus = currClass.getCampus();
+        if (campus == null) campus = "";
+        String professor = meeting.getProfId();
 
-        String time;
         long startSeconds = meeting.getStartSeconds();
         long endSeconds = meeting.getEndSeconds();
-        if (startSeconds == 0 || endSeconds == 0) {
-            time = "N/A";
-        } else {
-            time = String.format("%s - %s",
+        if (startSeconds != 0 && endSeconds != 0) {
+            detailsList.add(String.format("%s - %s",
                     getTimeFromSeconds(startSeconds),
-                    getTimeFromSeconds(endSeconds));
+                    getTimeFromSeconds(endSeconds)));
         }
-        if (campus == null) campus = "";
-        if (building == null || room == null) {
-            string2= String.format("%s<br>%s<br>%s",
-                    time,
-                    getFormattedDays(meeting.getDays()),
-                    campus);
-        } else {
-            string2= String.format("%s<br>%s<br>%s %s - %s",
-                    time,
-                    getFormattedDays(meeting.getDays()),
-                    building,
-                    room,
-                    campus);
+        if (meeting.getDays() != null && !meeting.getDays().isEmpty()) {
+            detailsList.add(getFormattedDays(meeting.getDays()));
         }
-        column2.setText(Html.fromHtml(string2));
+        if (StringUtils.isNotEmpty(building) || StringUtils.isNotEmpty(room)) {
+            detailsList.add(String.format("%s %s - %s", building, room, campus));
+        } else if (StringUtils.isNotEmpty(campus)) {
+            detailsList.add(campus);
+        }
+        if (StringUtils.isNotEmpty(professor)) {
+            professor = StringHelper.capitalize(professor.replaceAll("_", " "));
+            detailsList.add(professor);
+        }
+        column2.setText(Html.fromHtml(StringUtils.join(detailsList, "<br>")));
+
+        // Populate seats available column
+        int enrollmentTotal = currClass.getEnrollmentTotal();
+        int enrollmentCapacity = currClass.getEnrollmentCapacity();
+        String fractionHtml = String.format("%s/%s<br>seats", enrollmentTotal, enrollmentCapacity);
+        seatsAvailableTextView.setText(Html.fromHtml(fractionHtml));
 
         // Enable notification subscription button for at-capacity classes
         // TODO(david): Would be good to change button styling if alert already added
         // TODO(david): Change back to checkbox (and style it properly) if above is done.
         final String registrationId = RegistrationIdUtil.getRegistrationId(mContext);
-        if (RegistrationIdUtil.supportsGcm(mContext) && StringUtils.isNotEmpty(registrationId) &&
-                enrollmentTotal >= enrollmentCapacity) {
+        //if (RegistrationIdUtil.supportsGcm(mContext) && StringUtils.isNotEmpty(registrationId) &&
+        //        enrollmentTotal >= enrollmentCapacity) {
+        if (enrollmentTotal >= enrollmentCapacity) {
             addAlertButton.setVisibility(View.VISIBLE);
         } else {
             addAlertButton.setVisibility(View.INVISIBLE);
@@ -161,7 +156,6 @@ public class CourseClassListAdapter extends BaseAdapter {
                                 "You will be notified when a seat opens up for %s: %s %s.",
                                 humanizedCourseId, finalSectionType, finalSectionNumber);
                         Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
-                        addAlertButton.setEnabled(true);
                     }
 
                     @Override
@@ -192,12 +186,11 @@ public class CourseClassListAdapter extends BaseAdapter {
     private String getTimeFromSeconds(long seconds) {
         int hours = (int)(seconds / 3600);
         int minutes = (int)(seconds % 3600) / 60;
-        if (hours >= 12 && minutes >= 0) {
-            if (hours > 12) hours -= 12;
-            return String.format("%d:%dpm", hours, minutes);
-        } else {
-            return String.format("%d:%dam", hours, minutes);
-        }
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hours);
+        cal.set(Calendar.MINUTE, minutes);
+
+        return new SimpleDateFormat("h:mma").format(cal.getTime());
     }
 
     private String getFormattedDays(ArrayList<String> days) {

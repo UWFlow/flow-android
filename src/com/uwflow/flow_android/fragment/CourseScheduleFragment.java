@@ -127,13 +127,14 @@ public class CourseScheduleFragment extends TrackedFragment {
         TextView textView = new TextView(getActivity());
         textView.setText(heading);
         textView.setTypeface(null, Typeface.BOLD);
+        textView.setTextColor(getResources().getColor(R.color.white));
         textView.setLayoutParams(new TableLayout.LayoutParams(
                 TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT,
                 1f));
         float scale = getResources().getDisplayMetrics().density; // scale for converting dp to px
-        textView.setPadding((int)(10 * scale + 0.5f), 0, 0, 0);
-        textView.setBackgroundResource(R.color.flow_light_blue);
+        textView.setPadding((int)(10 * scale + 0.5f), 8, 0, 8);
+        textView.setBackgroundResource(R.color.flow_blue);
 
         return textView;
     }
