@@ -288,14 +288,6 @@ public class MainFlowActivity extends FlowActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() > 0){
-             super.onBackPressed();
-        }
-    }
-
-    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
