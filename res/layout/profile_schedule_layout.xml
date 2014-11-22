@@ -84,7 +84,7 @@
               android:layout_height="match_parent"
               android:gravity="center"
               android:textColor="@color/grey_dark"
-              android:text="No schedule uploaded"
+              android:text="No class schedule available"
               android:textSize="18dp"
               android:visibility="gone"/>
 </LinearLayout>

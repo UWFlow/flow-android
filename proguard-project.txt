@@ -42,3 +42,22 @@
 
 # We're open-sourced anyway... let's make life easier :)
 -dontobfuscate
+
+# Don't strip away required classes from Google Play Services SDK.
+# From http://developer.android.com/google/play-services/setup.html
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}
+
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+    @com.google.android.gms.common.annotation.KeepName *;
+}
+
+-keepnames class * implements android.os.Parcelable {
+    public static final ** CREATOR;
+}

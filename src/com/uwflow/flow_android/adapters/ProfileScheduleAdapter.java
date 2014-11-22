@@ -5,17 +5,17 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
 import com.uwflow.flow_android.FlowApplication;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageButton;
+import android.widget.TableLayout;
+import android.widget.TextView;
 import com.uwflow.flow_android.R;
-import com.uwflow.flow_android.constant.Constants;
-import com.uwflow.flow_android.db_object.*;
-import com.uwflow.flow_android.fragment.CourseFragment;
+import com.uwflow.flow_android.db_object.ScheduleCourse;
+import com.uwflow.flow_android.db_object.ScheduleCourses;
 import com.uwflow.flow_android.util.CalendarHelper;
 import com.uwflow.flow_android.util.CourseUtil;
 
@@ -155,7 +155,6 @@ public class ProfileScheduleAdapter extends BaseExpandableListAdapter {
         addAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Add an alarm for the current course
                 mContext.startActivity(CalendarHelper.getAddAlarmIntent(title, location, startDate));
             }
         });

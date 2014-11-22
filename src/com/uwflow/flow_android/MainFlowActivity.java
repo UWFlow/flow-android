@@ -34,6 +34,8 @@ import com.uwflow.flow_android.fragment.ProfileFragment;
 import com.uwflow.flow_android.network.FlowAsyncClient;
 import com.uwflow.flow_android.nfc.SharableURL;
 import com.uwflow.flow_android.util.FacebookUtilities;
+import com.uwflow.flow_android.util.RegistrationIdUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -154,8 +156,12 @@ public class MainFlowActivity extends FlowActivity {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         if (savedInstanceState == null) {
-            Fragment initialFragment;
-            if (isUserLoggedIn) {
+            Bundle bundle = getIntent().getExtras();
+            String courseId = (bundle == null ? null : bundle.getString(Constants.COURSE_ID_KEY));
+
+            if (StringUtils.isNotEmpty(courseId)) {
+                replaceWithFragment(CourseFragment.newInstance(courseId), false);
+            } else if (isUserLoggedIn) {
                 selectItem(Constants.NAV_DRAWER_PROFILE_INDEX, false);
             } else {
                 selectItem(Constants.NAV_DRAWER_EXPLORE_INDEX, false);
@@ -198,6 +204,8 @@ public class MainFlowActivity extends FlowActivity {
             }, this);
         }
 
+        // Register this device with GCM to receive push notifications, if possible.
+        RegistrationIdUtil.init(getApplicationContext());
     }
 
     /**
@@ -331,6 +339,18 @@ public class MainFlowActivity extends FlowActivity {
                 return;
         }
 
+        replaceWithFragment(fragment, addToBackStack);
+        int selectedPosition = mNavDrawerAdapter.getPositionFromId(itemID);
+        if (selectedPosition >= 0) {
+            mDrawerList.setItemChecked(selectedPosition, true);
+        }
+        mDrawerLayout.closeDrawer(mDrawerContainer);
+    }
+
+    /**
+     * Adds the given fragment to the back stack and replaces the current one with it.
+     */
+    private void replaceWithFragment(Fragment fragment, boolean addToBackStack) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, fragment);
@@ -338,12 +358,8 @@ public class MainFlowActivity extends FlowActivity {
             transaction.addToBackStack(null);
         }
         transaction.commit();
-        int selectedPosition = mNavDrawerAdapter.getPositionFromId(itemID);
-        if (selectedPosition >= 0) {
-            mDrawerList.setItemChecked(selectedPosition, true);
-        }
-        mDrawerLayout.closeDrawer(mDrawerContainer);
     }
+
 
     private void handleNfcIntent(Intent intent) {
         if (intent == null) return;

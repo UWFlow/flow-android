@@ -15,6 +15,7 @@ The following instructions are tested for Intellij on Mac OS X and Windows:
 
 1. Ensure you have
    [the latest Android SDKs and build tools installed](https://developer.android.com/sdk/index.html).
+1. Install the [Google Play Services SDK](http://developer.android.com/google/play-services/setup.html#Install).
 1. Create a file in the project root directory called `local.properties` and add the line `sdk.dir=/path/to/your/sdk`.
 1. Download [Gradle](http://www.gradle.org/downloads) (tested with version 1.10).
 1. Open Intellij (or Android Studio). Ensure you have the Gradle Intellij plugin.

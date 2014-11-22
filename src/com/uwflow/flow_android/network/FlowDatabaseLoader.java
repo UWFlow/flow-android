@@ -1,23 +1,23 @@
 package com.uwflow.flow_android.network;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
-import com.uwflow.flow_android.adapters.ProfileScheduleAdapter;
 import com.uwflow.flow_android.broadcast_receiver.BroadcastFactory;
-import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.dao.FlowDatabaseHelper;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.util.CalendarHelper;
 import com.uwflow.flow_android.util.JsonToDbUtil;
+import com.uwflow.flow_android.util.UserUtil;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -29,13 +29,11 @@ public class FlowDatabaseLoader {
     protected FlowDatabaseHelper flowDatabaseHelper;
     protected Context context;
     protected FlowImageLoader flowImageLoader;
-    protected SharedPreferences sp;
 
     public FlowDatabaseLoader(Context context, FlowDatabaseHelper flowDatabaseHelper) {
         this.context = context;
         this.flowDatabaseHelper = flowDatabaseHelper;
         this.flowImageLoader = new FlowImageLoader(context);
-        sp = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     /**
@@ -88,9 +86,7 @@ public class FlowDatabaseLoader {
                             if (user != null && user.getProfilePicUrls() != null)
                                 flowImageLoader.preloadImage(user.getProfilePicUrls().getLarge());
                             if (user != null) {
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.putString(Constants.PROFILE_ID_KEY, user.getId());
-                                editor.commit();
+                                UserUtil.saveLoggedInUserId(context, user.getId());
                                 userDao.createOrUpdate(user);
                             }
                         } catch (SQLException e) {
@@ -127,11 +123,12 @@ public class FlowDatabaseLoader {
             return;
         }
         if (scheduleImage.getId() == null) {
-            String id = sp.getString(Constants.PROFILE_ID_KEY, null);
-            if (id == null)
+            String id = UserUtil.getLoggedInUserId(context);
+            if (id == null) {
                 return;
-            else
-                scheduleImage.setId(id);
+            }
+
+            scheduleImage.setId(id);
         }
         new AsyncTask<ScheduleImage, Void, Void>() {
             @Override
@@ -390,7 +387,7 @@ public class FlowDatabaseLoader {
                 try {
                     String arg = strings[0];
                     if (arg == null) {
-                        arg = sp.getString(Constants.PROFILE_ID_KEY, null);
+                        arg = UserUtil.getLoggedInUserId(context);
                         if (arg == null) return null;
                     }
                     Dao<ScheduleImage, String> scheduleImageStringDao = flowDatabaseHelper.getUserSchduleImageDao();

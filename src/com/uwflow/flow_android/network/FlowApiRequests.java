@@ -17,6 +17,7 @@ import com.loopj.android.http.RequestParams;
 import com.uwflow.flow_android.constant.Constants;
 import com.uwflow.flow_android.db_object.*;
 import com.uwflow.flow_android.util.JsonToDbUtil;
+import com.uwflow.flow_android.util.RegistrationIdUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -64,6 +65,59 @@ public class FlowApiRequests {
             @Override
             public void onFailure(Throwable e, JSONObject errorResponse) {
                 Log.d(TAG, "Add course " + courseId +  " to shortlist failed.");
+
+                String errorMessage = "";
+                try {
+                    errorMessage = errorResponse.getString("error");
+                } catch (JSONException e1) {
+                    // Ignore could not parse error message
+                }
+
+                callback.onFailure(errorMessage);
+            }
+        });
+    }
+
+    public static void addCourseAlert(String registrationId, final String courseId, String termId, String sectionType,
+                                      String sectionNum, String userId, final FlowApiRequestCallback callback) {
+        RequestParams params = new RequestParams();
+        params.put("registration_id", registrationId);
+        params.put("course_id", courseId);
+
+        if (StringUtils.isNotEmpty(termId)) {
+            params.put("term_id", termId);
+        }
+        if (StringUtils.isNotEmpty(sectionType)) {
+            params.put("section_type", sectionType);
+        }
+        if (StringUtils.isNotEmpty(sectionNum)) {
+            params.put("section_num", sectionNum);
+        }
+        if (StringUtils.isNotEmpty(userId)) {
+            params.put("user_id", userId);
+        }
+
+        FlowAsyncClient.post(Constants.API_GCM_COURSE_ALERTS, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                Log.d(TAG, "Add alert for course " + courseId + " success.");
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailure(String responseBody, Throwable error) {
+                Log.d(TAG, "Add alert for course " + courseId + " failed.");
+                callback.onFailure(responseBody);
+            }
+
+            @Override
+            public void onFailure(Throwable e, JSONObject errorResponse) {
+                Log.d(TAG, "Add alert for course " + courseId + " failed.");
+
+                if (errorResponse == null) {
+                    callback.onFailure(null);
+                    return;
+                }
 
                 String errorMessage = "";
                 try {

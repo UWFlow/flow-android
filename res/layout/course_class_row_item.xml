@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
-          android:layout_width="match_parent" android:layout_height="wrap_content">
-    <TextView android:id="@+id/col1" android:layout_gravity="fill" android:layout_weight="1" android:paddingLeft="10dp"/>
-    <TextView android:id="@+id/col2" android:layout_gravity="fill" android:layout_weight="1" />
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingTop="3dp"
+          android:paddingBottom="3dp"
+          android:paddingLeft="10dp"
+          android:paddingRight="10dp">
+    <TextView
+            android:id="@+id/col1"
+            android:gravity="center|left"
+            android:text="LEC\n001"
+            android:layout_width="50dp"
+            android:layout_height="fill_parent"
+            android:textSize="18dp"/>
+    <TextView
+            android:id="@+id/col2"
+            android:text="7:00PM - 8:50PM\nMTWThFSSu\nMC 4059 - UW U\nByron Weber Becker"
+            android:layout_gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    <LinearLayout
+            android:layout_gravity="center_vertical|right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <TextView
+                android:id="@+id/seats_available_textview"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center|right"
+                android:text="0/0\nseats"
+                android:layout_weight="1" />
+        <ImageButton android:id="@+id/add_alert_button"
+                     style="@style/Flow.StyledButton"
+                     android:padding="5dp"
+                     android:layout_gravity="center_vertical"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:background="@drawable/blue_button"
+                     android:layout_marginLeft="10dp"
+                     android:src="@drawable/ic_add_alert" />
+    </LinearLayout>
 </TableRow>
