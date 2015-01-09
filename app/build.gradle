@@ -1,0 +1,68 @@
+apply plugin: 'com.android.application'
+apply plugin: 'crashlytics'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven {
+            url "http://mente.github.io/facebook-api-android-aar"
+        }
+        maven {
+            url 'http://repo1.maven.org/maven2'
+        }
+        maven {
+            url 'https://github.com/astuetz/PagerSlidingTabStrip'
+        }
+        maven {
+            url "http://download.crashlytics.com/maven"
+        }
+    }
+
+    dependencies {
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+    }
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.uwflow.flow_android"
+        minSdkVersion 14
+        targetSdkVersion 21
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+repositories {
+    maven { url "http://download.crashlytics.com/maven" }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.facebook.android:facebook-android-sdk:3.21.1'
+    compile 'com.loopj.android:android-async-http:1.4.4'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'com.android.support:support-v4:21.0.+'
+    compile 'com.google.code.gson:gson:2.1'
+    compile 'com.makeramen:roundedimageview:1.2.4'
+    compile 'org.apache.commons:commons-lang3:3.1'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
+    compile "com.mixpanel.android:mixpanel-android:4.0.0@aar"
+    compile "com.crashlytics.android:crashlytics:1.1.+"
+}
+
+
+
+
+
+
+
